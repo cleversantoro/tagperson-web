@@ -1,0 +1,2 @@
+.row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr .7fr .6fr; gap: 10px; margin-bottom: 12px; }
+@media (max-width: 1200px){ .row{ grid-template-columns: 1fr 1fr; } }

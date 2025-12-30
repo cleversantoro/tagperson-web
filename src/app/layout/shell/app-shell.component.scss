@@ -1,0 +1,5 @@
+.shell { height: 100vh; }
+.left  { width: 260px; border-right: 1px solid rgba(0,0,0,.12); }
+.top   { position: sticky; top: 0; z-index: 10; }
+.content { padding: 16px; }
+.spacer { flex: 1; }

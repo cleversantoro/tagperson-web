@@ -1,0 +1,9 @@
+.wrap { display: grid; gap: 12px; }
+.content { display: grid; grid-template-columns: 3fr 1fr; gap: 12px; }
+.attrs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+@media (max-width: 1100px){ .attrs{ grid-template-columns: repeat(2, 1fr); } }
+.content { align-items: start; }
+@media (max-width: 1200px){ .content { grid-template-columns: 1fr; } }
+.attr { padding: 10px; }
+.val { font-size: 28px; font-weight: 700; margin: 6px 0 2px; }
+.range { opacity: .65; font-size: 12px; }

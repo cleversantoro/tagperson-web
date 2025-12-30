@@ -1,0 +1,164 @@
+<div class="wrap">
+  <div class="left">
+    <mat-card>
+      <mat-card-title>Caracteristicas Fisicas</mat-card-title>
+      <mat-card-content class="grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Olhos</mat-label>
+          <input matInput [value]="sheet.caracteristicas.olhos ?? ''" readonly />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Cabelo</mat-label>
+          <input matInput [value]="sheet.caracteristicas.cabelo ?? ''" readonly />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Pele</mat-label>
+          <input matInput [value]="sheet.caracteristicas.pele ?? ''" readonly />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Idade</mat-label>
+          <input matInput type="number" [value]="sheet.caracteristicas.idade ?? 0" readonly />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Peso</mat-label>
+          <input matInput type="number" [value]="sheet.caracteristicas.peso ?? 0" readonly />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Altura</mat-label>
+          <input matInput type="number" [value]="sheet.caracteristicas.altura ?? 0" readonly />
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Aparencia</mat-card-title>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="full">
+          <textarea
+            matInput
+            rows="4"
+            [value]="sheet.caracteristicas.aparencia ?? ''"
+            (blur)="updateText('aparencia', ($any($event.target)).value)"
+          ></textarea>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="row">
+      <mat-card>
+        <mat-card-title>Personalidade e Objetivos</mat-card-title>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full">
+            <textarea
+              matInput
+              rows="8"
+              [value]="sheet.caracteristicas.personalidadeObjetivos ?? ''"
+              readonly
+            ></textarea>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Historia</mat-card-title>
+        <mat-card-content>
+          <mat-form-field appearance="outline" class="full">
+            <textarea
+              matInput
+              rows="8"
+              [value]="sheet.caracteristicas.historia ?? ''"
+              (blur)="updateText('historia', ($any($event.target)).value)"
+            ></textarea>
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="right">
+    <mat-card>
+      <mat-card-title>Pertences e Afins</mat-card-title>
+      <mat-card-content>
+        <div class="selectors">
+          <mat-form-field appearance="outline">
+            <mat-label>Selecione o Grupo</mat-label>
+            <mat-select (selectionChange)="selectGroup($event.value)">
+              @for (g of groups(); track g.group.id) {
+                <mat-option [value]="g.group.id">{{g.group.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Equipamento</mat-label>
+            <mat-select (selectionChange)="selectEquipment($event.value)">
+              @for (e of items(); track e.id) {
+                <mat-option [value]="e.id">{{e.name}}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button type="button" class="add-btn" (click)="addEquipment()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descricao</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (sheet.caracteristicas.pertences.length === 0) {
+              <tr><td colspan="3" class="muted">Sem dados.</td></tr>
+            } @else {
+              @for (p of sheet.caracteristicas.pertences; track p.equipmentId) {
+                <tr>
+                  <td>{{p.nome}}{{p.quantidade && p.quantidade > 1 ? (' x' + p.quantidade) : ''}}</td>
+                  <td>{{equipmentDescription(p.equipmentId)}}</td>
+                  <td>{{equipmentValue(p.equipmentId)}}</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="row">
+      <mat-card>
+        <mat-card-title>Dinheiro</mat-card-title>
+        <mat-card-content class="money">
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Cobre</mat-label>
+            <input matInput type="number" [value]="sheet.caracteristicas.dinheiro.cobre" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Prata</mat-label>
+            <input matInput type="number" [value]="sheet.caracteristicas.dinheiro.prata" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Ouro</mat-label>
+            <input matInput type="number" [value]="sheet.caracteristicas.dinheiro.ouro" readonly />
+          </mat-form-field>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Equipamentos Iniciais</mat-card-title>
+        <mat-card-content>
+          <div class="equip-list">
+            @if (sheet.caracteristicas.equipamentosIniciais.length === 0) {
+              <div class="muted">Sem dados.</div>
+            } @else {
+              @for (e of sheet.caracteristicas.equipamentosIniciais; track e) {
+                <div>{{e}}</div>
+              }
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

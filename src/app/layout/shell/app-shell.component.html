@@ -1,0 +1,26 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav mode="side" opened class="left">
+    <app-character-list />
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="top" color="primary">
+      <span>Gerador de Personagens Tagmar (Web)</span>
+      <span class="spacer"></span>
+
+      <button mat-icon-button matTooltip="Salvar">
+        <mat-icon>save</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Exportar">
+        <mat-icon>download</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Ajuda">
+        <mat-icon>help</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <main class="content">
+      <app-character-page />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

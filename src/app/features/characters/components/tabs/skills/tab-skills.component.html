@@ -1,0 +1,101 @@
+<div class="wrap">
+  <div class="summary">
+    <div><strong>Pontos para Aquisicao:</strong> {{sheet.pontos?.habilidade ?? 0}}</div>
+    <div><strong>Habilidades Compradas:</strong> {{skillsBought()}}</div>
+    <div><strong>Habilidades a Comprar:</strong> {{skillsToBuy()}}</div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="add-btn" (click)="openAddSkill()">+ Nova habilidade</button>
+  </div>
+
+  <div class="grid">
+    @for (g of filteredGroups(); track g.group.id) {
+      <mat-card class="card">
+        <mat-card-title>{{g.group.name}}</mat-card-title>
+        <mat-card-content>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Habilidade</th>
+                <th>Restrito</th>
+                <th>Nivel</th>
+                <th>Custo</th>
+                <th>Ajuste</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of g.skills; track s.id) {
+                <tr>
+                  <td>
+                    @if (s.hasSpecialization) {
+                      <button type="button" class="spec-btn" (click)="openSpecializations(s)">...</button>
+                    }
+                    <span>{{s.name}}</span>
+                  </td>
+                  <td>{{isRestricted(s) ? 'SIM' : ''}}</td>
+                  <td>{{levelOf(s.id)}}</td>
+                  <td>{{s.cost ?? 0}}</td>
+                  <td>{{(s.attributeCode ?? '').toUpperCase()}}</td>
+                  <td>{{totalOf(s)}}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    }
+  </div>
+
+  @if (addSkillOpen()) {
+    <div class="modal-backdrop" (click)="closeAddSkill()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Adicionar habilidade</h3>
+        <label class="field">
+          <span>Habilidade</span>
+          <select [value]="selectedSkillId() ?? ''" (change)="selectedSkillId.set(+($any($event.target).value))">
+            @for (s of availableSkills(); track s.id) {
+              <option [value]="s.id">{{s.name}}</option>
+            }
+          </select>
+        </label>
+        <label class="field">
+          <span>Nivel</span>
+          <input type="number" min="0" [value]="newSkillLevel()" (input)="newSkillLevel.set(+$any($event.target).value)" />
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="ghost-btn" (click)="closeAddSkill()">Cancelar</button>
+          <button type="button" class="primary-btn" (click)="saveSkill()" [disabled]="!selectedSkillId()">Salvar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (specializationOpen()) {
+    <div class="modal-backdrop" (click)="closeSpecializations()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Especializacoes - {{specializationSkillName()}}</h3>
+        @if (specializationLoading()) {
+          <p>Carregando...</p>
+        } @else if (specializationRows().length === 0) {
+          <p>Nenhuma especializacao cadastrada.</p>
+        } @else {
+          <ul class="spec-list">
+            @for (sp of specializationRows(); track sp.id) {
+              <li>
+                <span>{{sp.specialization ?? ''}}</span>
+                @if ((sp.nivel ?? 0) > 0) {
+                  <span class="spec-level">Nivel {{sp.nivel}}</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+        <div class="modal-actions">
+          <button type="button" class="primary-btn" (click)="closeSpecializations()">Fechar</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

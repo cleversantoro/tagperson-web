@@ -1,0 +1,33 @@
+<mat-card class="card">
+  <mat-card-title>ATRIBUTOS</mat-card-title>
+  <mat-card-content class="rows">
+    <div class="row">
+      <span class="label">Resistencia Fisica:</span>
+      <span class="value">{{sheet.derivados.resistenciaFisica}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Resistencia a Magia:</span>
+      <span class="value">{{sheet.derivados.resistenciaMagia}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Velocidade:</span>
+      <span class="value">{{sheet.derivados.velocidade}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Karma:</span>
+      <span class="value">{{sheet.derivados.karma}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Defesa (Ativa/Passiva):</span>
+      <span class="value">{{sheet.derivados.defesaAtiva}}/{{sheet.derivados.defesaPassiva}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Energia Fisica (Absorcao):</span>
+      <span class="value">{{sheet.derivados.energiaFisicaAtual}}/{{sheet.derivados.energiaFisicaMax}}</span>
+    </div>
+    <div class="row">
+      <span class="label">Energia Heroica:</span>
+      <span class="value">{{sheet.derivados.energiaHeroica}}</span>
+    </div>
+  </mat-card-content>
+</mat-card>

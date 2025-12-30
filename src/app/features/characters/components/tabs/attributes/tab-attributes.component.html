@@ -1,0 +1,24 @@
+<div class="wrap">
+  <mat-card class="points">
+    <mat-card-title>PONTOS: {{sheet.atributos.pointsUsed}} | {{sheet.atributos.pointsTotal}}</mat-card-title>
+  </mat-card>
+
+  <div class="content">
+    <div class="attrs">
+      @for (k of keys; track k) {
+        <mat-card class="attr">
+          <mat-card-title>{{labels[k]}}</mat-card-title>
+          <div class="val">{{value(k)}}</div>
+
+          <mat-slider min="-4" max="6" step="1" discrete>
+            <input matSliderThumb [value]="value(k)" (valueChange)="set(k, $event)">
+          </mat-slider>
+
+          <div class="range">-4 valor +6</div>
+        </mat-card>
+      }
+    </div>
+
+    <app-attributes-card [sheet]="sheet" />
+  </div>
+</div>

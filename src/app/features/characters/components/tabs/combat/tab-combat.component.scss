@@ -1,0 +1,9 @@
+.wrap { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; }
+.left, .center, .right { display: grid; gap: 12px; }
+@media (max-width: 1200px){ .wrap { grid-template-columns: 1fr; } }
+.gear { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.weapon { width: 100%; margin-bottom: 8px; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th, .tbl td { border: 1px solid rgba(0,0,0,.1); padding: 6px 8px; }
+.tbl th { background: #f2f2f2; text-align: left; }
+.muted { color: #777; text-align: center; }

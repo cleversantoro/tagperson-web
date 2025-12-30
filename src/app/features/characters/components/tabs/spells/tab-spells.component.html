@@ -1,0 +1,106 @@
+<div class="wrap">
+  <div class="left">
+    <mat-card>
+      <mat-card-title>Magias Basicas</mat-card-title>
+      <mat-card-content>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Magia</th>
+              <th>Nivel</th>
+              <th>Custo</th>
+              <th>Total</th>
+              <th class="icon-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of basicas(); track s.id) {
+              <tr>
+                <td>{{s.name}}</td>
+                <td>{{levelOf(s.id)}}</td>
+                <td>{{s.cost ?? 0}}</td>
+                <td>{{totalOf(s)}}</td>
+                <td class="icon-col">
+                  <button mat-icon-button (click)="selectSpell(s)">
+                    <mat-icon>help_outline</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="center">
+    <mat-card>
+      <mat-card-title>Magias da Especializacao</mat-card-title>
+      <mat-card-content>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Magia</th>
+              <th>Nivel</th>
+              <th>Custo</th>
+              <th>Total</th>
+              <th class="icon-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of especializacao(); track s.id) {
+              <tr>
+                <td>{{s.name}}</td>
+                <td>{{levelOf(s.id)}}</td>
+                <td>{{s.cost ?? 0}}</td>
+                <td>{{totalOf(s)}}</td>
+                <td class="icon-col">
+                  <button mat-icon-button (click)="selectSpell(s)">
+                    <mat-icon>help_outline</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="right">
+    <mat-card>
+      <mat-card-title>Detalhes</mat-card-title>
+      <mat-card-content class="details">
+        <mat-form-field appearance="outline">
+          <mat-label>Nome</mat-label>
+          <input matInput [value]="selected()?.name ?? ''" readonly />
+        </mat-form-field>
+
+        <div class="row">
+          <mat-form-field appearance="outline">
+            <mat-label>Evocacao</mat-label>
+            <input matInput [value]="selected()?.evocation ?? ''" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Alcance</mat-label>
+            <input matInput [value]="selected()?.range ?? ''" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Duracao</mat-label>
+            <input matInput [value]="selected()?.duration ?? ''" readonly />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Efeitos</mat-label>
+          <textarea matInput rows="6" [value]="effectsText()" readonly></textarea>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Descricao</mat-label>
+          <textarea matInput rows="8" [value]="selected()?.description ?? ''" readonly></textarea>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

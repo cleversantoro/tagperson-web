@@ -1,0 +1,17 @@
+@if (store.selected(); as sheet) {
+  <app-character-header [sheet]="sheet" />
+
+  <div class="grid">
+    <section class="main">
+      <mat-tab-group>
+        <mat-tab label="Atributos"><app-tab-attributes [sheet]="sheet" /></mat-tab>
+        <mat-tab label="Habilidades"><app-tab-skills [sheet]="sheet" /></mat-tab>
+        <mat-tab label="Combate"><app-tab-combat [sheet]="sheet" /></mat-tab>
+        <mat-tab label="Magias"><app-tab-spells [sheet]="sheet" /></mat-tab>
+        <mat-tab label="Caracteristicas"><app-tab-traits [sheet]="sheet" /></mat-tab>
+      </mat-tab-group>
+    </section>
+  </div>
+} @else {
+  <p>Nenhum personagem selecionado.</p>
+}

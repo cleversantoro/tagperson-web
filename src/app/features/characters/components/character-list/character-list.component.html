@@ -1,0 +1,20 @@
+<div class="wrap">
+  <mat-form-field appearance="outline" class="search">
+    <mat-label>Buscar</mat-label>
+    <input matInput (input)="q.set(($any($event.target)).value)" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" class="add" (click)="create()">
+    <mat-icon>add</mat-icon> Novo
+  </button>
+
+  <mat-nav-list>
+    @for (c of filtered(); track c.id) {
+      <a mat-list-item (click)="store.select(c.id)" [class.active]="store.selectedId() === c.id">
+        <span>{{c.profissao}} </span>
+        <span>{{c.nome}} </span>
+        <span class="lvl"> Nível {{c.nivel}}</span>
+      </a>
+    }
+  </mat-nav-list>
+</div>

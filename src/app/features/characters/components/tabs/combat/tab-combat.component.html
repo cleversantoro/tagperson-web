@@ -1,0 +1,145 @@
+<div class="wrap">
+  <div class="left">
+    <mat-card>
+      <mat-card-title>Armaduras, Elmos e Escudos</mat-card-title>
+      <mat-card-content class="gear">
+        <mat-form-field appearance="outline">
+          <mat-label>Armadura</mat-label>
+          <mat-select [value]="sheet.combate.armadura" (selectionChange)="setGear('armadura', $event.value)">
+            @for (e of armaduras(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Elmo</mat-label>
+          <mat-select [value]="sheet.combate.elmo" (selectionChange)="setGear('elmo', $event.value)">
+            @for (e of elmos(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Escudo</mat-label>
+          <mat-select [value]="sheet.combate.escudo" (selectionChange)="setGear('escudo', $event.value)">
+            @for (e of escudos(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Tecnicas Basicas</mat-card-title>
+      <mat-card-content>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Nivel</th>
+              <th>Custo</th>
+              <th>Ajuste</th>
+              <th>Total</th>
+              <th>Categoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (i of basicas(); track i.id) {
+              <tr>
+                <td>{{i.name}}</td>
+                <td>{{levelOf(i.id)}}</td>
+                <td>{{i.cost ?? 0}}</td>
+                <td>{{(i.attributeCode ?? '').toUpperCase()}}</td>
+                <td>{{totalOf(i)}}</td>
+                <td>{{categoryName(i.categoryId)}}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="center">
+    <mat-card>
+      <mat-card-title>Arma</mat-card-title>
+      <mat-card-content>
+        <mat-form-field appearance="outline" class="weapon">
+          <mat-label>Arma</mat-label>
+          <mat-select [value]="sheet.combate.arma" (selectionChange)="setGear('arma', $event.value)">
+            @for (e of armas(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
+          </mat-select>
+        </mat-form-field>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Descricao</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td colspan="3" class="muted">Sem dados.</td></tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>Tecnicas da Especializacao</mat-card-title>
+      <mat-card-content>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Nivel</th>
+              <th>Custo</th>
+              <th>Ajuste</th>
+              <th>Total</th>
+              <th>Categoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (i of especializacao(); track i.id) {
+              <tr>
+                <td>{{i.name}}</td>
+                <td>{{levelOf(i.id)}}</td>
+                <td>{{i.cost ?? 0}}</td>
+                <td>{{(i.attributeCode ?? '').toUpperCase()}}</td>
+                <td>{{totalOf(i)}}</td>
+                <td>{{categoryName(i.categoryId)}}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="right">
+    <mat-card>
+      <mat-card-title>Tecnicas Restritas a Profissao</mat-card-title>
+      <mat-card-content>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Nivel</th>
+              <th>Custo</th>
+              <th>Ajuste</th>
+              <th>Total</th>
+              <th>Categoria</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (i of restritas(); track i.id) {
+              <tr>
+                <td>{{i.name}}</td>
+                <td>{{levelOf(i.id)}}</td>
+                <td>{{i.cost ?? 0}}</td>
+                <td>{{(i.attributeCode ?? '').toUpperCase()}}</td>
+                <td>{{totalOf(i)}}</td>
+                <td>{{categoryName(i.categoryId)}}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
