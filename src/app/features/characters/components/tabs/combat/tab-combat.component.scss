@@ -1,9 +1,15 @@
 .wrap { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 12px; }
 .left, .center, .right { display: grid; gap: 12px; }
 @media (max-width: 1200px){ .wrap { grid-template-columns: 1fr; } }
-.gear { display: grid; grid-template-columns: 1fr; gap: 8px; }
-.weapon { width: 100%; margin-bottom: 8px; }
 .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
 .tbl th, .tbl td { border: 1px solid rgba(0,0,0,.1); padding: 6px 8px; }
 .tbl th { background: #f2f2f2; text-align: left; }
-.muted { color: #777; text-align: center; }
+.actions { display: flex; justify-content: flex-end; }
+.add-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+.modal { background: #fff; border-radius: 10px; padding: 16px; width: min(520px, 92vw); box-shadow: 0 20px 60px rgba(0,0,0,.2); display: grid; gap: 12px; }
+.field { display: grid; gap: 6px; font-size: 13px; }
+.field select, .field input { padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,.2); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.primary-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.ghost-btn { border: 1px solid rgba(0,0,0,.2); background: #fff; color: #111827; padding: 6px 12px; border-radius: 6px; cursor: pointer; }

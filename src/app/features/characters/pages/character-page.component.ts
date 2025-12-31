@@ -5,6 +5,7 @@ import { CharacterHeaderComponent } from '../components/character-header/charact
 import { TabAttributesComponent } from '../components/tabs/attributes/tab-attributes.component';
 import { TabSkillsComponent } from '../components/tabs/skills/tab-skills.component';
 import { TabCombatComponent } from '../components/tabs/combat/tab-combat.component';
+import { TabWeaponComponent } from '../components/tabs/weapon/tab-weapon.component';
 import { TabSpellsComponent } from '../components/tabs/spells/tab-spells.component';
 import { TabTraitsComponent } from '../components/tabs/traits/tab-traits.component';
 import { CharacterStore } from '../../../core/services/character-store.service';
@@ -18,6 +19,7 @@ import { CharacterStore } from '../../../core/services/character-store.service';
     TabAttributesComponent,
     TabSkillsComponent,
     TabCombatComponent,
+    TabWeaponComponent,
     TabSpellsComponent,
     TabTraitsComponent
   ],

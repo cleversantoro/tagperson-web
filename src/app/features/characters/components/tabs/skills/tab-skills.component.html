@@ -53,9 +53,17 @@
       <div class="modal" (click)="$event.stopPropagation()">
         <h3>Adicionar habilidade</h3>
         <label class="field">
+          <span>Grupo</span>
+          <select [value]="selectedGroupId() ?? ''" (change)="onGroupChange($any($event.target).value ? +$any($event.target).value : null)">
+            @for (g of groupOptions(); track g.id) {
+              <option [value]="g.id ?? ''">{{g.name}}</option>
+            }
+          </select>
+        </label>
+        <label class="field">
           <span>Habilidade</span>
-          <select [value]="selectedSkillId() ?? ''" (change)="selectedSkillId.set(+($any($event.target).value))">
-            @for (s of availableSkills(); track s.id) {
+          <select [value]="selectedSkillId() ?? ''" (change)="selectedSkillId.set($any($event.target).value ? +$any($event.target).value : null)">
+            @for (s of filteredAvailableSkills(); track s.id) {
               <option [value]="s.id">{{s.name}}</option>
             }
           </select>
@@ -93,7 +101,36 @@
           </ul>
         }
         <div class="modal-actions">
+          <button type="button" class="ghost-btn" (click)="openAddSpecialization()">Nova especializacao</button>
           <button type="button" class="primary-btn" (click)="closeSpecializations()">Fechar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (addSpecializationOpen()) {
+    <div class="modal-backdrop" (click)="closeAddSpecialization()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Nova especializacao</h3>
+        <label class="field">
+          <span>Especializacao</span>
+          @if (specializationSuggestions().length === 0) {
+            <span>Sem sugestoes para esta habilidade.</span>
+          } @else {
+            <select [value]="selectedSpecializationId() ?? ''" (change)="onSpecializationChange($event)">
+              @for (s of specializationSuggestions(); track s.suggestion) {
+                <option [value]="s.id">{{s.suggestion}}</option>
+              }
+            </select>
+          }
+        </label>
+        <label class="field">
+          <span>Nivel</span>
+          <input type="number" min="0" [value]="newSpecializationLevel()" (input)="newSpecializationLevel.set(+$any($event.target).value)" />
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="ghost-btn" (click)="closeAddSpecialization()">Cancelar</button>
+          <button type="button" class="primary-btn" (click)="saveSpecialization()" [disabled]="!selectedSpecializationId() || !selectedSpecializationText().trim()">Salvar</button>
         </div>
       </div>
     </div>

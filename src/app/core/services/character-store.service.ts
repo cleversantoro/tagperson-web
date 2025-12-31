@@ -70,6 +70,11 @@ export class CharacterStore {
     await this.select(characterId);
   }
 
+  async addCombatSkill(characterId: number, combatSkillId: number, level?: number) {
+    await this.api.addCombatSkill(characterId, { combatSkillId, level: level ?? null });
+    await this.select(characterId);
+  }
+
   upsert(sheet: CharacterSheet, scheduleSave = true) {
     const list = this._characters();
     const idx = list.findIndex(x => x.id === sheet.id);

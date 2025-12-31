@@ -19,6 +19,7 @@ interface ApiCharacterSheet {
   player?: string | null;
   race?: { id: number; name: string } | null;
   profession?: { id: number; name: string } | null;
+  specialization?: { id: number; name: string } | null;
   attributes: {
     agi: number | null;
     per: number | null;
@@ -116,6 +117,11 @@ interface ApiAddSkillRequest {
   level?: number | null;
 }
 
+interface ApiAddCombatSkillRequest {
+  combatSkillId: number;
+  level?: number | null;
+}
+
 interface ApiCreateRequest {
   name: string;
   player?: string | null;
@@ -130,6 +136,13 @@ interface ApiCharacterSkillSpecialization {
   skillSpecializationId?: number | null;
   specialization?: string | null;
   level?: number | null;
+}
+
+interface ApiCharacterSkillSpecializationRequest {
+  specialization?: string | null;
+  level?: number | null;
+  skillSpecializationId?: number | null;
+  id?: number | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -156,11 +169,25 @@ export class CharacterApiService {
     await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/skills`, payload));
   }
 
+  async addCombatSkill(characterId: number, payload: ApiAddCombatSkillRequest): Promise<void> {
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/combat`, payload));
+  }
+
   async getSkillSpecializations(characterId: number, skillId: number): Promise<ApiCharacterSkillSpecialization[]> {
     return await firstValueFrom(
       this.http.get<ApiCharacterSkillSpecialization[]>(
         `${API_BASE_URL}/characters/${characterId}/skills/${skillId}/specializations`
       )
+    );
+  }
+
+  async addSkillSpecialization(
+    characterId: number,
+    skillId: number,
+    payload: ApiCharacterSkillSpecializationRequest
+  ): Promise<void> {
+    await firstValueFrom(
+      this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/skills/${skillId}/specializations`, payload)
     );
   }
 
@@ -236,6 +263,7 @@ export class CharacterApiService {
       jogador: sheet.player ?? '',
       raca: sheet.race?.name ?? '',
       profissao: sheet.profession?.name ?? '',
+      especializacao: sheet.specialization?.name ?? '',
       racaId: sheet.race?.id ?? null,
       profissaoId: sheet.profession?.id ?? null,
       experiencia: 0,

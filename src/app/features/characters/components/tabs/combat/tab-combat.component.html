@@ -1,29 +1,8 @@
 <div class="wrap">
   <div class="left">
-    <mat-card>
-      <mat-card-title>Armaduras, Elmos e Escudos</mat-card-title>
-      <mat-card-content class="gear">
-        <mat-form-field appearance="outline">
-          <mat-label>Armadura</mat-label>
-          <mat-select [value]="sheet.combate.armadura" (selectionChange)="setGear('armadura', $event.value)">
-            @for (e of armaduras(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Elmo</mat-label>
-          <mat-select [value]="sheet.combate.elmo" (selectionChange)="setGear('elmo', $event.value)">
-            @for (e of elmos(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Escudo</mat-label>
-          <mat-select [value]="sheet.combate.escudo" (selectionChange)="setGear('escudo', $event.value)">
-            @for (e of escudos(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
-          </mat-select>
-        </mat-form-field>
-      </mat-card-content>
-    </mat-card>
-
+    <div class="actions">
+      <button type="button" class="add-btn" (click)="openAddCombat()">+ Nova tecnica combate</button>
+    </div>
     <mat-card>
       <mat-card-title>Tecnicas Basicas</mat-card-title>
       <mat-card-content>
@@ -57,30 +36,6 @@
 
   <div class="center">
     <mat-card>
-      <mat-card-title>Arma</mat-card-title>
-      <mat-card-content>
-        <mat-form-field appearance="outline" class="weapon">
-          <mat-label>Arma</mat-label>
-          <mat-select [value]="sheet.combate.arma" (selectionChange)="setGear('arma', $event.value)">
-            @for (e of armas(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
-          </mat-select>
-        </mat-form-field>
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Descricao</th>
-              <th>Valor</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td colspan="3" class="muted">Sem dados.</td></tr>
-          </tbody>
-        </table>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card>
       <mat-card-title>Tecnicas da Especializacao</mat-card-title>
       <mat-card-content>
         <table class="tbl">
@@ -113,7 +68,7 @@
 
   <div class="right">
     <mat-card>
-      <mat-card-title>Tecnicas Restritas a Profissao</mat-card-title>
+      <mat-card-title>Tecnicas da Profissao</mat-card-title>
       <mat-card-content>
         <table class="tbl">
           <thead>
@@ -142,4 +97,28 @@
       </mat-card-content>
     </mat-card>
   </div>
+
+  @if (addCombatOpen()) {
+    <div class="modal-backdrop" (click)="closeAddCombat()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Nova tecnica combate</h3>
+        <label class="field">
+          <span>Tecnica basica</span>
+          <select [value]="selectedCombatId() ?? ''" (change)="selectedCombatId.set($any($event.target).value ? +$any($event.target).value : null)">
+            @for (t of availableBasicTechniques(); track t.id) {
+              <option [value]="t.id">{{t.name}}</option>
+            }
+          </select>
+        </label>
+        <label class="field">
+          <span>Nivel</span>
+          <input type="number" min="0" [value]="newCombatLevel()" (input)="newCombatLevel.set(+$any($event.target).value)" />
+        </label>
+        <div class="modal-actions">
+          <button type="button" class="ghost-btn" (click)="closeAddCombat()">Cancelar</button>
+          <button type="button" class="primary-btn" (click)="saveCombat()" [disabled]="!selectedCombatId()">Salvar</button>
+        </div>
+      </div>
+    </div>
+  }
 </div>

@@ -34,3 +34,9 @@ export interface SkillGroupWithSkills {
   group: SkillGroup;
   skills: SkillFromGroup[];
 }
+
+export interface SkillSpecializationSuggestion {
+  id: number;
+  skillId: number;
+  suggestion?: string | null;
+}

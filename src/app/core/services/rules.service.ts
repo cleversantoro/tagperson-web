@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from './api-config';
 import { AuthService } from './auth.service';
-import { SkillFromGroup, SkillGroup, SkillGroupWithSkills, EquipmentLookup, CategoryLookup } from '../models/rules.models';
+import { SkillFromGroup, SkillGroup, SkillGroupWithSkills, SkillSpecializationSuggestion, EquipmentLookup, CategoryLookup } from '../models/rules.models';
 import { CombatGroup, CombatGroupWithItems, CombatFromGroup } from '../models/combat.models';
 import { SpellGroup, SpellGroupWithSpells, SpellFromGroup } from '../models/spells.models';
 import { EquipmentGroup, EquipmentGroupWithItems, EquipmentFromGroup } from '../models/equipment.models';
@@ -132,5 +132,13 @@ export class RulesService {
     }));
 
     this.equipmentGroups.set(merged);
+  }
+
+  async getSkillSpecializationSuggestions(skillId: number): Promise<SkillSpecializationSuggestion[]> {
+    const ok = await this.auth.ensureToken();
+    if (!ok) return [];
+    return await firstValueFrom(
+      this.http.get<SkillSpecializationSuggestion[]>(`${API_BASE_URL}/skills/${skillId}/specializations`)
+    );
   }
 }
