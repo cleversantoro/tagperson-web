@@ -13,6 +13,12 @@ export interface CombatFromGroup {
   hasSpecialization?: number | null;
   attributeCode?: string | null;
   categoryId?: number | null;
+  effect?: string | null;
+  improvement?: string | null;
+  notes?: string | null;
+  reduction?: number | null;
+  requisite?: string | null;
+  rollTable?: number | null;
 }
 
 export interface CombatGroupWithItems {

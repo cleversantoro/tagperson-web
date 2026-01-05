@@ -8,6 +8,7 @@ import { TabCombatComponent } from '../components/tabs/combat/tab-combat.compone
 import { TabWeaponComponent } from '../components/tabs/weapon/tab-weapon.component';
 import { TabSpellsComponent } from '../components/tabs/spells/tab-spells.component';
 import { TabTraitsComponent } from '../components/tabs/traits/tab-traits.component';
+import { TabCharacterizationComponent } from "../components/tabs/characterization/tab-characterization.component";
 import { CharacterStore } from '../../../core/services/character-store.service';
 
 @Component({
@@ -21,8 +22,9 @@ import { CharacterStore } from '../../../core/services/character-store.service';
     TabCombatComponent,
     TabWeaponComponent,
     TabSpellsComponent,
-    TabTraitsComponent
-  ],
+    TabTraitsComponent,
+    TabCharacterizationComponent
+],
   templateUrl: './character-page.component.html',
   styleUrl: './character-page.component.scss'
 })

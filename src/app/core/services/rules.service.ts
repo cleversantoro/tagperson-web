@@ -72,7 +72,7 @@ export class RulesService {
 
   private async loadCombat(groups: CombatGroup[]) {
     const childrenLists = await Promise.all(
-      groups.map(g => firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups/${g.id}/children`)))
+      groups.map(g => firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups/${g.id}/combat_children`)))
     );
 
     // const flatGroups = childrenLists.flatMap((children, idx) =>
@@ -82,7 +82,7 @@ export class RulesService {
     const flatGroups = this.mergeGroupsPreferParents(groups, childrenLists);
 
     const itemsLists = await Promise.all(
-      flatGroups.map(g => firstValueFrom(this.http.get<CombatFromGroup[]>(`${API_BASE_URL}/combat/groups/${g.id}/items`)))
+      flatGroups.map(g => firstValueFrom(this.http.get<CombatFromGroup[]>(`${API_BASE_URL}/combat/groups/${g.id}/combat_items`)))
     );
 
     const merged: CombatGroupWithItems[] = flatGroups.map((group, idx) => ({
