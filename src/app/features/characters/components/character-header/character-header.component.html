@@ -1,4 +1,5 @@
 <form class="row" [formGroup]="form">
+
   <mat-form-field appearance="outline">
     <mat-label>Nome</mat-label>
     <input matInput formControlName="nome" (blur)="commit()" />
@@ -15,6 +16,11 @@
   </mat-form-field>
 
   <mat-form-field appearance="outline">
+    <mat-label>Especialização</mat-label>
+    <input matInput formControlName="especializacao" (blur)="commit()" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
     <mat-label>Raca</mat-label>
     <mat-select formControlName="racaId" (selectionChange)="commit()">
       @for (r of racas(); track r.id) { <mat-option [value]="r.id">{{r.name}}</mat-option> }
@@ -26,6 +32,16 @@
     <mat-select formControlName="profissaoId" (selectionChange)="commit()">
       @for (p of profs(); track p.id) { <mat-option [value]="p.id">{{p.name}}</mat-option> }
     </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Classe Social</mat-label>
+    <input matInput formControlName="classeSocial" (blur)="commit()" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Local Nascimento</mat-label>
+    <input matInput formControlName="localidade" (blur)="commit()" />
   </mat-form-field>
 
   <mat-form-field appearance="outline">

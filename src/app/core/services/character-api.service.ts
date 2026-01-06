@@ -8,18 +8,22 @@ interface ApiCharacterListItem {
   id: number;
   name: string;
   level: number | null;
-  race?: { id: number; name: string }  | null;
-  profession?: { id: number; name: string }  | null;
+  race?: { id: number; name: string } | null;
+  profession?: { id: number; name: string } | null;
 }
 
 interface ApiCharacterSheet {
   id: number;
   name: string;
   level: number | null;
+  experience?: number | null;
   player?: string | null;
   race?: { id: number; name: string } | null;
   profession?: { id: number; name: string } | null;
   specialization?: { id: number; name: string } | null;
+  classSocial?: { id: number; name: string } | null;
+  birthPlace?: { id: number; name: string } | null;
+  deity?: { id: number; name: string } | null;
   attributes: {
     agi: number | null;
     per: number | null;
@@ -45,9 +49,9 @@ interface ApiCharacterSheet {
     appearance?: string | null;
     history?: string | null;
     coins: {
-      coinsCopper: number | null;
-      coinsSilver: number | null;
-      coinsGold: number | null;
+      copper: number | null;
+      silver: number | null;
+      gold: number | null;
     };
   };
   derived: {
@@ -152,7 +156,7 @@ interface ApiCharacterSkillSpecializationRequest {
 
 @Injectable({ providedIn: 'root' })
 export class CharacterApiService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   async list(): Promise<ApiCharacterListItem[]> {
     return await firstValueFrom(this.http.get<ApiCharacterListItem[]>(`${API_BASE_URL}/characters`));
@@ -221,6 +225,11 @@ export class CharacterApiService {
       nivel: item.level ?? 0,
       raca: item.race?.name ?? '',
       profissao: item.profession?.name ?? '',
+      classeSocial: '',
+      especializacao: '',
+      jogador: '',
+      localidade: '',
+      divindade: '',
       experiencia: 0,
       estagio: 0,
       atributos: {
@@ -276,11 +285,14 @@ export class CharacterApiService {
       jogador: sheet.player ?? '',
       raca: sheet.race?.name ?? '',
       profissao: sheet.profession?.name ?? '',
+      profissaoId: sheet.profession?.id ?? null,
       especializacao: sheet.specialization?.name ?? '',
       racaId: sheet.race?.id ?? null,
-      profissaoId: sheet.profession?.id ?? null,
-      experiencia: 0,
-      estagio: 0,
+      classeSocial: sheet.classSocial?.name ?? '',
+      localidade: sheet.birthPlace?.name ?? '',
+      divindade: sheet.deity?.name ?? '',
+      experiencia: sheet.experience ?? 0,
+      estagio: sheet.level ?? 0,
       atributos: {
         pointsTotal: sheet.points.pointsSkill ?? 0,
         pointsUsed: 0,
@@ -350,9 +362,9 @@ export class CharacterApiService {
           return e.name;
         }) ?? [],
         dinheiro: {
-          cobre: sheet.features.coins.coinsCopper ?? 0,
-          prata: sheet.features.coins.coinsSilver ?? 0,
-          ouro: sheet.features.coins.coinsGold ?? 0
+          cobre: sheet.features.coins.copper ?? 0,
+          prata: sheet.features.coins.silver ?? 0,
+          ouro: sheet.features.coins.gold ?? 0
         }
       },
       caracterizacoes: sheet.characterizations?.map(c => ({

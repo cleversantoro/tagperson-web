@@ -111,6 +111,7 @@ export interface CharacterSheet {
 
   jogador?: string;
   divindade?: string;
+  localidade?: string;
 
   raca: Race;
   racaId?: number | null;

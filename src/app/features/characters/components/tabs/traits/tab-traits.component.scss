@@ -16,4 +16,5 @@
 .money { display: grid; gap: 8px; }
 .equip-list { max-height: 220px; overflow: auto; display: grid; gap: 4px; }
 .selectors { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+.selectorsmoney { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .add-btn { margin-top: 2px; }
