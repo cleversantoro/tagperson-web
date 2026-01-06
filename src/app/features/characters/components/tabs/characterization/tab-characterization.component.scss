@@ -17,3 +17,35 @@
 .equip-list { max-height: 220px; overflow: auto; display: grid; gap: 4px; }
 .selectors { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .add-btn { margin-top: 2px; }
+.table-container {
+  overflow-x: auto;
+  margin-top: 8px;
+}
+
+.caracterizacoes-table {
+  width: 100%;
+  font-size: 13px;
+
+  th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid #ddd;
+  }
+
+  td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+  }
+
+  tr:hover {
+    background-color: #fafafa;
+  }
+
+  .muted {
+    color: #999;
+    text-align: center;
+    padding: 16px !important;
+  }
+}

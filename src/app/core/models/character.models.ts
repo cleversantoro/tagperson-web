@@ -83,6 +83,12 @@ export interface CombatState {
   tecnicasRestritas: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
 }
 
+export interface CharacterizationRow {
+  id: number;
+  nome: string;
+  nivel?: number | null;
+}
+
 export interface Traits {
   olhos?: string;
   cabelo?: string;
@@ -124,6 +130,7 @@ export interface CharacterSheet {
   magias: SpellRow[];
   combate: CombatState;
   caracteristicas: Traits;
+  caracterizacoes: CharacterizationRow[];
 
   updatedAt: string;
 }

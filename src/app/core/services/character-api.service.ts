@@ -88,6 +88,11 @@ interface ApiCharacterSheet {
     name: string;
     qty?: number | null;
   }>;
+  characterizations: Array<{
+    characterizationId: number;
+    name: string;
+    level?: number | null;
+  }>;
 }
 
 interface ApiUpdateRequest {
@@ -202,6 +207,13 @@ export class CharacterApiService {
     }));
   }
 
+  async addCharacterization(characterId: number, characterizationId: number, level?: number): Promise<void> {
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/characterizations`, {
+      characterizationId,
+      level
+    }));
+  }
+
   mapListItem(item: ApiCharacterListItem): CharacterSheet {
     return {
       id: item.id,
@@ -239,6 +251,7 @@ export class CharacterApiService {
       magias: [],
       combate: { tecnicas: [], tecnicasBasicas: [], tecnicasEspecializacao: [], tecnicasRestritas: [] },
       caracteristicas: { pertences: [], equipamentosIniciais: [], dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
+      caracterizacoes: [],
       updatedAt: new Date().toISOString()
     };
   }
@@ -342,6 +355,11 @@ export class CharacterApiService {
           ouro: sheet.features.coins.coinsGold ?? 0
         }
       },
+      caracterizacoes: sheet.characterizations?.map(c => ({
+        id: c.characterizationId,
+        nome: c.name,
+        nivel: c.level ?? null
+      })) ?? [],
       updatedAt: new Date().toISOString()
     };
   }

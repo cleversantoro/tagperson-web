@@ -65,6 +65,11 @@ export class CharacterStore {
     await this.select(characterId);
   }
 
+  async addCharacterization(characterId: number, characterizationId: number, level?: number) {
+    await this.api.addCharacterization(characterId, characterizationId, level);
+    await this.select(characterId);
+  }
+
   async addSkill(characterId: number, skillId: number, level?: number) {
     await this.api.addSkill(characterId, { skillId, level: level ?? null });
     await this.select(characterId);
