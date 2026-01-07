@@ -128,20 +128,20 @@
 
     <!-- <div class="row"> -->
 
-    <!-- <mat-card>
+     <mat-card>
         <mat-card-title>Equipamentos Iniciais</mat-card-title>
         <mat-card-content>
           <div class="equip-list">
-            @if (sheet.caracteristicas.equipamentosIniciais.length === 0) {
+            @if (sheet.equipamentosIniciais.length === 0) {
             <div class="muted">Sem dados.</div>
             } @else {
-            @for (e of sheet.caracteristicas.equipamentosIniciais; track e) {
-            <div>{{e}}</div>
-            }
+                @for (e of sheet.equipamentosIniciais; track e) {
+                    <div>{{e.nome}}</div>
+                }
             }
           </div>
         </mat-card-content>
-      </mat-card> -->
+      </mat-card>
     <!-- </div> -->
   </div>
 </div>

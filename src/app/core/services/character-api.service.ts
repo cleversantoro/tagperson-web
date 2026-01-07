@@ -18,6 +18,7 @@ interface ApiCharacterSheet {
   level: number | null;
   experience?: number | null;
   player?: string | null;
+  imageFile?: string | null;
   race?: { id: number; name: string } | null;
   profession?: { id: number; name: string } | null;
   specialization?: { id: number; name: string } | null;
@@ -48,11 +49,11 @@ interface ApiCharacterSheet {
     skin?: string | null;
     appearance?: string | null;
     history?: string | null;
-    coins: {
-      copper: number | null;
-      silver: number | null;
-      gold: number | null;
-    };
+  };
+  coins: {
+    copper: number | null;
+    silver: number | null;
+    gold: number | null;
   };
   derived: {
     resistenciaFisica: number;
@@ -96,6 +97,9 @@ interface ApiCharacterSheet {
     characterizationId: number;
     name: string;
     level?: number | null;
+  }>;
+  startingEquipments: Array<{
+    name: string;
   }>;
 }
 
@@ -259,8 +263,9 @@ export class CharacterApiService {
       habilidades: [],
       magias: [],
       combate: { tecnicas: [], tecnicasBasicas: [], tecnicasEspecializacao: [], tecnicasRestritas: [] },
-      caracteristicas: { pertences: [], equipamentosIniciais: [], dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
+      caracteristicas: {pertences: [], dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
       caracterizacoes: [],
+      equipamentosIniciais:[],
       updatedAt: new Date().toISOString()
     };
   }
@@ -283,6 +288,7 @@ export class CharacterApiService {
       nome: sheet.name,
       nivel: sheet.level ?? 0,
       jogador: sheet.player ?? '',
+      imagem: sheet.imageFile ?? '',
       raca: sheet.race?.name ?? '',
       profissao: sheet.profession?.name ?? '',
       profissaoId: sheet.profession?.id ?? null,
@@ -353,24 +359,23 @@ export class CharacterApiService {
         aparencia: sheet.features.appearance ?? '',
         historia: sheet.features.history ?? '',
         pertences: sheet.equipments?.map(e => ({
-          equipmentId: e.equipmentId,
-          nome: e.name,
-          quantidade: e.qty ?? 1
-        })) ?? [],
-        equipamentosIniciais: sheet.equipments?.map(e => {
-          if (e.qty && e.qty > 1) return `${e.name} x${e.qty}`;
-          return e.name;
-        }) ?? [],
+           equipmentId: e.equipmentId,
+           nome: e.name,
+           quantidade: e.qty ?? 1
+         })) ?? [],
         dinheiro: {
-          cobre: sheet.features.coins.copper ?? 0,
-          prata: sheet.features.coins.silver ?? 0,
-          ouro: sheet.features.coins.gold ?? 0
+          cobre: sheet.coins.copper ?? 0,
+          prata: sheet.coins.silver ?? 0,
+          ouro: sheet.coins.gold ?? 0
         }
       },
       caracterizacoes: sheet.characterizations?.map(c => ({
         id: c.characterizationId,
         nome: c.name,
         nivel: c.level ?? null
+      })) ?? [],
+      equipamentosIniciais: sheet.startingEquipments?.map(c => ({
+        nome: c.name,
       })) ?? [],
       updatedAt: new Date().toISOString()
     };

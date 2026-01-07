@@ -89,6 +89,10 @@ export interface CharacterizationRow {
   nivel?: number | null;
 }
 
+export interface StartingEquipments {
+  nome: string;
+}
+
 export interface Traits {
   olhos?: string;
   cabelo?: string;
@@ -99,8 +103,7 @@ export interface Traits {
   aparencia?: string;
   personalidadeObjetivos?: string;
   historia?: string;
-  pertences: Array<{ equipmentId: number; nome: string; descricao?: string; valor?: string; quantidade?: number }>;
-  equipamentosIniciais: string[];
+  pertences: Array<{ equipmentId: number; nome: string;  quantidade?: number }>;
   dinheiro: Money;
 }
 
@@ -108,6 +111,7 @@ export interface CharacterSheet {
   id: number;
   nome: string;
   nivel: number;
+  imagem?: string;
 
   jogador?: string;
   divindade?: string;
@@ -132,6 +136,7 @@ export interface CharacterSheet {
   combate: CombatState;
   caracteristicas: Traits;
   caracterizacoes: CharacterizationRow[];
+  equipamentosIniciais: StartingEquipments[];
 
   updatedAt: string;
 }
