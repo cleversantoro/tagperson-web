@@ -215,6 +215,12 @@ export class CharacterApiService {
     }));
   }
 
+  async addSpell(characterId: number, spellId: number): Promise<void> {
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/spells`, {
+      spellId
+    }));
+  }
+
   async addCharacterization(characterId: number, characterizationId: number, level?: number): Promise<void> {
     await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/characterizations`, {
       characterizationId,
