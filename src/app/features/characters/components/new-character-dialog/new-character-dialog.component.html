@@ -1,0 +1,54 @@
+<h2 mat-dialog-title>Criar Novo Personagem</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome do Personagem</mat-label>
+      <input matInput formControlName="nome" />
+      @if (form.get('nome')?.hasError('required')) {
+      <mat-error>Nome é obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nome do Jogador</mat-label>
+      <input matInput formControlName="jogador" />
+      @if (form.get('jogador')?.hasError('required')) {
+      <mat-error>Jogador é obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Raça</mat-label>
+      <mat-select formControlName="racaId">
+        <mat-option [value]="0" disabled>Selecione uma raça</mat-option>
+        @for (r of racas(); track r.id) {
+        <mat-option [value]="r.id">{{r.name}}</mat-option>
+        }
+      </mat-select>
+      @if (form.get('racaId')?.hasError('required')) {
+      <mat-error>Raça é obrigatória</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Profissão</mat-label>
+      <mat-select formControlName="profissaoId">
+        <mat-option [value]="0" disabled>Selecione uma profissão</mat-option>
+        @for (p of profs(); track p.id) {
+        <mat-option [value]="p.id">{{p.name}}</mat-option>
+        }
+      </mat-select>
+      @if (form.get('profissaoId')?.hasError('required')) {
+      <mat-error>Profissão é obrigatória</mat-error>
+      }
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="form.invalid">
+    Criar
+  </button>
+</mat-dialog-actions>

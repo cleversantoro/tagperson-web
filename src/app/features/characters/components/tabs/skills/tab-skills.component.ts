@@ -18,6 +18,7 @@ export class TabSkillsComponent {
   @Input({ required: true }) set sheet(value: CharacterSheet) {
     this.sheetSignal.set(value);
   }
+
   get sheet(): CharacterSheet {
     return this.sheetSignal()!;
   }

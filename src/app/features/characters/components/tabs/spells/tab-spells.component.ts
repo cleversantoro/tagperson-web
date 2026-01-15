@@ -31,6 +31,14 @@ export class TabSpellsComponent {
     return map;
   });
 
+  private characterSpellIds = computed(() => {
+    const ids = new Set<number>();
+    for (const s of this.sheet.magias ?? []) {
+      ids.add(s.id);
+    }
+    return ids;
+  });
+
   basicas = computed(() => this.filterByName(this.groups(), 'bas'));
   especializacao = computed(() => this.filterByName(this.groups(), 'esp'));
 
@@ -59,9 +67,32 @@ export class TabSpellsComponent {
 
   private filterByName(groups: SpellGroupWithSpells[], hint: string) {
     const lowered = hint.toLowerCase();
+    const characterIds = this.characterSpellIds();
+
     const list = groups.filter(g => g.group.name.toLowerCase().includes(lowered));
-    if (list.length > 0) return list.flatMap(g => g.spells);
-    return groups.flatMap(g => g.spells);
+
+    if (list.length > 0) {
+      return list.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
+    }
+
+    return groups.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
+  }
+
+  private filterParentId(parentId: number) {
+    const groups = this.groups() ?? [];
+    const characterIds = this.characterSpellIds();
+
+    const list = groups.filter(g => g.group.parentId === parentId);
+
+    if (list.length > 0) {
+      return list.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
+    }
+
+    return groups
+    .filter(g => g.group.parentId === parentId)
+    .flatMap(g => g.spells)
+    .filter(s => characterIds.has(s.id));
+
   }
 }
 

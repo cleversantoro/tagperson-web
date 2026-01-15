@@ -17,6 +17,7 @@ export class TabCombatComponent {
   @Input({ required: true }) set sheet(value: CharacterSheet) {
     this.sheetSignal.set(value);
   }
+
   get sheet(): CharacterSheet {
     return this.sheetSignal()!;
   }

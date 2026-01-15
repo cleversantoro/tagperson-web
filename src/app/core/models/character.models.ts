@@ -1,14 +1,7 @@
-export type Race = 'Humano' | 'Elfo' | 'Anão' | 'Meio-Elfo' | 'Halfling' | string;
-export type Profession = 'Guerreiro' | 'Mago' | 'Ladino' | 'Sacerdote' | string;
-
-export type AttributeKey =
-  | 'AGILIDADE'
-  | 'PERCEPCAO'
-  | 'INTELECTO'
-  | 'AURA'
-  | 'CARISMA'
-  | 'FORCA'
-  | 'FISICO';
+export type Race = 'Humano' | 'Pequenino' | 'Anão' | 'Elfo Florestal' | 'Elfo Dourado' | 'Meio Elfo' | string;
+export type Profession = 'Guerreiro' | 'Ladino' | 'Sacerdote' | 'Mago' | 'Rastreador' | 'Bardo' | string;
+export type AttributeKey = 'AGILIDADE' | 'PERCEPCAO' | 'INTELECTO' | 'AURA' | 'CARISMA' | 'FORCA' | 'FISICO';
+export type SocialClass = 'Alta nobreza' | 'Artífice' | 'Baixa nobreza' | 'Ex-escravo' | 'Ex-servo' | 'Grande comerciante' | 'Livre' | 'Pequeno comerciante' | string;
 
 export interface Attributes {
   values: Record<AttributeKey, number>; // -4..+6 (igual a tela)
@@ -103,7 +96,7 @@ export interface Traits {
   aparencia?: string;
   personalidadeObjetivos?: string;
   historia?: string;
-  pertences: Array<{ equipmentId: number; nome: string;  quantidade?: number }>;
+  pertences: Array<{ equipmentId: number; nome: string; quantidade?: number }>;
   dinheiro: Money;
 }
 
@@ -121,7 +114,7 @@ export interface CharacterSheet {
   racaId?: number | null;
   profissao: Profession;
   profissaoId?: number | null;
-  classeSocial?: string;
+  classeSocial: SocialClass;
 
   experiencia: number;
   estagio: number;

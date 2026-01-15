@@ -53,6 +53,18 @@ export class CharacterStore {
     await this.select(created.id);
   }
 
+  async createNewWithDetails(nome: string, player: string, racaId: number, profissaoId: number) {
+    const created = await this.api.create({
+      name: nome,
+      player: player,
+      level: 1,
+      raceId: racaId,
+      professionId: profissaoId
+    });
+    this.upsert(this.api.mapSheet(created), false);
+    await this.select(created.id);
+  }
+
   async delete(id: number) {
     await this.api.delete(id);
     const next = this._characters().filter(x => x.id !== id);

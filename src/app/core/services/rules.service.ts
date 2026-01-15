@@ -30,17 +30,31 @@ export class RulesService {
 
   async load() {
     const ok = await this.auth.ensureToken();
+
     if (!ok) return;
-    const [races, profs, groups, combatGroups, spellGroups, equipmentGroups, equipments, categories] = await Promise.all([
-      firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/races`)),
-      firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/professions`)),
-      firstValueFrom(this.http.get<SkillGroup[]>(`${API_BASE_URL}/skills/groups`)),
-      firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups`)),
-      firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups`)),
-      firstValueFrom(this.http.get<EquipmentGroup[]>(`${API_BASE_URL}/equipments/groups`)),
-      firstValueFrom(this.http.get<EquipmentLookup[]>(`${API_BASE_URL}/lookups/equipments`)),
-      firstValueFrom(this.http.get<CategoryLookup[]>(`${API_BASE_URL}/lookups/categories`))
-    ]);
+    const [
+        races,
+        profs,
+        groups,
+        combatGroups,
+        spellGroups,
+        equipmentGroups,
+        equipments,
+        categories
+      ] = await Promise.all
+      (
+        [
+          firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/races`)),
+          firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/professions`)),
+          firstValueFrom(this.http.get<SkillGroup[]>(`${API_BASE_URL}/skills/groups`)),
+          firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups`)),
+          firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups`)),
+          firstValueFrom(this.http.get<EquipmentGroup[]>(`${API_BASE_URL}/equipments/groups`)),
+          firstValueFrom(this.http.get<EquipmentLookup[]>(`${API_BASE_URL}/lookups/equipments`)),
+          firstValueFrom(this.http.get<CategoryLookup[]>(`${API_BASE_URL}/lookups/categories`))
+        ]
+    );
+
     this.races.set(races);
     this.professions.set(profs);
     this.equipments.set(equipments);
@@ -49,6 +63,7 @@ export class RulesService {
     await this.loadCombat(combatGroups);
     await this.loadSpells(spellGroups);
     await this.loadEquipmentGroups(equipmentGroups);
+
   }
 
   private async loadSkills(groups: SkillGroup[]) {
