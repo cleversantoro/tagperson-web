@@ -1,68 +1,100 @@
 <div class="wrap">
   <div class="left">
     <mat-card>
-      <mat-card-title>Magias Basicas</mat-card-title>
+      <mat-card-header>
+        <mat-card-title>Magias Basicas</mat-card-title>
+        <button mat-raised-button color="primary" (click)="addBasicSpell()" class="add-button">
+          <mat-icon>add</mat-icon>
+          Adicionar Magia Basica
+        </button>
+      </mat-card-header>
       <mat-card-content>
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>Magia</th>
-              <th>Nivel</th>
-              <th>Custo</th>
-              <th>Total</th>
-              <th class="icon-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (s of basicas(); track s.id) {
+        @if (basicas().length > 0) {
+          <table class="tbl">
+            <thead>
               <tr>
-                <td>{{s.name}}</td>
-                <td>{{levelOf(s.id)}}</td>
-                <td>{{s.cost ?? 0}}</td>
-                <td>{{totalOf(s)}}</td>
-                <td class="icon-col">
-                  <button mat-icon-button (click)="selectSpell(s)">
-                    <mat-icon>help_outline</mat-icon>
-                  </button>
-                </td>
+                <th>Magia</th>
+                <th>Nivel</th>
+                <th>Custo</th>
+                <th>Total</th>
+                <th class="icon-col"></th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @for (s of basicas(); track s.id) {
+                <tr>
+                  <td>{{s.name}}</td>
+                  <td>{{levelOf(s.id)}}</td>
+                  <td>{{s.cost ?? 0}}</td>
+                  <td>{{totalOf(s)}}</td>
+                  <td class="icon-col">
+                    <button mat-icon-button (click)="selectSpell(s)">
+                      <mat-icon>help_outline</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          <p class="empty-message">Nenhuma magia básica cadastrada</p>
+        }
       </mat-card-content>
     </mat-card>
   </div>
 
   <div class="center">
     <mat-card>
-      <mat-card-title>Magias da Especializacao</mat-card-title>
-      <mat-card-content>
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>Magia</th>
-              <th>Nivel</th>
-              <th>Custo</th>
-              <th>Total</th>
-              <th class="icon-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (s of especializacao(); track s.id) {
-              <tr>
-                <td>{{s.name}}</td>
-                <td>{{levelOf(s.id)}}</td>
-                <td>{{s.cost ?? 0}}</td>
-                <td>{{totalOf(s)}}</td>
-                <td class="icon-col">
-                  <button mat-icon-button (click)="selectSpell(s)">
-                    <mat-icon>help_outline</mat-icon>
-                  </button>
-                </td>
-              </tr>
+      <mat-card-header>
+        <mat-card-title>Magias da Especializacao</mat-card-title>
+        @if (canLearnSpecializationSpells()) {
+          <button mat-raised-button color="primary" (click)="addSpecializationSpell()" class="add-button">
+            <mat-icon>add</mat-icon>
+            Adicionar Magia Especializacao
+          </button>
+        } @else {
+          <span class="warning-message">
+            @if (sheet.nivel < 5) {
+              Necessário nível 5 para aprender magias de especialização
+            } @else {
+              Necessário cadastrar especialização
             }
-          </tbody>
-        </table>
+          </span>
+        }
+      </mat-card-header>
+      <mat-card-content>
+        @if (especializacao().length > 0) {
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Magia</th>
+                <th>Nivel</th>
+                <th>Custo</th>
+                <th>Total</th>
+                <th class="icon-col"></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (s of especializacao(); track s.id) {
+                <tr>
+                  <td>{{s.name}}</td>
+                  <td>{{levelOf(s.id)}}</td>
+                  <td>{{s.cost ?? 0}}</td>
+                  <td>{{totalOf(s)}}</td>
+                  <td class="icon-col">
+                    <button mat-icon-button (click)="selectSpell(s)">
+                      <mat-icon>help_outline</mat-icon>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        } @else {
+          @if (canLearnSpecializationSpells()) {
+            <p class="empty-message">Nenhuma magia de especialização cadastrada</p>
+          }
+        }
       </mat-card-content>
     </mat-card>
   </div>
@@ -103,4 +135,6 @@
       </mat-card-content>
     </mat-card>
   </div>
+
+
 </div>

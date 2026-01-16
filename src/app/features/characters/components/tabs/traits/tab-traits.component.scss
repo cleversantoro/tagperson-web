@@ -18,3 +18,36 @@
 .selectors { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .selectorsmoney { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
 .add-btn { margin-top: 2px; }
+// Card header styling
+::ng-deep .mat-mdc-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  margin: -16px -16px 16px -16px;
+
+  .mat-mdc-card-title {
+    margin: 0;
+    flex: 1;
+  }
+}
+
+.header-button {
+  flex-shrink: 0;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+}

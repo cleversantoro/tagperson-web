@@ -10,3 +10,38 @@
 .details { display: grid; gap: 10px; }
 .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 @media (max-width: 900px){ .row { grid-template-columns: 1fr; } }
+// Estilos para mat-card-header
+::ng-deep .mat-mdc-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+
+  .mat-mdc-card-title {
+    margin: 0;
+  }
+}
+
+.add-button {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.warning-message {
+  color: #ff9800;
+  font-size: 0.9em;
+  padding: 8px;
+  background: rgba(255, 152, 0, 0.1);
+  border-radius: 4px;
+  display: block;
+}
+
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 24px;
+  font-style: italic;
+}

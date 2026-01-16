@@ -9,6 +9,14 @@ export interface Attributes {
   pointsUsed: number;
 }
 
+export interface Specialization {
+  id: number;
+  profissaoId: number;
+  magiaGrupoId: number;
+  combateGrupoId: number;
+  nome: string;
+}
+
 export interface CharacterPoints {
   habilidade: number;
   arma: number;
@@ -110,16 +118,26 @@ export interface CharacterSheet {
   divindade?: string;
   localidade?: string;
 
+  olhos?: string;
+  cabelo?: string;
+  pele?: string;
+  idade?: number;
+  peso?: number;
+  altura?: number;
+  aparencia?: string;
+  historia?: string;
+
   raca: Race;
   racaId?: number | null;
   profissao: Profession;
   profissaoId?: number | null;
   classeSocial: SocialClass;
+  classeSocialId?: number | null;
 
   experiencia: number;
   estagio: number;
-  especializacao?: string;
 
+  especializacao?: Specialization;
   atributos: Attributes;
   pontos?: CharacterPoints;
   derivados: DerivedStats;

@@ -43,7 +43,9 @@ export class CharacterHeaderComponent {
       nome: this.sheet.nome ?? '',
       jogador: this.sheet.jogador ?? '',
       divindade: this.sheet.divindade ?? '',
-      especializacao: this.sheet.especializacao ?? '',
+      especializacao: typeof this.sheet.especializacao === 'string'
+        ? this.sheet.especializacao
+        : (this.sheet.especializacao?.nome ?? ''),
       classeSocial: this.sheet.classeSocial ?? '',
       localidade: this.sheet.localidade ?? '',
       racaId: this.sheet.racaId ?? 0,
@@ -60,6 +62,9 @@ export class CharacterHeaderComponent {
     this.store.upsert({
       ...this.sheet,
       ...v,
+      especializacao: typeof this.sheet.especializacao === 'string'
+        ? this.sheet.especializacao
+        : this.sheet.especializacao,
       raca: racaName,
       profissao: profName,
       updatedAt: new Date().toISOString()

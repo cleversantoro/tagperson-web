@@ -30,4 +30,10 @@ import { CharacterStore } from '../../../core/services/character-store.service';
 })
 export class CharacterPageComponent {
   constructor(public store: CharacterStore) {}
+
+  canAccessSpellsTab(profession: string | undefined): boolean {
+    if (!profession) return true;
+    const professionLower = profession.toLowerCase();
+    return professionLower !== 'guerreiro' && professionLower !== 'ladino' && professionLower !== 'ladrão';
+  }
 }

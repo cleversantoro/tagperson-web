@@ -38,7 +38,7 @@ export class TabCombatComponent {
 
   basicas = computed(() => this.filterOwned(this.byParentId(1)));
   especializacao = computed(() =>
-    this.filterOwned(this.byGroupName(3, this.sheetSignal()?.especializacao ?? ''))
+    this.filterOwned(this.byGroupName(3, this.sheetSignal()?.especializacao?.nome ?? ''))
   );
   restritas = computed(() => {
     const parentId = this.professionParentId();

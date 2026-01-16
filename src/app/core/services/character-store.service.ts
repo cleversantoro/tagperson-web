@@ -92,6 +92,59 @@ export class CharacterStore {
     await this.select(characterId);
   }
 
+  async addSpell(characterId: number, spellId: number) {
+    await this.api.addSpell(characterId, spellId);
+    await this.select(characterId);
+  }
+
+  async updateTraits(characterId: number, updates: Partial<any>) {
+    const sheet = this._characters().find(c => c.id === characterId);
+    if (!sheet) return;
+
+    const updated = {
+      ...sheet,
+      caracteristicas: {
+        ...sheet.caracteristicas,
+        ...updates
+      },
+      updatedAt: new Date().toISOString()
+    };
+
+    this.upsert(updated);
+  }
+
+  async updateMoney(characterId: number, money: { cobre: number; prata: number; ouro: number }) {
+    const sheet = this._characters().find(c => c.id === characterId);
+    if (!sheet) return;
+
+    const updated = {
+      ...sheet,
+      caracteristicas: {
+        ...sheet.caracteristicas,
+        dinheiro: money
+      },
+      updatedAt: new Date().toISOString()
+    };
+
+    this.upsert(updated);
+  }
+
+  async updateGear(characterId: number, gear: Partial<{ armadura: string; elmo: string; escudo: string; arma: string }>) {
+    const sheet = this._characters().find(c => c.id === characterId);
+    if (!sheet) return;
+
+    const updated = {
+      ...sheet,
+      combate: {
+        ...sheet.combate,
+        ...gear
+      },
+      updatedAt: new Date().toISOString()
+    };
+
+    this.upsert(updated);
+  }
+
   upsert(sheet: CharacterSheet, scheduleSave = true) {
     const list = this._characters();
     const idx = list.findIndex(x => x.id === sheet.id);

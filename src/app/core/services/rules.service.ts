@@ -33,15 +33,15 @@ export class RulesService {
 
     if (!ok) return;
     const [
-        races,
-        profs,
-        groups,
-        combatGroups,
-        spellGroups,
-        equipmentGroups,
-        equipments,
-        categories
-      ] = await Promise.all
+      races,
+      profs,
+      groups,
+      combatGroups,
+      spellGroups,
+      equipmentGroups,
+      equipments,
+      categories
+    ] = await Promise.all
       (
         [
           firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/races`)),
@@ -53,7 +53,7 @@ export class RulesService {
           firstValueFrom(this.http.get<EquipmentLookup[]>(`${API_BASE_URL}/lookups/equipments`)),
           firstValueFrom(this.http.get<CategoryLookup[]>(`${API_BASE_URL}/lookups/categories`))
         ]
-    );
+      );
 
     this.races.set(races);
     this.professions.set(profs);
@@ -101,7 +101,7 @@ export class RulesService {
     );
 
     const merged: CombatGroupWithItems[] = flatGroups.map((group, idx) => ({
-      group: {...group },
+      group: { ...group },
       items: itemsLists[idx]
     }));
 
@@ -120,9 +120,11 @@ export class RulesService {
       groups.map(g => firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups/${g.id}/children`)))
     );
 
-    const flatGroups = childrenLists.flatMap((children, idx) =>
-      children.length ? children : [groups[idx]]
-    );
+    // const flatGroups = childrenLists.flatMap((children, idx) =>
+    //   children.length ? children : [groups[idx]]
+    // );
+
+    const flatGroups = this.mergeGroupsPreferParents(groups, childrenLists);
 
     const spellsLists = await Promise.all(
       flatGroups.map(g => firstValueFrom(this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/groups/${g.id}/spells`)))

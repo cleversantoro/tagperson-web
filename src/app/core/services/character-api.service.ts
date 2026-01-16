@@ -21,7 +21,7 @@ interface ApiCharacterSheet {
   imageFile?: string | null;
   race?: { id: number; name: string } | null;
   profession?: { id: number; name: string } | null;
-  specialization?: { id: number; name: string } | null;
+  specialization?: { id: number; professionId: number; spellGroupId: number; combatGroupId: number; name: string } | null;
   classSocial?: { id: number; name: string } | null;
   birthPlace?: { id: number; name: string } | null;
   deity?: { id: number; name: string } | null;
@@ -109,6 +109,16 @@ interface ApiUpdateRequest {
   level?: number | null;
   raceId?: number | null;
   professionId?: number | null;
+
+  age?: number | null;
+  height?: number | null;
+  weight?: number | null;
+  eyes?: string | null;
+  hair?: string | null;
+  skin?: string | null;
+  appearance?: string | null;
+  history?: string | null;
+
   attAgi?: number | null;
   attPer?: number | null;
   attInt?: number | null;
@@ -116,9 +126,11 @@ interface ApiUpdateRequest {
   attCar?: number | null;
   attFor?: number | null;
   attFis?: number | null;
+
   coinsCopper?: number | null;
   coinsSilver?: number | null;
   coinsGold?: number | null;
+
   pointsSkill?: number | null;
   pointsWeapon?: number | null;
   pointsCombat?: number | null;
@@ -236,12 +248,18 @@ export class CharacterApiService {
       raca: item.race?.name ?? '',
       profissao: item.profession?.name ?? '',
       classeSocial: '',
-      especializacao: '',
       jogador: '',
       localidade: '',
       divindade: '',
       experiencia: 0,
       estagio: 0,
+      especializacao: {
+        id: 0,
+        profissaoId: 0,
+        magiaGrupoId: 0,
+        combateGrupoId: 0,
+        nome: ''
+      },
       atributos: {
         pointsTotal: 0,
         pointsUsed: 0,
@@ -269,9 +287,9 @@ export class CharacterApiService {
       habilidades: [],
       magias: [],
       combate: { tecnicas: [], tecnicasBasicas: [], tecnicasEspecializacao: [], tecnicasRestritas: [] },
-      caracteristicas: {pertences: [], dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
+      caracteristicas: { pertences: [], dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
       caracterizacoes: [],
-      equipamentosIniciais:[],
+      equipamentosIniciais: [],
       updatedAt: new Date().toISOString()
     };
   }
@@ -298,13 +316,20 @@ export class CharacterApiService {
       raca: sheet.race?.name ?? '',
       profissao: sheet.profession?.name ?? '',
       profissaoId: sheet.profession?.id ?? null,
-      especializacao: sheet.specialization?.name ?? '',
       racaId: sheet.race?.id ?? null,
       classeSocial: sheet.classSocial?.name ?? '',
+      classeSocialId: sheet.classSocial?.id ?? null,
       localidade: sheet.birthPlace?.name ?? '',
       divindade: sheet.deity?.name ?? '',
       experiencia: sheet.experience ?? 0,
       estagio: sheet.level ?? 0,
+      especializacao: {
+        id: sheet.specialization?.id ?? 0,
+        profissaoId: sheet.specialization?.professionId ?? 0,
+        magiaGrupoId: sheet.specialization?.spellGroupId ?? 0,
+        combateGrupoId: sheet.specialization?.combatGroupId ?? 0,
+        nome: sheet.specialization?.name ?? '',
+      },
       atributos: {
         pointsTotal: sheet.points.pointsSkill ?? 0,
         pointsUsed: 0,
@@ -365,10 +390,10 @@ export class CharacterApiService {
         aparencia: sheet.features.appearance ?? '',
         historia: sheet.features.history ?? '',
         pertences: sheet.equipments?.map(e => ({
-           equipmentId: e.equipmentId,
-           nome: e.name,
-           quantidade: e.qty ?? 1
-         })) ?? [],
+          equipmentId: e.equipmentId,
+          nome: e.name,
+          quantidade: e.qty ?? 1
+        })) ?? [],
         dinheiro: {
           cobre: sheet.coins.copper ?? 0,
           prata: sheet.coins.silver ?? 0,
@@ -394,6 +419,16 @@ export class CharacterApiService {
       level: sheet.nivel ?? null,
       raceId: sheet.racaId ? sheet.racaId : null,
       professionId: sheet.profissaoId ? sheet.profissaoId : null,
+
+      eyes: sheet.caracteristicas.olhos ?? null,
+      hair: sheet.caracteristicas.cabelo ?? null,
+      skin: sheet.caracteristicas.pele ?? null,
+      age: sheet.caracteristicas.idade ?? 0,
+      weight: sheet.caracteristicas.peso ?? 0,
+      height: sheet.caracteristicas.altura ?? 0,
+      appearance: sheet.caracteristicas.aparencia ?? null,
+      history: sheet.caracteristicas.historia ?? null,
+
       attAgi: sheet.atributos.values.AGILIDADE ?? 0,
       attPer: sheet.atributos.values.PERCEPCAO ?? 0,
       attInt: sheet.atributos.values.INTELECTO ?? 0,
@@ -401,9 +436,11 @@ export class CharacterApiService {
       attCar: sheet.atributos.values.CARISMA ?? 0,
       attFor: sheet.atributos.values.FORCA ?? 0,
       attFis: sheet.atributos.values.FISICO ?? 0,
+
       coinsCopper: sheet.caracteristicas.dinheiro.cobre ?? 0,
       coinsSilver: sheet.caracteristicas.dinheiro.prata ?? 0,
       coinsGold: sheet.caracteristicas.dinheiro.ouro ?? 0,
+
       pointsSkill: sheet.pontos?.habilidade ?? 0,
       pointsWeapon: sheet.pontos?.arma ?? 0,
       pointsCombat: sheet.pontos?.combate ?? 0,
