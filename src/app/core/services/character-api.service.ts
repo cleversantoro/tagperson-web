@@ -89,9 +89,16 @@ interface ApiCharacterSheet {
     attributeCode?: string | null;
   }>;
   equipments: Array<{
-    equipmentId: number;
+    id: number;
+    groupId: number;
     name: string;
-    qty?: number | null;
+    description: string;
+    value: number;
+    weapon: number;
+    defense: number;
+    armor: number;
+    shield: number;
+    helmet: number;
   }>;
   characterizations: Array<{
     characterizationId: number;
@@ -287,7 +294,8 @@ export class CharacterApiService {
       habilidades: [],
       magias: [],
       combate: { tecnicas: [], tecnicasBasicas: [], tecnicasEspecializacao: [], tecnicasRestritas: [] },
-      caracteristicas: { pertences: [], dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
+      equipamentos:[],
+      caracteristicas: { dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
       caracterizacoes: [],
       equipamentosIniciais: [],
       updatedAt: new Date().toISOString()
@@ -380,6 +388,18 @@ export class CharacterApiService {
         tecnicasEspecializacao: [],
         tecnicasRestritas: []
       },
+      equipamentos: sheet.equipments?.map(s => ({
+        id: s.id,
+        grupoId: s.groupId,
+        nome: s.name,
+        descricao: s.description,
+        valor: s.value,
+        arma: s.weapon,
+        defesa: s.defense,
+        armadura: s.armor,
+        escudo: s.shield,
+        capacete: s.helmet
+      })) ?? [],
       caracteristicas: {
         olhos: sheet.features.eyes ?? '',
         cabelo: sheet.features.hair ?? '',
@@ -389,11 +409,11 @@ export class CharacterApiService {
         altura: sheet.features.height ?? 0,
         aparencia: sheet.features.appearance ?? '',
         historia: sheet.features.history ?? '',
-        pertences: sheet.equipments?.map(e => ({
-          equipmentId: e.equipmentId,
-          nome: e.name,
-          quantidade: e.qty ?? 1
-        })) ?? [],
+        // pertences: sheet.equipments?.map(e => ({
+        //   equipmentId: e.equipmentId,
+        //   nome: e.name,
+        //   quantidade: e.qty ?? 1
+        // })) ?? [],
         dinheiro: {
           cobre: sheet.coins.copper ?? 0,
           prata: sheet.coins.silver ?? 0,

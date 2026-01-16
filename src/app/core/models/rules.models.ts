@@ -8,6 +8,14 @@ export interface EquipmentLookup {
   isHelmet?: number | null;
 }
 
+export interface EquipmentBelongings {
+  id: number;
+  name: string;
+  descriptio?: string | null;
+  value?: number | null;
+}
+
+
 export interface CategoryLookup {
   id: number;
   name: string;

@@ -51,6 +51,19 @@ export interface SkillRow {
   hasSpecialization?: boolean;
 }
 
+export interface EquipmentRow {
+  id: number;
+  grupoId:number;
+  nome: string;
+  descricao: string;
+  valor:number;
+  arma:number;
+  defesa:number;
+  armadura:number;
+  escudo:number;
+  capacete:number;
+}
+
 export interface SkillSpecializationRow {
   id: number;
   skillId: number;
@@ -102,9 +115,9 @@ export interface Traits {
   peso?: number;
   altura?: number;
   aparencia?: string;
-  personalidadeObjetivos?: string;
+  //personalidadeObjetivos?: string;
   historia?: string;
-  pertences: Array<{ equipmentId: number; nome: string; quantidade?: number }>;
+  //pertences: Array<{ equipmentId: number; nome: string; quantidade?: number }>;
   dinheiro: Money;
 }
 
@@ -145,6 +158,7 @@ export interface CharacterSheet {
   habilidades: SkillRow[];
   magias: SpellRow[];
   combate: CombatState;
+  equipamentos: EquipmentRow[];
   caracteristicas: Traits;
   caracterizacoes: CharacterizationRow[];
   equipamentosIniciais: StartingEquipments[];

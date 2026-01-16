@@ -52,7 +52,7 @@
                 @for (e of elmos(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" style="flex: 1;">
               <mat-label>Escudo</mat-label>
               <mat-select [value]="sheet.combate.escudo" disabled>
                 @for (e of escudos(); track e.id) { <mat-option [value]="e.name">{{e.name}}</mat-option> }
@@ -63,6 +63,7 @@
         </mat-card-content>
       </mat-card>
     </div>
+    <br>
 
     <div class="row">
       <!-- Card de Armas -->

@@ -1,4 +1,4 @@
-import { Component, Input, computed, inject, signal, OnInit } from '@angular/core';
+import { Component, Input, computed, inject, signal, OnInit, effect } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -17,7 +17,6 @@ import { CharacterStore } from '../../../../../core/services/character-store.ser
   styleUrls: ['./tab-weapon.component.scss']
 })
 export class TabWeaponComponent implements OnInit {
-  //@Input({ required: true }) sheet!: CharacterSheet;
   private readonly sheetSignal = signal<CharacterSheet | null>(null);
   @Input({ required: true }) set sheet(value: CharacterSheet) {
     this.sheetSignal.set(value);
@@ -47,6 +46,19 @@ export class TabWeaponComponent implements OnInit {
   elmos = computed(() => this.rules.equipments().filter(e => (e.isHelmet ?? 0) === 1));
   escudos = computed(() => this.rules.equipments().filter(e => (e.isShield ?? 0) === 1));
   armas = computed(() => this.rules.equipments().filter(e => (e.isWeapon ?? 0) === 1));
+
+  constructor() {
+    // Efeito para reagir a mudanças no sheet
+    effect(() => {
+      if (this.sheetSignal()) {
+        this.initializeArmorData();
+        this.initializeWeaponData();
+        // Resetar modo de edição ao mudar de personagem
+        this.editingArmor.set(false);
+        this.editingWeapon.set(false);
+      }
+    });
+  }
 
   ngOnInit() {
     this.initializeArmorData();

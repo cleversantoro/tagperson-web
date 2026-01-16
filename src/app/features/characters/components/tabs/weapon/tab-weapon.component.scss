@@ -1,4 +1,4 @@
-.wrap { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.wrap { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; }
 @media (max-width: 1200px){ .wrap { grid-template-columns: 1fr; } }
 .gear { display: grid; grid-template-columns: 1fr; gap: 8px; }
 .weapon-row { margin-bottom: 12px; }
@@ -10,6 +10,10 @@
 
 .header-button {
   margin-left: auto;
+}
+
+.mat-form-field {
+  width: 500px;
 }
 
 mat-card-header {

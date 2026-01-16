@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from './api-config';
 import { AuthService } from './auth.service';
-import { SkillFromGroup, SkillGroup, SkillGroupWithSkills, SkillSpecializationSuggestion, EquipmentLookup, CategoryLookup } from '../models/rules.models';
+import { SkillFromGroup, SkillGroup, SkillGroupWithSkills, SkillSpecializationSuggestion, EquipmentLookup, CategoryLookup, EquipmentBelongings } from '../models/rules.models';
 import { CombatGroup, CombatGroupWithItems, CombatFromGroup } from '../models/combat.models';
 import { SpellGroup, SpellGroupWithSpells, SpellFromGroup } from '../models/spells.models';
 import { EquipmentGroup, EquipmentGroupWithItems, EquipmentFromGroup } from '../models/equipment.models';
@@ -22,6 +22,7 @@ export class RulesService {
   readonly spellGroups = signal<SpellGroupWithSpells[]>([]);
   readonly equipmentGroups = signal<EquipmentGroupWithItems[]>([]);
   readonly equipments = signal<EquipmentLookup[]>([]);
+  //readonly equipmentBelonging = signal<EquipmentBelongings[]>([]);
   readonly categories = signal<CategoryLookup[]>([]);
 
   constructor(private http: HttpClient, private auth: AuthService) {
@@ -40,6 +41,7 @@ export class RulesService {
       spellGroups,
       equipmentGroups,
       equipments,
+      //equipmentBelonging,
       categories
     ] = await Promise.all
       (
@@ -51,6 +53,7 @@ export class RulesService {
           firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups`)),
           firstValueFrom(this.http.get<EquipmentGroup[]>(`${API_BASE_URL}/equipments/groups`)),
           firstValueFrom(this.http.get<EquipmentLookup[]>(`${API_BASE_URL}/lookups/equipments`)),
+          //firstValueFrom(this.http.get<EquipmentBelongings[]>(`${API_BASE_URL}/equipments/belongings`)),
           firstValueFrom(this.http.get<CategoryLookup[]>(`${API_BASE_URL}/lookups/categories`))
         ]
       );
@@ -59,10 +62,12 @@ export class RulesService {
     this.professions.set(profs);
     this.equipments.set(equipments);
     this.categories.set(categories);
+    //this.equipmentBelonging.set(equipmentBelonging);
     await this.loadSkills(groups);
     await this.loadCombat(combatGroups);
     await this.loadSpells(spellGroups);
     await this.loadEquipmentGroups(equipmentGroups);
+    //await this.loadEquipmentBelonging(equipmentBelonging);
 
   }
 
@@ -120,10 +125,6 @@ export class RulesService {
       groups.map(g => firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups/${g.id}/children`)))
     );
 
-    // const flatGroups = childrenLists.flatMap((children, idx) =>
-    //   children.length ? children : [groups[idx]]
-    // );
-
     const flatGroups = this.mergeGroupsPreferParents(groups, childrenLists);
 
     const spellsLists = await Promise.all(
@@ -142,6 +143,9 @@ export class RulesService {
     const itemsLists = await Promise.all(
       groups.map(g => firstValueFrom(this.http.get<EquipmentFromGroup[]>(`${API_BASE_URL}/equipments/groups/${g.id}/items`)))
     );
+
+      groups.splice(1,2)
+      itemsLists.splice(1,2)
 
     const merged: EquipmentGroupWithItems[] = groups.map((group, idx) => ({
       group,

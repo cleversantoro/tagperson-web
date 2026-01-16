@@ -246,19 +246,10 @@
             </tr>
           </thead>
           <tbody>
-            @if (sheet.caracteristicas.pertences.length === 0) {
             <tr>
               <td colspan="3" class="muted">Sem dados.</td>
             </tr>
-            } @else {
-            @for (p of sheet.caracteristicas.pertences; track p.equipmentId) {
-            <tr>
-              <td>{{p.nome}}{{p.quantidade && p.quantidade > 1 ? (' x' + p.quantidade) : ''}}</td>
-              <td>{{equipmentDescription(p.equipmentId)}}</td>
-              <td>{{equipmentValue(p.equipmentId)}}</td>
-            </tr>
-            }
-            }
+
           </tbody>
         </table>
       </mat-card-content>
