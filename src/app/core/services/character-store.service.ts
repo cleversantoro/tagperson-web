@@ -87,8 +87,8 @@ export class CharacterStore {
     await this.select(characterId);
   }
 
-  async addCombatSkill(characterId: number, combatSkillId: number, level?: number) {
-    await this.api.addCombatSkill(characterId, { combatSkillId, level: level ?? null });
+  async addCombatSkill(characterId: number, combatSkillId: number, level?: number, group?: number) {
+    await this.api.addCombatSkill(characterId, { combatSkillId, level: level ?? null, group: group ?? null});
     await this.select(characterId);
   }
 

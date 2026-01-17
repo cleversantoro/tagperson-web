@@ -36,12 +36,25 @@ export class TabCombatComponent {
 
   private ownedTechIds = computed(() => new Set((this.sheetSignal()?.combate.tecnicas ?? []).map(t => t.id)));
 
+  private professionMainGroup = computed(() => {
+    const prof = this.normalizeName(this.sheetSignal()?.profissao ?? '');
+    if (!prof) return null;
+    const groups = this.groups() ?? [];
+    return groups.find(g => {
+      const gName = this.normalizeName(g.group.name);
+      return gName.includes(prof) && !gName.includes('-');
+    });
+  });
+
   basicas = computed(() => this.filterOwned(this.byParentId(1)));
-  especializacao = computed(() => this.filterOwned(this.byGroupName(this.professionParentId(), this.sheetSignal()?.especializacao?.nome ?? '')));
+  especializacao = computed(() => {
+    const parentId = this.professionMainGroup()?.group.parentId;
+    if (!parentId) return [];
+    return this.filterOwned(this.byGroupName(parentId, this.sheetSignal()?.especializacao?.nome ?? ''));
+  });
   profissao = computed(() => {
-    const parentId = this.professionParentId();
-    if (!parentId || parentId === 1) return [];
-    return this.filterOwned(this.byParentId(parentId));
+    const group = this.professionMainGroup();
+    return group ? this.filterOwned(group.items) : [];
   });
 
   addCombatOpen = signal(false);
@@ -58,18 +71,16 @@ export class TabCombatComponent {
   });
 
   private professionTechniquesSource = computed(() => {
-    const parentId = this.professionParentId();
-    if (parentId === 1) return [];
-    const groups = this.groups() ?? [];
-    const mainGroup = groups.find(g => g.group.parentId === parentId && !g.group.name.includes('-'));
-    const items = mainGroup?.items ?? [];
+    const group = this.professionMainGroup();
+    if (!group) return [];
+    const items = group.items;
     const owned = this.ownedTechIds();
     return items.filter(t => !owned.has(t.id)).sort((a, b) => a.name.localeCompare(b.name));
   });
 
   private specializationTechniquesSource = computed(() => {
-    const parentId = this.professionParentId();
-    if (parentId === 1) return [];
+    const parentId = this.professionMainGroup()?.group.parentId;
+    if (!parentId) return [];
     const specName = this.sheetSignal()?.especializacao?.nome;
     if (!specName) return [];
     const items = this.byGroupName(parentId, specName);
@@ -114,7 +125,11 @@ export class TabCombatComponent {
   async saveCombat() {
     const combatSkillId = this.selectedCombatId();
     if (!combatSkillId) return;
-    await this.store.addCombatSkill(this.sheet.id, combatSkillId, this.newCombatLevel());
+
+    const type = this.addCombatType();
+    const group = type === 'basic' ? 1 : type === 'profession' ? 2 : 3;
+
+    await this.store.addCombatSkill(this.sheet.id, combatSkillId, this.newCombatLevel(), group);
     this.addCombatOpen.set(false);
   }
 
@@ -145,13 +160,6 @@ export class TabCombatComponent {
     return match?.items ?? [];
   }
 
-  private professionParentId() {
-    const prof = this.normalizeName(this.sheetSignal()?.profissao ?? '');
-    if (prof.includes('guerreiro')) return 2;
-    if (prof.includes('ladino')) return 3;
-    return 1;
-  }
-
   private normalizeName(value: string) {
     return value
       .toLowerCase()
@@ -161,7 +169,6 @@ export class TabCombatComponent {
   }
 
   get canAddProfession() {
-    const pid = this.professionParentId();
-    return pid === 2 || pid === 3;
+    return !!this.professionMainGroup();
   }
 }
