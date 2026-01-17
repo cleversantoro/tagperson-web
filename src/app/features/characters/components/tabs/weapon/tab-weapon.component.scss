@@ -1,32 +1,62 @@
-.wrap { display: grid; grid-template-columns: repeat(1, 1fr); gap: 12px; }
-@media (max-width: 1200px){ .wrap { grid-template-columns: 1fr; } }
-.gear { display: grid; grid-template-columns: 1fr; gap: 8px; }
-.weapon-row { margin-bottom: 12px; }
-.weapon { width: 100%; }
-.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-.tbl th, .tbl td { border: 1px solid rgba(0,0,0,.1); padding: 6px 8px; }
-.tbl th { background: #f2f2f2; text-align: left; }
-.muted { color: #777; text-align: center; }
+.weapon-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
 
-.header-button {
-  margin-left: auto;
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
 }
 
-.mat-form-field {
-  width: 500px;
+.gear-card {
+  width: 100%;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    font-weight: 500;
+    color: rgba(0,0,0,0.6);
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 mat-card-header {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-}
 
-.action-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  margin-top: 16px;
-  border-top: 1px solid rgba(0,0,0,.1);
-  padding-top: 12px;
+  mat-card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .spacer {
+    flex: 1;
+  }
 }

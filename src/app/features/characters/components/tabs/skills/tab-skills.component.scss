@@ -1,6 +1,6 @@
 .wrap { display: grid; gap: 12px; }
 .summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-.actions { display: flex; justify-content: flex-end; }
+.actions { display: flex; justify-content: flex-start; }
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
 @media (max-width: 1200px){ .grid{ grid-template-columns: 1fr; } .summary{ grid-template-columns: 1fr; } }
 .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }

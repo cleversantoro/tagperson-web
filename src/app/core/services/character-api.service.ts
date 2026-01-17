@@ -151,6 +151,7 @@ interface ApiAddSkillRequest {
 
 interface ApiAddCombatSkillRequest {
   combatSkillId: number;
+  group?: number | null;
   level?: number | null;
 }
 
