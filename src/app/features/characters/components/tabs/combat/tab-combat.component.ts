@@ -37,26 +37,51 @@ export class TabCombatComponent {
   private ownedTechIds = computed(() => new Set((this.sheetSignal()?.combate.tecnicas ?? []).map(t => t.id)));
 
   basicas = computed(() => this.filterOwned(this.byParentId(1)));
-  especializacao = computed(() =>
-    this.filterOwned(this.byGroupName(3, this.sheetSignal()?.especializacao?.nome ?? ''))
-  );
-  restritas = computed(() => {
+  especializacao = computed(() => this.filterOwned(this.byGroupName(this.professionParentId(), this.sheetSignal()?.especializacao?.nome ?? '')));
+  profissao = computed(() => {
     const parentId = this.professionParentId();
     if (!parentId || parentId === 1) return [];
     return this.filterOwned(this.byParentId(parentId));
   });
 
   addCombatOpen = signal(false);
+  addCombatType = signal<'basic' | 'profession' | 'specialization'>('basic');
   selectedCombatId = signal<number | null>(null);
   newCombatLevel = signal(0);
 
-  availableBasicTechniques = computed(() => {
-    const parentId = this.professionParentId() ?? 1;
-    const basics = this.byParentId(parentId);
+  private basicTechniquesSource = computed(() => {
+    const basics = this.byParentId(1);
     const owned = this.ownedTechIds();
     return basics
       .filter(t => !owned.has(t.id))
       .sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  private professionTechniquesSource = computed(() => {
+    const parentId = this.professionParentId();
+    if (parentId === 1) return [];
+    const groups = this.groups() ?? [];
+    const mainGroup = groups.find(g => g.group.parentId === parentId && !g.group.name.includes('-'));
+    const items = mainGroup?.items ?? [];
+    const owned = this.ownedTechIds();
+    return items.filter(t => !owned.has(t.id)).sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  private specializationTechniquesSource = computed(() => {
+    const parentId = this.professionParentId();
+    if (parentId === 1) return [];
+    const specName = this.sheetSignal()?.especializacao?.nome;
+    if (!specName) return [];
+    const items = this.byGroupName(parentId, specName);
+    const owned = this.ownedTechIds();
+    return items.filter(t => !owned.has(t.id)).sort((a, b) => a.name.localeCompare(b.name));
+  });
+
+  availableBasicTechniques = computed(() => {
+    const type = this.addCombatType();
+    if (type === 'profession') return this.professionTechniquesSource();
+    if (type === 'specialization') return this.specializationTechniquesSource();
+    return this.basicTechniquesSource();
   });
 
   levelOf(id: number) {
@@ -74,8 +99,9 @@ export class TabCombatComponent {
     return cat?.name ?? '-';
   }
 
-  openAddCombat() {
-    const list = this.availableBasicTechniques();
+  openAddCombat(type: 'basic' | 'profession' | 'specialization' = 'basic') {
+    this.addCombatType.set(type);
+    const list = this.availableBasicTechniques(); // Agora retorna a lista baseada no tipo
     this.selectedCombatId.set(list[0]?.id ?? null);
     this.newCombatLevel.set(0);
     this.addCombatOpen.set(true);
@@ -132,5 +158,10 @@ export class TabCombatComponent {
       .normalize('NFD')
       .replace(/[\u0300-\u036f]/g, '')
       .trim();
+  }
+
+  get canAddProfession() {
+    const pid = this.professionParentId();
+    return pid === 2 || pid === 3;
   }
 }

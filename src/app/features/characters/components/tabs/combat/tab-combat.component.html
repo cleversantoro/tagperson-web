@@ -3,7 +3,7 @@
   <!-- Tecnias Basicas -->
   <div class="left">
     <div class="actions">
-      <button type="button" class="add-btn" (click)="openAddCombat()">+ Nova tecnica básica</button>
+      <button type="button" class="add-btn" (click)="openAddCombat('basic')">+ Nova tecnica básica</button>
     </div>
 
     <mat-card>
@@ -40,7 +40,7 @@
   <!-- Tecnias da Especializacao -->
   <div class="center">
     <div class="actions">
-      <button type="button" class="add-btn" (click)="openAddCombat()">+ Nova tecnica especializacao</button>
+      <button type="button" class="add-btn" (click)="openAddCombat('specialization')">+ Nova tecnica especializacao</button>
     </div>
 
     <mat-card>
@@ -78,7 +78,7 @@
   <div class="right">
 
     <div class="actions">
-      <button type="button" class="add-btn" (click)="openAddCombat()">+ Nova tecnica profissão</button>
+      <button type="button" class="add-btn" (click)="openAddCombat('profession')">+ Nova tecnica profissão</button>
     </div>
 
     <mat-card>
@@ -96,7 +96,7 @@
             </tr>
           </thead>
           <tbody>
-            @for (i of restritas(); track i.id) {
+            @for (i of profissao(); track i.id) {
               <tr>
                 <td>{{i.name}}</td>
                 <td>{{levelOf(i.id)}}</td>
