@@ -42,6 +42,7 @@ export interface Money {
   ouro: number;
 }
 
+/*****Habilidade*****/
 export interface SkillRow {
   id: number;
   nome: string;
@@ -49,19 +50,6 @@ export interface SkillRow {
   nivel: number;
   ajuste: string; // ex: "INT", "AGI"...
   hasSpecialization?: boolean;
-}
-
-export interface EquipmentRow {
-  id: number;
-  grupoId:number;
-  nome: string;
-  descricao: string;
-  valor:number;
-  arma:number;
-  defesa:number;
-  armadura:number;
-  escudo:number;
-  capacete:number;
 }
 
 export interface SkillSpecializationRow {
@@ -72,13 +60,30 @@ export interface SkillSpecializationRow {
   nivel?: number | null;
 }
 
+/*****Equipamento*****/
+export interface EquipmentRow {
+  id: number;
+  grupoId: number;
+  nome: string;
+  descricao: string;
+  valor: number;
+}
+
+export interface EquipmentState {
+  armadura: EquipmentRow;
+  escudo: EquipmentRow;
+  capacete: EquipmentRow;
+  armas?: EquipmentRow[]
+  pertences?: EquipmentRow[]
+}
+
+/*****Magia*****/
 export interface SpellRow {
   id: number;
   nome: string;
   nivel: number;
   custo: number;
   total: number;
-  grupo: 'Basica' | 'Especializacao';
   evocacao?: string;
   alcance?: string;
   duracao?: string;
@@ -86,15 +91,27 @@ export interface SpellRow {
   descricao?: string;
 }
 
+export interface SpellState {
+  magiasBasicas?: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
+  magiasEspecializacao?: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
+  magiasRestritas?: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
+}
+
+/*****Combate*****/
+export interface CombatRow {
+  id: number;
+  nome: string;
+  nivel: number;
+  custo: number;
+  ajuste: string;
+  total: number;
+  categoria: string
+}
+
 export interface CombatState {
-  armadura?: string;
-  elmo?: string;
-  escudo?: string;
-  arma?: string;
-  tecnicas?: Array<{ id: number; nivel: number }>;
-  tecnicasBasicas: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
-  tecnicasEspecializacao: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
-  tecnicasRestritas: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
+  tecnicasBasicas?: CombatRow[];
+  tecnicasEspecializacao?: CombatRow[];
+  tecnicasProfissao?: CombatRow[];
 }
 
 export interface CharacterizationRow {
@@ -104,6 +121,7 @@ export interface CharacterizationRow {
 }
 
 export interface StartingEquipments {
+  id: number;
   nome: string;
 }
 
@@ -115,10 +133,7 @@ export interface Traits {
   peso?: number;
   altura?: number;
   aparencia?: string;
-  //personalidadeObjetivos?: string;
   historia?: string;
-  //pertences: Array<{ equipmentId: number; nome: string; quantidade?: number }>;
-  dinheiro: Money;
 }
 
 export interface CharacterSheet {
@@ -139,6 +154,7 @@ export interface CharacterSheet {
   altura?: number;
   aparencia?: string;
   historia?: string;
+  dinheiro: Money;
 
   raca: Race;
   racaId?: number | null;
@@ -158,7 +174,7 @@ export interface CharacterSheet {
   habilidades: SkillRow[];
   magias: SpellRow[];
   combate: CombatState;
-  equipamentos: EquipmentRow[];
+  equipamentos: EquipmentState;
   caracteristicas: Traits;
   caracterizacoes: CharacterizationRow[];
   equipamentosIniciais: StartingEquipments[];

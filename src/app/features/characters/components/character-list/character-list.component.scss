@@ -3,3 +3,7 @@
 .add { width: 100%; margin-bottom: 10px; }
 a.active { background: rgba(0,0,0,.06); }
 .lvl { margin-left: auto; opacity: .75; }
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl th, .tbl td { border: 1px solid rgba(0,0,0,.1); padding: 6px 8px; }
+.tbl th { background: #f2f2f2; text-align: left; }

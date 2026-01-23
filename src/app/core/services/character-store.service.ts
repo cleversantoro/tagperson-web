@@ -129,7 +129,16 @@ export class CharacterStore {
     this.upsert(updated);
   }
 
-  async updateGear(characterId: number, gear: Partial<{ armadura: string; elmo: string; escudo: string; arma: string }>) {
+  async updateGear(
+    characterId: number,
+    gear: Partial<{
+      armadura: string;
+      elmo: string;
+      escudo: string;
+      arma: string
+      armas: { id: number; nome: string }[];
+      pertences: { id: number; nome: string }[];
+    }>){
     const sheet = this._characters().find(c => c.id === characterId);
     if (!sheet) return;
 

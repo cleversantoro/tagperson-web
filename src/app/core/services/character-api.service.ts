@@ -19,12 +19,21 @@ interface ApiCharacterSheet {
   experience?: number | null;
   player?: string | null;
   imageFile?: string | null;
+
   race?: { id: number; name: string } | null;
   profession?: { id: number; name: string } | null;
-  specialization?: { id: number; professionId: number; spellGroupId: number; combatGroupId: number; name: string } | null;
   classSocial?: { id: number; name: string } | null;
   birthPlace?: { id: number; name: string } | null;
   deity?: { id: number; name: string } | null;
+
+  specialization?: {
+    id: number;
+    professionId: number;
+    spellGroupId: number;
+    combatGroupId: number;
+    name: string
+  } | null;
+
   attributes: {
     agi: number | null;
     per: number | null;
@@ -34,12 +43,14 @@ interface ApiCharacterSheet {
     for: number | null;
     fis: number | null;
   };
+
   points: {
     pointsSkill: number | null;
     pointsWeapon: number | null;
     pointsCombat: number | null;
     pointsMagic: number | null;
   };
+
   features: {
     age?: number | null;
     height?: number | null;
@@ -50,11 +61,13 @@ interface ApiCharacterSheet {
     appearance?: string | null;
     history?: string | null;
   };
+
   coins: {
     copper: number | null;
     silver: number | null;
     gold: number | null;
   };
+
   derived: {
     resistenciaFisica: number;
     resistenciaMagica: number;
@@ -66,6 +79,7 @@ interface ApiCharacterSheet {
     pontosMagia: number;
     maxEf: number;
   };
+
   skills: Array<{
     skillId: number;
     name: string;
@@ -74,6 +88,7 @@ interface ApiCharacterSheet {
     restricted?: number | null;
     hasSpecialization?: number | null;
   }>;
+
   spells: Array<{
     spellId: number;
     name: string;
@@ -82,35 +97,41 @@ interface ApiCharacterSheet {
     range?: string | null;
     duration?: string | null;
   }>;
+
   combat: Array<{
     combatSkillId: number;
     name: string;
     level: number | null;
+    group: number | null;
     attributeCode?: string | null;
   }>;
+
   equipments: Array<{
-    id: number;
-    groupId: number;
+    equipmentId: number;
+    groupid: number;
     name: string;
     description: string;
-    value: number;
-    weapon: number;
-    defense: number;
-    armor: number;
-    shield: number;
-    helmet: number;
+    price: number;
+    isWeapon: number;
+    isDefense: number;
+    isArmor: number;
+    isShield: number;
+    isHelmet: number;
   }>;
+
   characterizations: Array<{
     characterizationId: number;
     name: string;
     level?: number | null;
   }>;
+
   startingEquipments: Array<{
+    equipmentId: number;
     name: string;
   }>;
 }
 
-interface ApiUpdateRequest {
+interface ApiCharacterUpdateRequest {
   name: string;
   player?: string | null;
   level?: number | null;
@@ -144,6 +165,14 @@ interface ApiUpdateRequest {
   pointsMagic?: number | null;
 }
 
+interface ApiCharacterCreateRequest {
+  name: string;
+  player?: string | null;
+  level?: number | null;
+  raceId?: number | null;
+  professionId?: number | null;
+}
+
 interface ApiAddSkillRequest {
   skillId: number;
   level?: number | null;
@@ -153,14 +182,6 @@ interface ApiAddCombatSkillRequest {
   combatSkillId: number;
   group?: number | null;
   level?: number | null;
-}
-
-interface ApiCreateRequest {
-  name: string;
-  player?: string | null;
-  level?: number | null;
-  raceId?: number | null;
-  professionId?: number | null;
 }
 
 interface ApiCharacterSkillSpecialization {
@@ -190,12 +211,48 @@ export class CharacterApiService {
     return await firstValueFrom(this.http.get<ApiCharacterSheet>(`${API_BASE_URL}/characters/${id}/sheet`));
   }
 
-  async create(payload: ApiCreateRequest): Promise<ApiCharacterSheet> {
+  async create(payload: ApiCharacterCreateRequest): Promise<ApiCharacterSheet> {
     return await firstValueFrom(this.http.post<ApiCharacterSheet>(`${API_BASE_URL}/characters`, payload));
   }
 
-  async update(id: number, payload: ApiUpdateRequest): Promise<void> {
+  async update(id: number, payload: ApiCharacterUpdateRequest): Promise<void> {
     await firstValueFrom(this.http.put<void>(`${API_BASE_URL}/characters/${id}`, payload));
+  }
+
+  toUpdatePayload(sheet: CharacterSheet): ApiCharacterUpdateRequest {
+    return {
+      name: sheet.nome,
+      player: sheet.jogador ?? null,
+      level: sheet.nivel ?? null,
+      raceId: sheet.racaId ? sheet.racaId : null,
+      professionId: sheet.profissaoId ? sheet.profissaoId : null,
+
+      eyes: sheet.caracteristicas.olhos ?? null,
+      hair: sheet.caracteristicas.cabelo ?? null,
+      skin: sheet.caracteristicas.pele ?? null,
+      age: sheet.caracteristicas.idade ?? 0,
+      weight: sheet.caracteristicas.peso ?? 0,
+      height: sheet.caracteristicas.altura ?? 0,
+      appearance: sheet.caracteristicas.aparencia ?? null,
+      history: sheet.caracteristicas.historia ?? null,
+
+      attAgi: sheet.atributos.values.AGILIDADE ?? 0,
+      attPer: sheet.atributos.values.PERCEPCAO ?? 0,
+      attInt: sheet.atributos.values.INTELECTO ?? 0,
+      attAur: sheet.atributos.values.AURA ?? 0,
+      attCar: sheet.atributos.values.CARISMA ?? 0,
+      attFor: sheet.atributos.values.FORCA ?? 0,
+      attFis: sheet.atributos.values.FISICO ?? 0,
+
+      coinsCopper: sheet.dinheiro.cobre ?? 0,
+      coinsSilver: sheet.dinheiro.prata ?? 0,
+      coinsGold: sheet.dinheiro.ouro ?? 0,
+
+      pointsSkill: sheet.pontos?.habilidade ?? 0,
+      pointsWeapon: sheet.pontos?.arma ?? 0,
+      pointsCombat: sheet.pontos?.combate ?? 0,
+      pointsMagic: sheet.pontos?.magia ?? 0
+    };
   }
 
   async addSkill(characterId: number, payload: ApiAddSkillRequest): Promise<void> {
@@ -294,9 +351,25 @@ export class CharacterApiService {
       },
       habilidades: [],
       magias: [],
-      combate: { tecnicas: [], tecnicasBasicas: [], tecnicasEspecializacao: [], tecnicasRestritas: [] },
-      equipamentos:[],
-      caracteristicas: { dinheiro: { cobre: 0, prata: 0, ouro: 0 } },
+      combate: { tecnicasBasicas: [], tecnicasEspecializacao: [], tecnicasProfissao: [] },
+      equipamentos: {
+        armadura: { id: 0, grupoId: 0, nome: '', descricao: '', valor: 0 },
+        escudo: { id: 0, grupoId: 0, nome: '', descricao: '', valor: 0 },
+        capacete: { id: 0, grupoId: 0, nome: '', descricao: '', valor: 0 },
+        armas: [],
+        pertences: []
+      },
+      dinheiro: { cobre: 0, prata: 0, ouro: 0 },
+      caracteristicas:{
+        olhos: '',
+        cabelo: '',
+        pele: '',
+        idade: 0,
+        peso: 0,
+        altura: 0,
+        aparencia: '',
+        historia: ''
+      },
       caracterizacoes: [],
       equipamentosIniciais: [],
       updatedAt: new Date().toISOString()
@@ -315,6 +388,38 @@ export class CharacterApiService {
     };
 
     const maxEf = sheet.derived.maxEf ?? 0;
+
+    const rawEquips = sheet.equipments ?? [];
+
+    const mapEq = (e: typeof rawEquips[0]) => ({
+      id: e.equipmentId,
+      grupoId: e.groupid,
+      nome: e.name,
+      descricao: e.description,
+      valor: e.price,
+      isWeapon: e.isWeapon,
+      isDefense: e.isDefense,
+      isArmor: e.isArmor,
+      isShield: e.isShield,
+      isHelmet: e.isHelmet
+    });
+
+    const emptyEq = {
+        id: 0,
+        grupoId: 0,
+        nome: '',
+        descricao: '',
+        valor: 0,
+        isWeapon: 0,
+        isDefense: 0,
+        isArmor: 0,
+        isShield: 0,
+        isHelmet: 0
+    };
+
+    const armaduraItem = rawEquips.find(e => e.isArmor === 1);
+    const escudoItem = rawEquips.find(e => e.isShield === 1);
+    const capaceteItem = rawEquips.find(e => e.isHelmet === 1);
 
     return {
       id: sheet.id,
@@ -381,26 +486,17 @@ export class CharacterApiService {
         duracao: s.duration ?? ''
       })) ?? [],
       combate: {
-        tecnicas: sheet.combat?.map(c => ({
-          id: c.combatSkillId,
-          nivel: c.level ?? 0
-        })) ?? [],
-        tecnicasBasicas: [],
-        tecnicasEspecializacao: [],
-        tecnicasRestritas: []
+        tecnicasBasicas: sheet.combat?.map(c => ({ id: c.combatSkillId, nome: '', nivel: 0, custo: 0, ajuste: '', total: 0, categoria: '' })) ?? [],//.filter(c => c. === '') ?? [],
+        tecnicasEspecializacao: sheet.combat?.map(c => ({ id: c.combatSkillId, nome: '', nivel: 0, custo: 0, ajuste: '', total: 0, categoria: '' })) ?? [],
+        tecnicasProfissao: sheet.combat?.map(c => ({ id: c.combatSkillId, nome: '', nivel: 0, custo: 0, ajuste: '', total: 0, categoria: '' })) ?? []
       },
-      equipamentos: sheet.equipments?.map(s => ({
-        id: s.id,
-        grupoId: s.groupId,
-        nome: s.name,
-        descricao: s.description,
-        valor: s.value,
-        arma: s.weapon,
-        defesa: s.defense,
-        armadura: s.armor,
-        escudo: s.shield,
-        capacete: s.helmet
-      })) ?? [],
+      equipamentos: {
+        armadura: armaduraItem ? mapEq(armaduraItem) : emptyEq,
+        escudo: escudoItem ? mapEq(escudoItem) : emptyEq,
+        capacete: capaceteItem ? mapEq(capaceteItem) : emptyEq,
+        armas: rawEquips.filter(e => e.isWeapon === 1).map(mapEq),
+        pertences: rawEquips.filter(e => !e.isArmor && !e.isShield && !e.isHelmet && !e.isWeapon).map(mapEq)
+      },
       caracteristicas: {
         olhos: sheet.features.eyes ?? '',
         cabelo: sheet.features.hair ?? '',
@@ -410,16 +506,11 @@ export class CharacterApiService {
         altura: sheet.features.height ?? 0,
         aparencia: sheet.features.appearance ?? '',
         historia: sheet.features.history ?? '',
-        // pertences: sheet.equipments?.map(e => ({
-        //   equipmentId: e.equipmentId,
-        //   nome: e.name,
-        //   quantidade: e.qty ?? 1
-        // })) ?? [],
-        dinheiro: {
-          cobre: sheet.coins.copper ?? 0,
-          prata: sheet.coins.silver ?? 0,
-          ouro: sheet.coins.gold ?? 0
-        }
+      },
+      dinheiro: {
+        cobre: sheet.coins.copper ?? 0,
+        prata: sheet.coins.silver ?? 0,
+        ouro: sheet.coins.gold ?? 0
       },
       caracterizacoes: sheet.characterizations?.map(c => ({
         id: c.characterizationId,
@@ -427,45 +518,11 @@ export class CharacterApiService {
         nivel: c.level ?? null
       })) ?? [],
       equipamentosIniciais: sheet.startingEquipments?.map(c => ({
+        id: c.equipmentId,
         nome: c.name,
       })) ?? [],
       updatedAt: new Date().toISOString()
     };
   }
 
-  toUpdatePayload(sheet: CharacterSheet): ApiUpdateRequest {
-    return {
-      name: sheet.nome,
-      player: sheet.jogador ?? null,
-      level: sheet.nivel ?? null,
-      raceId: sheet.racaId ? sheet.racaId : null,
-      professionId: sheet.profissaoId ? sheet.profissaoId : null,
-
-      eyes: sheet.caracteristicas.olhos ?? null,
-      hair: sheet.caracteristicas.cabelo ?? null,
-      skin: sheet.caracteristicas.pele ?? null,
-      age: sheet.caracteristicas.idade ?? 0,
-      weight: sheet.caracteristicas.peso ?? 0,
-      height: sheet.caracteristicas.altura ?? 0,
-      appearance: sheet.caracteristicas.aparencia ?? null,
-      history: sheet.caracteristicas.historia ?? null,
-
-      attAgi: sheet.atributos.values.AGILIDADE ?? 0,
-      attPer: sheet.atributos.values.PERCEPCAO ?? 0,
-      attInt: sheet.atributos.values.INTELECTO ?? 0,
-      attAur: sheet.atributos.values.AURA ?? 0,
-      attCar: sheet.atributos.values.CARISMA ?? 0,
-      attFor: sheet.atributos.values.FORCA ?? 0,
-      attFis: sheet.atributos.values.FISICO ?? 0,
-
-      coinsCopper: sheet.caracteristicas.dinheiro.cobre ?? 0,
-      coinsSilver: sheet.caracteristicas.dinheiro.prata ?? 0,
-      coinsGold: sheet.caracteristicas.dinheiro.ouro ?? 0,
-
-      pointsSkill: sheet.pontos?.habilidade ?? 0,
-      pointsWeapon: sheet.pontos?.arma ?? 0,
-      pointsCombat: sheet.pontos?.combate ?? 0,
-      pointsMagic: sheet.pontos?.magia ?? 0
-    };
-  }
 }

@@ -5,84 +5,84 @@
       <mat-card-header>
         <mat-card-title>Caracteristicas Fisicas</mat-card-title>
         @if (!isEditingPhysicalTraits()) {
-          <button mat-icon-button (click)="startEditingPhysicalTraits()" class="header-button">
-            <mat-icon>edit</mat-icon>
-          </button>
+        <button mat-icon-button (click)="startEditingPhysicalTraits()" class="header-button">
+          <mat-icon>edit</mat-icon>
+        </button>
         }
       </mat-card-header>
       <mat-card-content>
         @if (isEditingPhysicalTraits()) {
-          <div class="grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Olhos</mat-label>
-              <input matInput [value]="getPhysicalTraits().olhos"
-                (change)="updatePhysicalTrait('olhos', ($any($event.target)).value)" />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Cabelo</mat-label>
-              <input matInput [value]="getPhysicalTraits().cabelo"
-                (change)="updatePhysicalTrait('cabelo', ($any($event.target)).value)" />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Pele</mat-label>
-              <input matInput [value]="getPhysicalTraits().pele"
-                (change)="updatePhysicalTrait('pele', ($any($event.target)).value)" />
-            </mat-form-field>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Olhos</mat-label>
+            <input matInput [value]="getPhysicalTraits().olhos"
+              (change)="updatePhysicalTrait('olhos', ($any($event.target)).value)" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cabelo</mat-label>
+            <input matInput [value]="getPhysicalTraits().cabelo"
+              (change)="updatePhysicalTrait('cabelo', ($any($event.target)).value)" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Pele</mat-label>
+            <input matInput [value]="getPhysicalTraits().pele"
+              (change)="updatePhysicalTrait('pele', ($any($event.target)).value)" />
+          </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Idade</mat-label>
-              <input matInput type="number" [value]="getPhysicalTraits().idade"
-                (change)="updatePhysicalTrait('idade', parseInt(($any($event.target)).value))" />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Peso</mat-label>
-              <input matInput type="number" [value]="getPhysicalTraits().peso"
-                (change)="updatePhysicalTrait('peso', parseInt(($any($event.target)).value))" />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Altura</mat-label>
-              <input matInput type="number" [value]="getPhysicalTraits().altura"
-                (change)="updatePhysicalTrait('altura', parseInt(($any($event.target)).value))" />
-            </mat-form-field>
-          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Idade</mat-label>
+            <input matInput type="number" [value]="getPhysicalTraits().idade"
+              (change)="updatePhysicalTrait('idade', parseInt(($any($event.target)).value))" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Peso</mat-label>
+            <input matInput type="number" [value]="getPhysicalTraits().peso"
+              (change)="updatePhysicalTrait('peso', parseInt(($any($event.target)).value))" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Altura</mat-label>
+            <input matInput type="number" [value]="getPhysicalTraits().altura"
+              (change)="updatePhysicalTrait('altura', parseInt(($any($event.target)).value))" />
+          </mat-form-field>
+        </div>
 
-          <div class="action-buttons">
-            <button mat-raised-button color="primary" (click)="savePhysicalTraits()">
-              <mat-icon>save</mat-icon>
-              Salvar
-            </button>
-            <button mat-button (click)="cancelEditingPhysicalTraits()">
-              Cancelar
-            </button>
-          </div>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="savePhysicalTraits()">
+            <mat-icon>save</mat-icon>
+            Salvar
+          </button>
+          <button mat-button (click)="cancelEditingPhysicalTraits()">
+            Cancelar
+          </button>
+        </div>
         } @else {
-          <div class="grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Olhos</mat-label>
-              <input matInput [value]="sheet.caracteristicas.olhos ?? ''" readonly />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Cabelo</mat-label>
-              <input matInput [value]="sheet.caracteristicas.cabelo ?? ''" readonly />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Pele</mat-label>
-              <input matInput [value]="sheet.caracteristicas.pele ?? ''" readonly />
-            </mat-form-field>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Olhos</mat-label>
+            <input matInput [value]="sheet.caracteristicas.olhos ?? ''" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cabelo</mat-label>
+            <input matInput [value]="sheet.caracteristicas.cabelo ?? ''" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Pele</mat-label>
+            <input matInput [value]="sheet.caracteristicas.pele ?? ''" readonly />
+          </mat-form-field>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Idade</mat-label>
-              <input matInput type="number" [value]="sheet.caracteristicas.idade ?? 0" readonly />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Peso</mat-label>
-              <input matInput type="number" [value]="sheet.caracteristicas.peso ?? 0" readonly />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Altura</mat-label>
-              <input matInput type="number" [value]="sheet.caracteristicas.altura ?? 0" readonly />
-            </mat-form-field>
-          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Idade</mat-label>
+            <input matInput type="number" [value]="sheet.caracteristicas.idade ?? 0" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Peso</mat-label>
+            <input matInput type="number" [value]="sheet.caracteristicas.peso ?? 0" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Altura</mat-label>
+            <input matInput type="number" [value]="sheet.caracteristicas.altura ?? 0" readonly />
+          </mat-form-field>
+        </div>
         }
       </mat-card-content>
     </mat-card>
@@ -92,30 +92,30 @@
       <mat-card-header>
         <mat-card-title>Aparencia</mat-card-title>
         @if (!isEditingAparencia()) {
-          <button mat-icon-button (click)="startEditingAparencia()" class="header-button">
-            <mat-icon>edit</mat-icon>
-          </button>
+        <button mat-icon-button (click)="startEditingAparencia()" class="header-button">
+          <mat-icon>edit</mat-icon>
+        </button>
         }
       </mat-card-header>
       <mat-card-content>
         @if (isEditingAparencia()) {
-          <mat-form-field appearance="outline" class="full">
-            <textarea matInput rows="4" [value]="getAparencia()"
-              (change)="aparencia.set(($any($event.target)).value)"></textarea>
-          </mat-form-field>
-          <div class="action-buttons">
-            <button mat-raised-button color="primary" (click)="saveAparencia()">
-              <mat-icon>save</mat-icon>
-              Salvar
-            </button>
-            <button mat-button (click)="cancelEditingAparencia()">
-              Cancelar
-            </button>
-          </div>
+        <mat-form-field appearance="outline" class="full">
+          <textarea matInput rows="4" [value]="getAparencia()"
+            (change)="aparencia.set(($any($event.target)).value)"></textarea>
+        </mat-form-field>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveAparencia()">
+            <mat-icon>save</mat-icon>
+            Salvar
+          </button>
+          <button mat-button (click)="cancelEditingAparencia()">
+            Cancelar
+          </button>
+        </div>
         } @else {
-          <mat-form-field appearance="outline" class="full">
-            <textarea matInput rows="4" [value]="sheet.caracteristicas.aparencia ?? ''" readonly></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="outline" class="full">
+          <textarea matInput rows="4" [value]="sheet.caracteristicas.aparencia ?? ''" readonly></textarea>
+        </mat-form-field>
         }
       </mat-card-content>
     </mat-card>
@@ -125,30 +125,30 @@
       <mat-card-header>
         <mat-card-title>Historia</mat-card-title>
         @if (!isEditingHistoria()) {
-          <button mat-icon-button (click)="startEditingHistoria()" class="header-button">
-            <mat-icon>edit</mat-icon>
-          </button>
+        <button mat-icon-button (click)="startEditingHistoria()" class="header-button">
+          <mat-icon>edit</mat-icon>
+        </button>
         }
       </mat-card-header>
       <mat-card-content>
         @if (isEditingHistoria()) {
-          <mat-form-field appearance="outline" class="full">
-            <textarea matInput rows="8" [value]="getHistoria()"
-              (change)="historia.set(($any($event.target)).value)"></textarea>
-          </mat-form-field>
-          <div class="action-buttons">
-            <button mat-raised-button color="primary" (click)="saveHistoria()">
-              <mat-icon>save</mat-icon>
-              Salvar
-            </button>
-            <button mat-button (click)="cancelEditingHistoria()">
-              Cancelar
-            </button>
-          </div>
+        <mat-form-field appearance="outline" class="full">
+          <textarea matInput rows="8" [value]="getHistoria()"
+            (change)="historia.set(($any($event.target)).value)"></textarea>
+        </mat-form-field>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveHistoria()">
+            <mat-icon>save</mat-icon>
+            Salvar
+          </button>
+          <button mat-button (click)="cancelEditingHistoria()">
+            Cancelar
+          </button>
+        </div>
         } @else {
-          <mat-form-field appearance="outline" class="full">
-            <textarea matInput rows="8" [value]="sheet.caracteristicas.historia ?? ''" readonly></textarea>
-          </mat-form-field>
+        <mat-form-field appearance="outline" class="full">
+          <textarea matInput rows="8" [value]="sheet.caracteristicas.historia ?? ''" readonly></textarea>
+        </mat-form-field>
         }
       </mat-card-content>
     </mat-card>
@@ -160,54 +160,54 @@
       <mat-card-header>
         <mat-card-title>Dinheiro</mat-card-title>
         @if (!isEditingMoney()) {
-          <button mat-icon-button (click)="startEditingMoney()" class="header-button">
-            <mat-icon>edit</mat-icon>
-          </button>
+        <button mat-icon-button (click)="startEditingMoney()" class="header-button">
+          <mat-icon>edit</mat-icon>
+        </button>
         }
       </mat-card-header>
       <mat-card-content class="money">
         <div class="selectors">
           @if (isEditingMoney()) {
-            <mat-form-field appearance="outline">
-              <mat-label>Moedas de Cobre</mat-label>
-              <input matInput type="number" [value]="getMoney().cobre"
-                (change)="updateMoney('cobre', parseInt(($any($event.target)).value))" />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Moedas de Prata</mat-label>
-              <input matInput type="number" [value]="getMoney().prata"
-                (change)="updateMoney('prata', parseInt(($any($event.target)).value))" />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Moedas de Ouro</mat-label>
-              <input matInput type="number" [value]="getMoney().ouro"
-                (change)="updateMoney('ouro', parseInt(($any($event.target)).value))" />
-            </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Cobre</mat-label>
+            <input matInput type="number" [value]="getMoney().cobre"
+              (change)="updateMoney('cobre', parseInt(($any($event.target)).value))" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Prata</mat-label>
+            <input matInput type="number" [value]="getMoney().prata"
+              (change)="updateMoney('prata', parseInt(($any($event.target)).value))" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Ouro</mat-label>
+            <input matInput type="number" [value]="getMoney().ouro"
+              (change)="updateMoney('ouro', parseInt(($any($event.target)).value))" />
+          </mat-form-field>
           } @else {
-            <mat-form-field appearance="outline">
-              <mat-label>Moedas de Cobre</mat-label>
-              <input matInput type="number" [value]="sheet.caracteristicas.dinheiro.cobre" readonly />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Moedas de Prata</mat-label>
-              <input matInput type="number" [value]="sheet.caracteristicas.dinheiro.prata" readonly />
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-              <mat-label>Moedas de Ouro</mat-label>
-              <input matInput type="number" [value]="sheet.caracteristicas.dinheiro.ouro" readonly />
-            </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Cobre</mat-label>
+            <input matInput type="number" [value]="sheet.dinheiro.cobre" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Prata</mat-label>
+            <input matInput type="number" [value]="sheet.dinheiro.prata" readonly />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Moedas de Ouro</mat-label>
+            <input matInput type="number" [value]="sheet.dinheiro.ouro" readonly />
+          </mat-form-field>
           }
         </div>
         @if (isEditingMoney()) {
-          <div class="action-buttons">
-            <button mat-raised-button color="primary" (click)="saveMoney()">
-              <mat-icon>save</mat-icon>
-              Salvar
-            </button>
-            <button mat-button (click)="cancelEditingMoney()">
-              Cancelar
-            </button>
-          </div>
+        <div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="saveMoney()">
+            <mat-icon>save</mat-icon>
+            Salvar
+          </button>
+          <button mat-button (click)="cancelEditingMoney()">
+            Cancelar
+          </button>
+        </div>
         }
       </mat-card-content>
     </mat-card>
@@ -246,10 +246,13 @@
             </tr>
           </thead>
           <tbody>
+            @for(c of getPertences(); track c.id){
             <tr>
-              <td colspan="3" class="muted">Sem dados.</td>
+              <td>{{c.nome}}</td>
+              <td>{{c.descricao}}</td>
+              <td>{{c.valor}}</td>
             </tr>
-
+            }
           </tbody>
         </table>
       </mat-card-content>
@@ -257,20 +260,20 @@
 
     <!-- <div class="row"> -->
 
-     <mat-card>
-        <mat-card-title>Equipamentos Iniciais</mat-card-title>
-        <mat-card-content>
-          <div class="equip-list">
-            @if (sheet.equipamentosIniciais.length === 0) {
-            <div class="muted">Sem dados.</div>
-            } @else {
-                @for (e of sheet.equipamentosIniciais; track e) {
-                    <div>{{e.nome}}</div>
-                }
-            }
-          </div>
-        </mat-card-content>
-      </mat-card>
+    <mat-card>
+      <mat-card-title>Equipamentos Iniciais</mat-card-title>
+      <mat-card-content>
+        <div class="equip-list">
+          @if (sheet.equipamentosIniciais.length === 0) {
+          <div class="muted">Sem dados.</div>
+          } @else {
+          @for (e of sheet.equipamentosIniciais; track e) {
+          <div>{{e.nome}}</div>
+          }
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
     <!-- </div> -->
   </div>
 </div>

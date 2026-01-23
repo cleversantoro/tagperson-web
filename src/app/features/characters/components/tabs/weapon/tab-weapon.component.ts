@@ -5,7 +5,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { CharacterSheet } from '../../../../../core/models/character.models';
+import { CharacterSheet, EquipmentRow } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 
@@ -33,14 +33,16 @@ export class TabWeaponComponent implements OnInit {
   // Sinais para editar armaduras/elmos/escudos
   private editingArmor = signal(false);
   private armorData = signal({
-    armadura: '',
+    armadura: '' ,
     elmo: '',
-    escudo: ''
+    escudo: '',
+    armas: [] as EquipmentRow[],
+    pertences: [] as EquipmentRow[]
   });
 
   // Sinais para editar arma
-  private editingWeapon = signal(false);
-  private weaponData = signal('');
+  addWeaponOpen = signal(false);
+  selectedWeapon = signal('');
 
   armaduras = computed(() => this.rules.equipments().filter(e => (e.isArmor ?? 0) === 1));
   elmos = computed(() => this.rules.equipments().filter(e => (e.isHelmet ?? 0) === 1));
@@ -52,37 +54,34 @@ export class TabWeaponComponent implements OnInit {
     effect(() => {
       if (this.sheetSignal()) {
         this.initializeArmorData();
-        this.initializeWeaponData();
         // Resetar modo de edição ao mudar de personagem
         this.editingArmor.set(false);
-        this.editingWeapon.set(false);
+        this.addWeaponOpen.set(false);
       }
     });
   }
 
   ngOnInit() {
     this.initializeArmorData();
-    this.initializeWeaponData();
   }
 
   private initializeArmorData() {
     this.armorData.set({
-      armadura: this.sheet.combate.armadura || '',
-      elmo: this.sheet.combate.elmo || '',
-      escudo: this.sheet.combate.escudo || ''
+      armadura: this.sheet.equipamentos.armadura.nome || '',
+      elmo: this.sheet.equipamentos.capacete.nome || '',
+      escudo: this.sheet.equipamentos.escudo.nome || '',
+      armas: this.sheet.equipamentos.armas || [],
+      pertences: this.sheet.equipamentos.pertences || []
     });
-  }
-
-  private initializeWeaponData() {
-    this.weaponData.set(this.sheet.combate.arma || '');
   }
 
   startEditingArmor() {
     this.editingArmor.set(true);
   }
 
-  startEditingWeapon() {
-    this.editingWeapon.set(true);
+  openAddWeapon() {
+    this.selectedWeapon.set('');
+    this.addWeaponOpen.set(true);
   }
 
   async saveArmor() {
@@ -90,16 +89,16 @@ export class TabWeaponComponent implements OnInit {
     await this.store.updateGear(this.sheet.id, {
       armadura: data.armadura,
       elmo: data.elmo,
-      escudo: data.escudo
+      escudo: data.escudo,
     });
     this.editingArmor.set(false);
   }
 
   async saveWeapon() {
     await this.store.updateGear(this.sheet.id, {
-      arma: this.weaponData()
+      arma: this.selectedWeapon()
     });
-    this.editingWeapon.set(false);
+    this.addWeaponOpen.set(false);
   }
 
   cancelEditArmor() {
@@ -107,9 +106,8 @@ export class TabWeaponComponent implements OnInit {
     this.editingArmor.set(false);
   }
 
-  cancelEditWeapon() {
-    this.initializeWeaponData();
-    this.editingWeapon.set(false);
+  closeAddWeapon() {
+    this.addWeaponOpen.set(false);
   }
 
   updateArmorField(field: 'armadura' | 'elmo' | 'escudo', value: string) {
@@ -119,24 +117,12 @@ export class TabWeaponComponent implements OnInit {
     });
   }
 
-  updateWeaponField(value: string) {
-    this.weaponData.set(value);
-  }
-
   // Getters para template
   getEditingArmor() {
     return this.editingArmor();
   }
 
-  getEditingWeapon() {
-    return this.editingWeapon();
-  }
-
   getArmorData() {
     return this.armorData();
-  }
-
-  getWeaponData() {
-    return this.weaponData();
   }
 }

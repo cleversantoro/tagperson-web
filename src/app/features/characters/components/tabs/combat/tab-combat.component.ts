@@ -28,13 +28,13 @@ export class TabCombatComponent {
 
   private techMap = computed(() => {
     const map = new Map<number, number>();
-    for (const t of this.sheetSignal()?.combate.tecnicas ?? []) {
+    for (const t of this.sheetSignal()?.combate.tecnicasBasicas ?? []) {
       map.set(t.id, t.nivel ?? 0);
     }
     return map;
   });
 
-  private ownedTechIds = computed(() => new Set((this.sheetSignal()?.combate.tecnicas ?? []).map(t => t.id)));
+  private ownedTechIds = computed(() => new Set((this.sheetSignal()?.combate.tecnicasBasicas ?? []).map(t => t.id)));
 
   private professionMainGroup = computed(() => {
     const prof = this.normalizeName(this.sheetSignal()?.profissao ?? '');

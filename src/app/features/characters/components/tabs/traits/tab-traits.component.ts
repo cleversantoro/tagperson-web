@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { CharacterSheet, Traits } from '../../../../../core/models/character.models';
+import { CharacterSheet, Traits, EquipmentRow } from '../../../../../core/models/character.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 import { RulesService } from '../../../../../core/services/rules.service';
 
@@ -50,6 +50,7 @@ export class TabTraitsComponent implements OnInit {
   private editingHistoria = signal(false);
   aparencia = signal('');
   historia = signal('');
+  pertences = signal([] as Array<EquipmentRow>)
 
   private rules = inject(RulesService);
   private store = inject(CharacterStore);
@@ -93,10 +94,12 @@ export class TabTraitsComponent implements OnInit {
     });
 
     this.money.set({
-      cobre: this.sheet.caracteristicas.dinheiro.cobre,
-      prata: this.sheet.caracteristicas.dinheiro.prata,
-      ouro: this.sheet.caracteristicas.dinheiro.ouro
+      cobre: this.sheet.dinheiro.cobre,
+      prata: this.sheet.dinheiro.prata,
+      ouro: this.sheet.dinheiro.ouro
     });
+
+    this.pertences.set(this.sheet.equipamentos.pertences ?? []);
 
     this.aparencia.set(this.sheet.caracteristicas.aparencia ?? '');
     this.historia.set(this.sheet.caracteristicas.historia ?? '');
@@ -190,6 +193,10 @@ export class TabTraitsComponent implements OnInit {
 
   getAparencia() {
     return this.aparencia();
+  }
+
+  getPertences() {
+    return this.pertences();
   }
 
   getHistoria() {
