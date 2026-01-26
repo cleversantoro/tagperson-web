@@ -20,7 +20,7 @@
       <tbody>
         @for (c of filtered(); track c.id) {
           <tr (click)="store.select(c.id)" [class.active]="store.selectedId() === c.id" style="cursor: pointer">
-            <td [title]="c.profissao"><img [src]="'public/imagens/ico/profissao/' + c.profissao.trim().toLowerCase() + '.png'" height="24" width="24" [alt]="c.profissao"></td>
+            <td [title]="c.profissao"><img [src]="'assets/profissao/' + c.profissao.trim().toLowerCase() + '.png'" height="24" width="24" [alt]="c.profissao"></td>
             <td>{{c.nome}}</td>
             <td>{{c.nivel}}</td>
           </tr>

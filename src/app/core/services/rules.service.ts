@@ -20,6 +20,7 @@ export class RulesService {
   readonly skillGroups = signal<SkillGroupWithSkills[]>([]);
   readonly combatGroups = signal<CombatGroupWithItems[]>([]);
   readonly spellGroups = signal<SpellGroupWithSpells[]>([]);
+  //readonly spellProfession = signal<SpellFromGroup[]>([]);
   readonly equipmentGroups = signal<EquipmentGroupWithItems[]>([]);
   readonly equipments = signal<EquipmentLookup[]>([]);
   //readonly equipmentBelonging = signal<EquipmentBelongings[]>([]);
@@ -39,6 +40,7 @@ export class RulesService {
       groups,
       combatGroups,
       spellGroups,
+      //spellProfession,
       equipmentGroups,
       equipments,
       //equipmentBelonging,
@@ -51,6 +53,7 @@ export class RulesService {
           firstValueFrom(this.http.get<SkillGroup[]>(`${API_BASE_URL}/skills/groups`)),
           firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups`)),
           firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups`)),
+          //firstValueFrom(this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/groups`)),
           firstValueFrom(this.http.get<EquipmentGroup[]>(`${API_BASE_URL}/equipments/groups`)),
           firstValueFrom(this.http.get<EquipmentLookup[]>(`${API_BASE_URL}/lookups/equipments`)),
           //firstValueFrom(this.http.get<EquipmentBelongings[]>(`${API_BASE_URL}/equipments/belongings`)),
@@ -66,6 +69,7 @@ export class RulesService {
     await this.loadSkills(groups);
     await this.loadCombat(combatGroups);
     await this.loadSpells(spellGroups);
+    //await this.loadSpellBasis(profs[0].id, spellProfession);
     await this.loadEquipmentGroups(equipmentGroups);
     //await this.loadEquipmentBelonging(equipmentBelonging);
 
@@ -92,7 +96,7 @@ export class RulesService {
 
   private async loadCombat(groups: CombatGroup[]) {
     const childrenLists = await Promise.all(
-      groups.map(g => firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups/${g.id}/combat_children`)))
+      groups.map(g => firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups`)))
     );
 
     // const flatGroups = childrenLists.flatMap((children, idx) =>
@@ -122,13 +126,13 @@ export class RulesService {
 
   private async loadSpells(groups: SpellGroup[]) {
     const childrenLists = await Promise.all(
-      groups.map(g => firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups/${g.id}/children`)))
+      groups.map(g => firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups`)))
     );
 
     const flatGroups = this.mergeGroupsPreferParents(groups, childrenLists);
 
     const spellsLists = await Promise.all(
-      flatGroups.map(g => firstValueFrom(this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/groups/${g.id}/spells`)))
+      flatGroups.map(g => firstValueFrom(this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/groups/${g.id}/spell_items`)))
     );
 
     const merged: SpellGroupWithSpells[] = flatGroups.map((group, idx) => ({
@@ -141,11 +145,11 @@ export class RulesService {
 
   private async loadEquipmentGroups(groups: EquipmentGroup[]) {
     const itemsLists = await Promise.all(
-      groups.map(g => firstValueFrom(this.http.get<EquipmentFromGroup[]>(`${API_BASE_URL}/equipments/groups/${g.id}/items`)))
+      groups.map(g => firstValueFrom(this.http.get<EquipmentFromGroup[]>(`${API_BASE_URL}/equipments/groups/${g.id}/equipment_items`)))
     );
 
-      groups.splice(1,2)
-      itemsLists.splice(1,2)
+    groups.splice(1, 2)
+    itemsLists.splice(1, 2)
 
     const merged: EquipmentGroupWithItems[] = groups.map((group, idx) => ({
       group,
@@ -162,4 +166,14 @@ export class RulesService {
       this.http.get<SkillSpecializationSuggestion[]>(`${API_BASE_URL}/skills/${skillId}/specializations`)
     );
   }
+
+  private async loadSpellBasis(ProfessionId: number, spells: SpellFromGroup[]) {
+    const SpellLists = await Promise.all(
+      spells.map(g => firstValueFrom(this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/views/${ProfessionId}/spell_profession`)))
+    );
+
+    //this.spellProfession.set(spells);
+  }
+
+
 }

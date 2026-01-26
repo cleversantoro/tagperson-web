@@ -44,18 +44,23 @@ export class TabSpellsComponent {
   private selectedSpell = signal<SpellFromGroup | null>(null);
 
   groups = this.rules.spellGroups;
+  //basicsspell = this.rules.spellProfession;
 
   private spellMap = computed(() => {
+    const sheet = this.sheetSignal();
     const map = new Map<number, number>();
-    for (const s of this.sheet.magias ?? []) {
+    if (!sheet) return map;
+    for (const s of sheet.magias ?? []) {
       map.set(s.id, s.nivel ?? 0);
     }
     return map;
   });
 
   private characterSpellIds = computed(() => {
+    const sheet = this.sheetSignal();
     const ids = new Set<number>();
-    for (const s of this.sheet.magias ?? []) {
+    if (!sheet) return ids;
+    for (const s of sheet.magias ?? []) {
       ids.add(s.id);
     }
     return ids;
@@ -64,8 +69,9 @@ export class TabSpellsComponent {
   // Calcula magias básicas (grupos com parentId = null ou -1)
   basicas = computed(() => {
     const all = this.groups() ?? [];
+    //const list = this.basicsspell() ?? [];
     const characterIds = this.characterSpellIds();
-    const basicGroups = all.filter(g => !g.group.parentId || g.group.parentId === -1);
+    const basicGroups = all;
     return basicGroups.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
   });
 
@@ -73,14 +79,15 @@ export class TabSpellsComponent {
   especializacao = computed(() => {
     const all = this.groups() ?? [];
     const characterIds = this.characterSpellIds();
+    const sheet = this.sheetSignal();
 
     // Verifica se pode ter magias de especialização
-    if (!this.canLearnSpecializationSpells()) {
+    if (!this.canLearnSpecializationSpells() || !sheet) {
       return [];
     }
 
     const specializationGroups = all.filter(
-      g => g.group.parentId && g.group.parentId !== -1 && g.group.id === this.sheet.especializacao?.magiaGrupoId
+      g => g.group.parentId && g.group.parentId !== -1 && g.group.id === sheet.especializacao?.magiaGrupoId
     );
 
     return specializationGroups.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
@@ -90,7 +97,7 @@ export class TabSpellsComponent {
   availableBasicSpells = computed(() => {
     const all = this.groups() ?? [];
     const characterIds = this.characterSpellIds();
-    const basicGroups = all.filter(g => !g.group.parentId || g.group.parentId === -1);
+    const basicGroups = all;
     const allBasic = basicGroups.flatMap(g => g.spells);
     return allBasic.filter(s => !characterIds.has(s.id));
   });
@@ -100,9 +107,11 @@ export class TabSpellsComponent {
     if (!this.canLearnSpecializationSpells()) {
       return [];
     }
+    const sheet = this.sheetSignal();
+    if (!sheet) return [];
     const all = this.groups() ?? [];
     const characterIds = this.characterSpellIds();
-    const specializationGroups = all.filter(g => g.group.parentId && g.group.parentId !== -1 && g.group.id === this.sheet.especializacao?.magiaGrupoId);
+    const specializationGroups = all.filter(g => g.group.parentId && g.group.parentId !== -1 && g.group.id === sheet.especializacao?.magiaGrupoId);
     const allSpecialization = specializationGroups.flatMap(g => g.spells);
     return allSpecialization.filter(s => !characterIds.has(s.id));
   });
@@ -137,7 +146,8 @@ export class TabSpellsComponent {
    * 2. Especialização cadastrada
    */
   canLearnSpecializationSpells(): boolean {
-    return (this.sheet.nivel ?? 0) >= 5 && !!this.sheet.especializacao;
+    const sheet = this.sheetSignal();
+    return !!sheet && (sheet.nivel ?? 0) >= 5; //&& this.sheet.especializacao?.magiaGrupoId > 0;
   }
 
   /**
@@ -199,5 +209,3 @@ export class TabSpellsComponent {
     }
   }
 }
-
-
