@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from './api-config';
 import { CharacterSheet, AttributeKey } from '../models/character.models';
+import { SpellFromGroup } from '../models/spells.models';
 
 interface ApiCharacterListItem {
   id: number;
@@ -305,6 +306,17 @@ export class CharacterApiService {
     }));
   }
 
+  // Busca as magias disponíveis para uma profissão específica
+  getProfessionSpells(professionId: number) {
+    return this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/views/${professionId}/spell_profession`);
+  }
+
+  // Adiciona uma magia ao personagem
+  addCharacterSpell(characterId: number, spellId: number) {
+    // Assumindo que o payload espera o ID da magia. Ajuste conforme seu backend se necessário.
+    return this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/spells`, { spellId });
+  }
+
   mapListItem(item: ApiCharacterListItem): CharacterSheet {
     return {
       id: item.id,
@@ -353,7 +365,7 @@ export class CharacterApiService {
         energiaHeroica: 0
       },
       habilidades: [],
-      magias: [],
+      magias: { magiasProfissao: [], magiasEspecializacao: [] },
       combate: { tecnicasBasicas: [], tecnicasEspecializacao: [], tecnicasProfissao: [] },
       equipamentos: {
         armadura: { id: 0, grupoId: 0, nome: '', descricao: '', valor: 0 },
@@ -363,7 +375,7 @@ export class CharacterApiService {
         pertences: []
       },
       dinheiro: { cobre: 0, prata: 0, ouro: 0 },
-      caracteristicas:{
+      caracteristicas: {
         olhos: '',
         cabelo: '',
         pele: '',
@@ -393,6 +405,8 @@ export class CharacterApiService {
     const maxEf = sheet.derived.maxEf ?? 0;
 
     const rawEquips = sheet.equipments ?? [];
+    const rawSpells = sheet.spells ?? [];
+    const rawCombat = sheet.combat ?? [];
 
     const mapEq = (e: typeof rawEquips[0]) => ({
       id: e.equipmentId,
@@ -407,22 +421,46 @@ export class CharacterApiService {
       isHelmet: e.isHelmet
     });
 
+    const mapSpell = (e: typeof rawSpells[0]) => ({
+      id: e.spellId,
+      nome: e.name,
+      evocacao: e.evocation ?? '',
+      duracao: e.duration ?? '',
+      nivel: e.level ?? 0,
+      alcance: e.range ?? ''
+    });
+
+    const mapCombat = (e: typeof rawCombat[0]) => ({
+      id: e.combatSkillId,
+      nome: e.name,
+      grupo: e.group ?? 0,
+      atributo: e.attributeCode ?? '',
+      nivel: e.level ?? 0,
+    });
+
     const emptyEq = {
-        id: 0,
-        grupoId: 0,
-        nome: '',
-        descricao: '',
-        valor: 0,
-        isWeapon: 0,
-        isDefense: 0,
-        isArmor: 0,
-        isShield: 0,
-        isHelmet: 0
+      id: 0,
+      grupoId: 0,
+      nome: '',
+      descricao: '',
+      valor: 0,
+      isWeapon: 0,
+      isDefense: 0,
+      isArmor: 0,
+      isShield: 0,
+      isHelmet: 0
     };
 
     const armaduraItem = rawEquips.find(e => e.isArmor === 1);
     const escudoItem = rawEquips.find(e => e.isShield === 1);
     const capaceteItem = rawEquips.find(e => e.isHelmet === 1);
+
+    const tecnicasBasicas = rawCombat.filter(c => c.group === 0);
+    const tecnicasEspecializacao = rawCombat.filter(c => c.group === 1);
+    const tecnicasProfissao = rawCombat.filter(c => c.group === 2);
+
+    const magiasProfissao = rawSpells; //.filter(c => c. === 2);
+    const magiasEspecializacao = rawSpells; //.filter(c => c. === 1);
 
     return {
       id: sheet.id,
@@ -477,21 +515,14 @@ export class CharacterApiService {
         ajuste: s.attributeCode ?? '',
         hasSpecialization: (s.hasSpecialization ?? 0) === 1
       })) ?? [],
-      magias: sheet.spells?.map(s => ({
-        id: s.spellId,
-        nome: s.name,
-        nivel: s.level ?? 0,
-        custo: 0,
-        total: 0,
-        grupo: 'Basica',
-        evocacao: s.evocation ?? '',
-        alcance: s.range ?? '',
-        duracao: s.duration ?? ''
-      })) ?? [],
+      magias: {
+        magiasProfissao: magiasProfissao.map(mapSpell),
+        magiasEspecializacao: magiasEspecializacao.map(mapSpell)
+      },
       combate: {
-        tecnicasBasicas: sheet.combat?.map(c => ({ id: c.combatSkillId, nome: '', nivel: 0, custo: 0, ajuste: '', total: 0, categoria: '' })) ?? [],//.filter(c => c. === '') ?? [],
-        tecnicasEspecializacao: sheet.combat?.map(c => ({ id: c.combatSkillId, nome: '', nivel: 0, custo: 0, ajuste: '', total: 0, categoria: '' })) ?? [],
-        tecnicasProfissao: sheet.combat?.map(c => ({ id: c.combatSkillId, nome: '', nivel: 0, custo: 0, ajuste: '', total: 0, categoria: '' })) ?? []
+        tecnicasBasicas:  tecnicasBasicas.map(mapCombat),
+        tecnicasEspecializacao: tecnicasEspecializacao.map(mapCombat),
+        tecnicasProfissao: tecnicasProfissao.map(mapCombat)
       },
       equipamentos: {
         armadura: armaduraItem ? mapEq(armaduraItem) : emptyEq,

@@ -1,0 +1,43 @@
+<!-- <h2 mat-dialog-title>Adicionar Magia da Profissão</h2> -->
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+
+  <!--<mat-nav-list>
+     @for (spell of spells$ | async; track spell.id) {
+    <a mat-list-item (click)="select(spell)">
+      <mat-icon matListItemIcon>auto_awesome</mat-icon>
+      <span matListItemTitle>{{spell.name}}</span>
+      <span matListItemLine>Nível {{spell.name}} • Custo {{spell.cost}}</span>
+    </a>
+    } @empty {
+    <div class="empty-state">Nenhuma magia disponível para esta profissão.</div>
+    }
+  </mat-nav-list> -->
+
+  <mat-form-field appearance="outline" class="search-field">
+    <mat-label>Buscar magia</mat-label>
+    <input matInput [(ngModel)]="searchText" />
+  </mat-form-field>
+
+  <mat-list>
+    @for (spell of spells$ | async; track spell.id){
+    <mat-list-item class="spell-item" (click)="select(spell)">
+      <strong>{{ spell.name }}</strong>
+      @if (spell.cost) {
+      <span class="spell-cost"> • Custo: {{ spell.cost }}</span>
+      }
+    </mat-list-item>
+    }
+  </mat-list>
+
+</mat-dialog-content>
+
+<!-- <mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+</mat-dialog-actions> -->
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-raised-button color="primary" (click)="confirm()" [disabled]="!selected()"> Adicionar </button>
+</mat-dialog-actions>

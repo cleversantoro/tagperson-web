@@ -81,31 +81,34 @@ export interface EquipmentState {
 export interface SpellRow {
   id: number;
   nome: string;
-  nivel: number;
-  custo: number;
-  total: number;
   evocacao?: string;
-  alcance?: string;
   duracao?: string;
-  efeitos?: string;
-  descricao?: string;
+  nivel: number;
+  alcance?: string;
+  //custo: number;
+  //descricao?: string;
+  //efeitos?: string;
+  //total: number;
+  //isProfissao?: number | null;
+  //isEspecializacao?: number | null;
 }
 
 export interface SpellState {
-  magiasBasicas?: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
-  magiasEspecializacao?: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
-  magiasRestritas?: Array<{ nome: string; nivel: number; custo: number; ajuste: string; total: number; categoria: string }>;
+  magiasProfissao?: SpellRow[];
+  magiasEspecializacao?: SpellRow[];
 }
 
 /*****Combate*****/
 export interface CombatRow {
   id: number;
   nome: string;
-  nivel: number;
-  custo: number;
-  ajuste: string;
-  total: number;
-  categoria: string
+  grupo?: number;
+  atributo?: string;
+  nivel?: number;
+  //custo: number;
+  //ajuste: string;
+  //total: number;
+  //categoria: string
 }
 
 export interface CombatState {
@@ -172,7 +175,7 @@ export interface CharacterSheet {
   derivados: DerivedStats;
 
   habilidades: SkillRow[];
-  magias: SpellRow[];
+  magias: SpellState;
   combate: CombatState;
   equipamentos: EquipmentState;
   caracteristicas: Traits;

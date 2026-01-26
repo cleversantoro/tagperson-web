@@ -1,0 +1,42 @@
+    // mat-dialog-content {
+    //   min-width: 350px;
+    //   max-height: 400px;
+    // }
+
+    .empty-state {
+      padding: 20px;
+      text-align: center;
+      color: gray;
+    }
+
+    .search-field {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    mat-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .spell-item {
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+
+    .spell-cost {
+      margin-left: auto;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    mat-dialog-actions {
+      padding-top: 16px;
+    }
+

@@ -9,7 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { CharacterSheet } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
-import { SpellFromGroup, SpellGroupWithSpells } from '../../../../../core/models/spells.models';
+import { SpellFromGroup, SpellTechniquesDto } from '../../../../../core/models/spells.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 import { SpellSelectionDialogComponent } from './spell-selection-dialog.component';
 
@@ -50,7 +50,7 @@ export class TabSpellsComponent {
     const sheet = this.sheetSignal();
     const map = new Map<number, number>();
     if (!sheet) return map;
-    for (const s of sheet.magias ?? []) {
+    for (const s of sheet.magias.magiasProfissao ?? []) {
       map.set(s.id, s.nivel ?? 0);
     }
     return map;
@@ -60,7 +60,7 @@ export class TabSpellsComponent {
     const sheet = this.sheetSignal();
     const ids = new Set<number>();
     if (!sheet) return ids;
-    for (const s of sheet.magias ?? []) {
+    for (const s of sheet.magias.magiasProfissao ?? []) {
       ids.add(s.id);
     }
     return ids;
@@ -69,7 +69,6 @@ export class TabSpellsComponent {
   // Calcula magias básicas (grupos com parentId = null ou -1)
   basicas = computed(() => {
     const all = this.groups() ?? [];
-    //const list = this.basicsspell() ?? [];
     const characterIds = this.characterSpellIds();
     const basicGroups = all;
     return basicGroups.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
@@ -150,24 +149,21 @@ export class TabSpellsComponent {
     return !!sheet && (sheet.nivel ?? 0) >= 5; //&& this.sheet.especializacao?.magiaGrupoId > 0;
   }
 
-  /**
-   * Abre diálogo para adicionar magia básica
-   */
   addBasicSpell() {
-    const spells = this.availableBasicSpells();
-    if (spells.length === 0) {
-      return; // Nenhuma magia disponível
-    }
-
-    this.dialog.open(SpellSelectionDialogComponent, {
+    // Abre o diálogo passando o ID da profissão e do personagem
+    const dialogRef = this.dialog.open(SpellSelectionDialogComponent, {
       data: {
-        spells,
-        title: 'Adicionar Magia Básica'
+        professionId: this.sheet.profissaoId, // Certifique-se que essa propriedade existe no sheet
+        characterId: this.sheet.id,
+        title: 'Adicionar Magia da Profissão'
       },
       width: '600px'
-    }).afterClosed().subscribe(async (spell: SpellFromGroup | undefined) => {
-      if (spell) {
-        await this.addSpell(spell.id);
+    });
+
+    // Se salvou com sucesso (retornou true), recarrega o personagem
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.store.select(this.sheet.id);
       }
     });
   }
@@ -180,14 +176,15 @@ export class TabSpellsComponent {
       return; // Não pode adicionar
     }
 
-    const spells = this.availableSpecializationSpells();
-    if (spells.length === 0) {
-      return; // Nenhuma magia disponível
-    }
+    // const spells = this.availableSpecializationSpells();
+    // if (spells.length === 0) {
+    //   return; // Nenhuma magia disponível
+    // }
 
     this.dialog.open(SpellSelectionDialogComponent, {
       data: {
-        spells,
+        professionId: this.sheet.profissaoId, // Certifique-se que essa propriedade existe no sheet
+        characterId: this.sheet.id,
         title: 'Adicionar Magia de Especialização'
       },
       width: '600px'

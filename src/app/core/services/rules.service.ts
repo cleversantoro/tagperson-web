@@ -20,10 +20,8 @@ export class RulesService {
   readonly skillGroups = signal<SkillGroupWithSkills[]>([]);
   readonly combatGroups = signal<CombatGroupWithItems[]>([]);
   readonly spellGroups = signal<SpellGroupWithSpells[]>([]);
-  //readonly spellProfession = signal<SpellFromGroup[]>([]);
   readonly equipmentGroups = signal<EquipmentGroupWithItems[]>([]);
   readonly equipments = signal<EquipmentLookup[]>([]);
-  //readonly equipmentBelonging = signal<EquipmentBelongings[]>([]);
   readonly categories = signal<CategoryLookup[]>([]);
 
   constructor(private http: HttpClient, private auth: AuthService) {
@@ -40,10 +38,8 @@ export class RulesService {
       groups,
       combatGroups,
       spellGroups,
-      //spellProfession,
       equipmentGroups,
       equipments,
-      //equipmentBelonging,
       categories
     ] = await Promise.all
       (
@@ -53,10 +49,8 @@ export class RulesService {
           firstValueFrom(this.http.get<SkillGroup[]>(`${API_BASE_URL}/skills/groups`)),
           firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups`)),
           firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups`)),
-          //firstValueFrom(this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/groups`)),
           firstValueFrom(this.http.get<EquipmentGroup[]>(`${API_BASE_URL}/equipments/groups`)),
           firstValueFrom(this.http.get<EquipmentLookup[]>(`${API_BASE_URL}/lookups/equipments`)),
-          //firstValueFrom(this.http.get<EquipmentBelongings[]>(`${API_BASE_URL}/equipments/belongings`)),
           firstValueFrom(this.http.get<CategoryLookup[]>(`${API_BASE_URL}/lookups/categories`))
         ]
       );
@@ -65,14 +59,10 @@ export class RulesService {
     this.professions.set(profs);
     this.equipments.set(equipments);
     this.categories.set(categories);
-    //this.equipmentBelonging.set(equipmentBelonging);
     await this.loadSkills(groups);
     await this.loadCombat(combatGroups);
     await this.loadSpells(spellGroups);
-    //await this.loadSpellBasis(profs[0].id, spellProfession);
     await this.loadEquipmentGroups(equipmentGroups);
-    //await this.loadEquipmentBelonging(equipmentBelonging);
-
   }
 
   private async loadSkills(groups: SkillGroup[]) {
@@ -165,14 +155,6 @@ export class RulesService {
     return await firstValueFrom(
       this.http.get<SkillSpecializationSuggestion[]>(`${API_BASE_URL}/skills/${skillId}/specializations`)
     );
-  }
-
-  private async loadSpellBasis(ProfessionId: number, spells: SpellFromGroup[]) {
-    const SpellLists = await Promise.all(
-      spells.map(g => firstValueFrom(this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/views/${ProfessionId}/spell_profession`)))
-    );
-
-    //this.spellProfession.set(spells);
   }
 
 

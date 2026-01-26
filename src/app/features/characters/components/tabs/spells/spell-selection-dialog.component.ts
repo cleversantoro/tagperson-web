@@ -1,17 +1,28 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+
+
 import { SpellFromGroup } from '../../../../../core/models/spells.models';
+import { CharacterApiService } from '../../../../../core/services/character-api.service';
+import { Observable } from 'rxjs';
 
 interface DialogData {
-  spells: SpellFromGroup[];
+  professionId: number;
+  characterId: number;
   title: string;
 }
+// interface DialogData {
+//   spells: SpellFromGroup[];
+// }
+
 
 @Component({
   selector: 'app-spell-selection-dialog',
@@ -21,87 +32,42 @@ interface DialogData {
     MatDialogModule,
     MatButtonModule,
     MatListModule,
+    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     FormsModule
   ],
-  template: `
-    <h2 mat-dialog-title>{{ data.title }}</h2>
-    <mat-dialog-content>
-      <mat-form-field appearance="outline" class="search-field">
-        <mat-label>Buscar magia</mat-label>
-        <input matInput [(ngModel)]="searchText" />
-      </mat-form-field>
-
-      <mat-list>
-        @for (spell of filteredSpells(); track spell.id) {
-          <mat-list-item class="spell-item" (click)="selectSpell(spell)">
-            <strong>{{ spell.name }}</strong>
-            @if (spell.cost) {
-              <span class="spell-cost">Custo: {{ spell.cost }}</span>
-            }
-          </mat-list-item>
-        }
-      </mat-list>
-    </mat-dialog-content>
-
-    <mat-dialog-actions align="end">
-      <button mat-button (click)="cancel()">Cancelar</button>
-      <button mat-raised-button color="primary" (click)="confirm()" [disabled]="!selected()">
-        Adicionar
-      </button>
-    </mat-dialog-actions>
-  `,
-  styles: [`
-    .search-field {
-      width: 100%;
-      margin-bottom: 16px;
-    }
-
-    mat-list {
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .spell-item {
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 4px;
-      transition: background-color 0.2s;
-
-      &:hover {
-        background-color: rgba(0, 0, 0, 0.04);
-      }
-    }
-
-    .spell-cost {
-      margin-left: auto;
-      font-size: 0.9em;
-      color: #666;
-    }
-
-    mat-dialog-actions {
-      padding-top: 16px;
-    }
-  `]
+  templateUrl: './spell-selection-dialog.component.html',
+  styleUrls: ['./spell-selection-dialog.component.scss']
 })
 export class SpellSelectionDialogComponent {
+  spells$: Observable<SpellFromGroup[]>;
+
   searchText = '';
   selectedSpell: SpellFromGroup | null = null;
 
   filteredSpells = () => {
     const search = this.searchText.toLowerCase().trim();
     return search
-      ? this.data.spells.filter(s => s.name.toLowerCase().includes(search))
-      : this.data.spells;
+    //? this.data.spells.filter(s => s.name.toLowerCase().includes(search))
+    //: this.data.spells;
   };
 
   selected = () => this.selectedSpell;
 
   constructor(
-    public dialogRef: MatDialogRef<SpellSelectionDialogComponent>,
+    private api: CharacterApiService,
+    private dialogRef: MatDialogRef<SpellSelectionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {}
+  ) {
+    this.spells$ = this.api.getProfessionSpells(this.data.professionId);
+  }
+
+  select(spell: SpellFromGroup) {
+    this.api.addCharacterSpell(this.data.characterId, spell.id).subscribe(() => {
+      this.dialogRef.close(true);
+    });
+  }
 
   selectSpell(spell: SpellFromGroup) {
     this.selectedSpell = spell;
@@ -109,7 +75,7 @@ export class SpellSelectionDialogComponent {
 
   confirm() {
     if (this.selectedSpell) {
-      this.dialogRef.close(this.selectedSpell);
+    this.dialogRef.close(this.selectedSpell);
     }
   }
 

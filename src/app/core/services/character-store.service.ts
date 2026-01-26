@@ -41,6 +41,7 @@ export class CharacterStore {
   async select(id: number) {
     this._selectedId.set(id);
     const sheet = await this.api.getSheet(id);
+    console.log(this.api.mapSheet(sheet));
     this.upsert(this.api.mapSheet(sheet), false);
   }
 
