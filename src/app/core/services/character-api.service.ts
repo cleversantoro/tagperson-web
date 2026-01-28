@@ -91,12 +91,16 @@ interface ApiCharacterSheet {
   }>;
 
   spells: Array<{
-    spellId: number;
+    id: number;
     name: string;
-    level: number | null;
-    evocation?: string | null;
-    range?: string | null;
+    description: string;
+    effects: string;
     duration?: string | null;
+    evocation?: string | null;
+    level: number | null;
+    range?: string | null;
+    cost: number;
+    type: number;
   }>;
 
   combat: Array<{
@@ -311,10 +315,16 @@ export class CharacterApiService {
     return this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/views/${professionId}/spell_profession`);
   }
 
+  // Busca as magias disponíveis para uma especialização específica
+  getEspecializationSpells(especializationId: number) {
+    return this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/views/${especializationId}/spell_especialization`);
+  }
+
+
   // Adiciona uma magia ao personagem
-  addCharacterSpell(characterId: number, spellId: number) {
+  addCharacterSpell(characterId: number, spellId: number, spellGroupId: number, level: number, type: number) {
     // Assumindo que o payload espera o ID da magia. Ajuste conforme seu backend se necessário.
-    return this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/spells`, { spellId });
+    return this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/spells`, { spellId, spellGroupId, level, type });
   }
 
   mapListItem(item: ApiCharacterListItem): CharacterSheet {
@@ -422,12 +432,16 @@ export class CharacterApiService {
     });
 
     const mapSpell = (e: typeof rawSpells[0]) => ({
-      id: e.spellId,
+      id: e.id,
       nome: e.name,
+      descricao: e.description,
+      efeitos: e.effects,
       evocacao: e.evocation ?? '',
       duracao: e.duration ?? '',
       nivel: e.level ?? 0,
-      alcance: e.range ?? ''
+      alcance: e.range ?? '',
+      custo: e.cost,
+      tipo: e.type
     });
 
     const mapCombat = (e: typeof rawCombat[0]) => ({
@@ -454,13 +468,15 @@ export class CharacterApiService {
     const armaduraItem = rawEquips.find(e => e.isArmor === 1);
     const escudoItem = rawEquips.find(e => e.isShield === 1);
     const capaceteItem = rawEquips.find(e => e.isHelmet === 1);
+    const armas = rawEquips.filter(e => e.isWeapon === 1).map(mapEq);
+    const pertences = rawEquips.filter(e => !e.isArmor && !e.isShield && !e.isHelmet && !e.isWeapon).map(mapEq)
 
     const tecnicasBasicas = rawCombat.filter(c => c.group === 0);
     const tecnicasEspecializacao = rawCombat.filter(c => c.group === 1);
     const tecnicasProfissao = rawCombat.filter(c => c.group === 2);
 
-    const magiasProfissao = rawSpells; //.filter(c => c. === 2);
-    const magiasEspecializacao = rawSpells; //.filter(c => c. === 1);
+    const magiasProfissao = rawSpells.filter(c => c.type === 1);
+    const magiasEspecializacao = rawSpells.filter(c => c.type === 2);
 
     return {
       id: sheet.id,
@@ -520,7 +536,7 @@ export class CharacterApiService {
         magiasEspecializacao: magiasEspecializacao.map(mapSpell)
       },
       combate: {
-        tecnicasBasicas:  tecnicasBasicas.map(mapCombat),
+        tecnicasBasicas: tecnicasBasicas.map(mapCombat),
         tecnicasEspecializacao: tecnicasEspecializacao.map(mapCombat),
         tecnicasProfissao: tecnicasProfissao.map(mapCombat)
       },
@@ -528,8 +544,8 @@ export class CharacterApiService {
         armadura: armaduraItem ? mapEq(armaduraItem) : emptyEq,
         escudo: escudoItem ? mapEq(escudoItem) : emptyEq,
         capacete: capaceteItem ? mapEq(capaceteItem) : emptyEq,
-        armas: rawEquips.filter(e => e.isWeapon === 1).map(mapEq),
-        pertences: rawEquips.filter(e => !e.isArmor && !e.isShield && !e.isHelmet && !e.isWeapon).map(mapEq)
+        armas: armas,
+        pertences: pertences,
       },
       caracteristicas: {
         olhos: sheet.features.eyes ?? '',

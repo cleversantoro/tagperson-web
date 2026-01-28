@@ -48,6 +48,12 @@ export class TabWeaponComponent implements OnInit {
   elmos = computed(() => this.rules.equipments().filter(e => (e.isHelmet ?? 0) === 1));
   escudos = computed(() => this.rules.equipments().filter(e => (e.isShield ?? 0) === 1));
   armas = computed(() => this.rules.equipments().filter(e => (e.isWeapon ?? 0) === 1));
+  pertences = computed(() => this.rules.equipments().filter(
+    e => (e.isArmor ?? 0) !== 1
+    && (e.isShield ?? 0) !== 1
+    && (e.isHelmet ?? 0) !== 1
+    && (e.isWeapon ?? 0) !== 1)
+  );
 
   constructor() {
     // Efeito para reagir a mudanças no sheet

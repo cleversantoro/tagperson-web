@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { CharacterSheet } from '../../../../../core/models/character.models';
+import { CharacterSheet, SpellRow } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
 import { SpellFromGroup, SpellTechniquesDto } from '../../../../../core/models/spells.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
@@ -41,10 +41,9 @@ export class TabSpellsComponent {
   private rules = inject(RulesService);
   private dialog = inject(MatDialog);
   private store = inject(CharacterStore);
-  private selectedSpell = signal<SpellFromGroup | null>(null);
+  private selectedSpell = signal<SpellRow | null>(null);
 
   groups = this.rules.spellGroups;
-  //basicsspell = this.rules.spellProfession;
 
   private spellMap = computed(() => {
     const sheet = this.sheetSignal();
@@ -53,79 +52,41 @@ export class TabSpellsComponent {
     for (const s of sheet.magias.magiasProfissao ?? []) {
       map.set(s.id, s.nivel ?? 0);
     }
+    for (const s of sheet.magias.magiasEspecializacao ?? []) {
+      map.set(s.id, s.nivel ?? 0);
+    }
     return map;
   });
 
-  private characterSpellIds = computed(() => {
-    const sheet = this.sheetSignal();
-    const ids = new Set<number>();
-    if (!sheet) return ids;
-    for (const s of sheet.magias.magiasProfissao ?? []) {
-      ids.add(s.id);
-    }
-    return ids;
-  });
-
-  // Calcula magias básicas (grupos com parentId = null ou -1)
   basicas = computed(() => {
-    const all = this.groups() ?? [];
-    const characterIds = this.characterSpellIds();
-    const basicGroups = all;
-    return basicGroups.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
+    const profission = this.sheetSignal()?.magias.magiasProfissao ?? [];
+    const basics = profission;
+    const rt = basics.flatMap(g => g).filter(s => s.tipo === 1);
+    return rt;
   });
 
-  // Calcula magias de especialização (apenas se personagem tem especialização e nível >= 5)
   especializacao = computed(() => {
-    const all = this.groups() ?? [];
-    const characterIds = this.characterSpellIds();
     const sheet = this.sheetSignal();
-
-    // Verifica se pode ter magias de especialização
     if (!this.canLearnSpecializationSpells() || !sheet) {
       return [];
     }
-
-    const specializationGroups = all.filter(
-      g => g.group.parentId && g.group.parentId !== -1 && g.group.id === sheet.especializacao?.magiaGrupoId
-    );
-
-    return specializationGroups.flatMap(g => g.spells).filter(s => characterIds.has(s.id));
-  });
-
-  // Magias disponíveis para adicionar (básicas)
-  availableBasicSpells = computed(() => {
-    const all = this.groups() ?? [];
-    const characterIds = this.characterSpellIds();
-    const basicGroups = all;
-    const allBasic = basicGroups.flatMap(g => g.spells);
-    return allBasic.filter(s => !characterIds.has(s.id));
-  });
-
-  // Magias disponíveis para adicionar (especialização)
-  availableSpecializationSpells = computed(() => {
-    if (!this.canLearnSpecializationSpells()) {
-      return [];
-    }
-    const sheet = this.sheetSignal();
-    if (!sheet) return [];
-    const all = this.groups() ?? [];
-    const characterIds = this.characterSpellIds();
-    const specializationGroups = all.filter(g => g.group.parentId && g.group.parentId !== -1 && g.group.id === sheet.especializacao?.magiaGrupoId);
-    const allSpecialization = specializationGroups.flatMap(g => g.spells);
-    return allSpecialization.filter(s => !characterIds.has(s.id));
+    const profission = this.sheetSignal()?.magias.magiasEspecializacao ?? [];
+    const basics = profission;
+    const rt = basics.flatMap(g => g).filter(s => s.tipo === 2);
+    return rt;
   });
 
   levelOf(id: number) {
     return this.spellMap().get(id) ?? 0;
   }
 
-  totalOf(spell: SpellFromGroup) {
+  totalOf(spell: SpellRow) {
     const level = this.levelOf(spell.id);
-    const cost = spell.cost ?? 0;
+    const cost = spell.custo ?? 0;
     return level * cost;
   }
 
-  selectSpell(spell: SpellFromGroup) {
+  selectSpell(spell: SpellRow) {
     this.selectedSpell.set(spell);
   }
 
@@ -134,7 +95,7 @@ export class TabSpellsComponent {
   }
 
   effectsText() {
-    const effects = this.selectedSpell()?.effects ?? '';
+    const effects = this.selectedSpell()?.efeitos ?? '';
     return effects ? effects.replaceAll('|', '\n') : '';
   }
 
@@ -153,9 +114,12 @@ export class TabSpellsComponent {
     // Abre o diálogo passando o ID da profissão e do personagem
     const dialogRef = this.dialog.open(SpellSelectionDialogComponent, {
       data: {
-        professionId: this.sheet.profissaoId, // Certifique-se que essa propriedade existe no sheet
+        professionId: this.sheet.profissaoId,
+        especializationId: this.sheet.especializacao?.id,
+        spellGroupId: this.sheet.especializacao?.magiaGrupoId,
         characterId: this.sheet.id,
-        title: 'Adicionar Magia da Profissão'
+        title: 'Adicionar Magia da Profissão',
+        type: 1
       },
       width: '600px'
     });
@@ -173,17 +137,14 @@ export class TabSpellsComponent {
    */
   addSpecializationSpell() {
     if (!this.canLearnSpecializationSpells()) {
-      return; // Não pode adicionar
+      return;
     }
-
-    // const spells = this.availableSpecializationSpells();
-    // if (spells.length === 0) {
-    //   return; // Nenhuma magia disponível
-    // }
-
     this.dialog.open(SpellSelectionDialogComponent, {
       data: {
-        professionId: this.sheet.profissaoId, // Certifique-se que essa propriedade existe no sheet
+        professionId: this.sheet.profissaoId,
+        especializationId: this.sheet.especializacao?.id,
+        spellGroupId: this.sheet.especializacao?.magiaGrupoId,
+        type: 2,
         characterId: this.sheet.id,
         title: 'Adicionar Magia de Especialização'
       },
@@ -191,6 +152,7 @@ export class TabSpellsComponent {
     }).afterClosed().subscribe(async (spell: SpellFromGroup | undefined) => {
       if (spell) {
         await this.addSpell(spell.id);
+        this.store.select(this.sheet.id);
       }
     });
   }

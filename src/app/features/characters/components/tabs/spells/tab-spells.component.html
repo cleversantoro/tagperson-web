@@ -26,9 +26,9 @@
             <tbody>
               @for (s of basicas(); track s.id) {
                 <tr>
-                  <td>{{s.name}}</td>
+                  <td>{{s.nome}}</td>
                   <td>{{levelOf(s.id)}}</td>
-                  <td>{{s.cost ?? 0}}</td>
+                  <td>{{s.custo}}</td>
                   <td>{{totalOf(s)}}</td>
                   <td class="icon-col">
                     <button mat-icon-button (click)="selectSpell(s)">
@@ -84,9 +84,9 @@
             <tbody>
               @for (s of especializacao(); track s.id) {
                 <tr>
-                  <td>{{s.name}}</td>
+                  <td>{{s.nome}}</td>
                   <td>{{levelOf(s.id)}}</td>
-                  <td>{{s.cost ?? 0}}</td>
+                  <td>{{s.custo}}</td>
                   <td>{{totalOf(s)}}</td>
                   <td class="icon-col">
                     <button mat-icon-button (click)="selectSpell(s)">
@@ -114,21 +114,21 @@
       <mat-card-content class="details">
         <mat-form-field appearance="outline">
           <mat-label>Nome</mat-label>
-          <input matInput [value]="selected()?.name ?? ''" readonly />
+          <input matInput [value]="selected()?.nome ?? ''" readonly />
         </mat-form-field>
 
         <div class="row">
           <mat-form-field appearance="outline">
             <mat-label>Evocacao</mat-label>
-            <input matInput [value]="selected()?.evocation ?? ''" readonly />
+            <input matInput [value]="selected()?.evocacao ?? ''" readonly />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Alcance</mat-label>
-            <input matInput [value]="selected()?.range ?? ''" readonly />
+            <input matInput [value]="selected()?.alcance ?? ''" readonly />
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Duracao</mat-label>
-            <input matInput [value]="selected()?.duration ?? ''" readonly />
+            <input matInput [value]="selected()?.duracao ?? ''" readonly />
           </mat-form-field>
         </div>
 
@@ -139,7 +139,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Descricao</mat-label>
-          <textarea matInput rows="8" [value]="selected()?.description ?? ''" readonly></textarea>
+          <textarea matInput rows="8" [value]="selected()?.descricao ?? ''" readonly></textarea>
         </mat-form-field>
       </mat-card-content>
     </mat-card>

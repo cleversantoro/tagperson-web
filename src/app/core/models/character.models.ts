@@ -81,16 +81,15 @@ export interface EquipmentState {
 export interface SpellRow {
   id: number;
   nome: string;
+  descricao?: string;
   evocacao?: string;
-  duracao?: string;
-  nivel: number;
   alcance?: string;
-  //custo: number;
-  //descricao?: string;
-  //efeitos?: string;
-  //total: number;
-  //isProfissao?: number | null;
-  //isEspecializacao?: number | null;
+  duracao?: string;
+  efeitos?: string;
+  custo: number;
+  nivel: number;
+  tipo?: number | null
+  //total: number
 }
 
 export interface SpellState {

@@ -10,18 +10,18 @@ import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
 
 
-import { SpellFromGroup } from '../../../../../core/models/spells.models';
+import { SpellFromGroup, SpellTechniquesDto} from '../../../../../core/models/spells.models';
 import { CharacterApiService } from '../../../../../core/services/character-api.service';
 import { Observable } from 'rxjs';
 
 interface DialogData {
-  professionId: number;
-  characterId: number;
+  professionId?: number;
+  especializationId?: number;
+  magiaGrupoId?: number;
+  type?: number;
+  characterId?: number;
   title: string;
 }
-// interface DialogData {
-//   spells: SpellFromGroup[];
-// }
 
 
 @Component({
@@ -60,22 +60,29 @@ export class SpellSelectionDialogComponent {
     private dialogRef: MatDialogRef<SpellSelectionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData
   ) {
-    this.spells$ = this.api.getProfessionSpells(this.data.professionId);
+    this.spells$ = this.data.type === 1
+      ? this.api.getProfessionSpells(this.data.professionId ?? 0)
+      : this.api.getEspecializationSpells(this.data.especializationId ?? 0);
   }
 
-  select(spell: SpellFromGroup) {
-    this.api.addCharacterSpell(this.data.characterId, spell.id).subscribe(() => {
-      this.dialogRef.close(true);
-    });
+  select(spell: SpellTechniquesDto) {
+    this.api.addCharacterSpell(
+      this.data.characterId ?? 0,
+      spell.id,
+      spell.spellGroupId ?? 0,//type === 1 ? this.data.professionId ?? 0 : this.data.especializationId ?? 0,
+      0,
+      this.data.type ?? 0
+    )
+      .subscribe(() => { this.dialogRef.close(true); });
   }
 
-  selectSpell(spell: SpellFromGroup) {
+  selectSpell(spell: SpellTechniquesDto) {
     this.selectedSpell = spell;
   }
 
   confirm() {
     if (this.selectedSpell) {
-    this.dialogRef.close(this.selectedSpell);
+      this.dialogRef.close(this.selectedSpell);
     }
   }
 
