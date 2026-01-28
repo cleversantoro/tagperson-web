@@ -1,13 +1,16 @@
 <div class="wrap">
+
   <div class="left">
+
     <mat-card>
+
       <mat-card-header>
         <mat-card-title>Magias da Profissão</mat-card-title>
         <button mat-raised-button color="primary" (click)="addBasicSpell()" class="add-button">
-          <mat-icon>add</mat-icon>
-          Adicionar Magia
+          <mat-icon>add</mat-icon> Adicionar Magia
         </button>
       </mat-card-header>
+
       <mat-card-content>
         @if (basicas().length > 0) {
           <table class="tbl">
@@ -40,17 +43,20 @@
           <p class="empty-message">Nenhuma magia básica cadastrada</p>
         }
       </mat-card-content>
+
     </mat-card>
+
   </div>
 
   <div class="center">
+
     <mat-card>
+
       <mat-card-header>
         <mat-card-title>Magias da Especializacao</mat-card-title>
         @if (canLearnSpecializationSpells()) {
           <button mat-raised-button color="primary" (click)="addSpecializationSpell()" class="add-button">
-            <mat-icon>add</mat-icon>
-            Adicionar Magia
+            <mat-icon>add</mat-icon> Adicionar Magia
           </button>
         } @else {
           <span class="warning-message">
@@ -62,6 +68,7 @@
           </span>
         }
       </mat-card-header>
+
       <mat-card-content>
         @if (especializacao().length > 0) {
           <table class="tbl">
@@ -96,7 +103,9 @@
           }
         }
       </mat-card-content>
+
     </mat-card>
+
   </div>
 
   <div class="right">
