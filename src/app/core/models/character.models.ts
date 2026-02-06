@@ -11,10 +11,11 @@ export interface Attributes {
 
 export interface Specialization {
   id: number;
+  nome: string;
+  descricao?: string;
   profissaoId: number;
   magiaGrupoId: number;
   combateGrupoId: number;
-  nome: string;
 }
 
 export interface CharacterPoints {
@@ -101,13 +102,24 @@ export interface SpellState {
 export interface CombatRow {
   id: number;
   nome: string;
-  grupo?: number;
   atributo?: string;
+  efeito?: string;
+  observacoes?: string;
+  requisicoes?: string;
+  quadroRolagem: string;
+  aprimoramento?: string;
+  ProfEspId?: number;
+  GrupoCombateId?: number;
+  nomeGrupo?: number;
+  categoriaId?: number;
+  categoria?: string;
+  custo: number;
+  bonus?: number;
+  reducao?: number;
+  tipo?: number;
   nivel?: number;
-  //custo: number;
   //ajuste: string;
   //total: number;
-  //categoria: string
 }
 
 export interface CombatState {

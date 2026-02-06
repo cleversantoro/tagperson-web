@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from './api-config';
 import { CharacterSheet, AttributeKey } from '../models/character.models';
 import { SpellFromGroup } from '../models/spells.models';
+// import { CombatFromGroup } from '../models/combat.models';
 
 interface ApiCharacterListItem {
   id: number;
@@ -29,10 +30,11 @@ interface ApiCharacterSheet {
 
   specialization?: {
     id: number;
+    name?: string | null;
+    description?: string | null;
     professionId: number;
     spellGroupId: number;
     combatGroupId: number;
-    name: string
   } | null;
 
   attributes: {
@@ -104,11 +106,24 @@ interface ApiCharacterSheet {
   }>;
 
   combat: Array<{
-    combatSkillId: number;
-    name: string;
-    level: number | null;
-    group: number | null;
-    attributeCode?: string | null;
+    combatId: number;
+    combatName: string;
+    attributeCode?: string;
+    effect?: string;
+    notes?: string;
+    requisite?: string;
+    rollTable: string;
+    improvement?: string;
+    profEspId?: number;
+    combatGroupId?: number;
+    groupName?: number;
+    categoryId?: number;
+    categoryName?: string;
+    cost: number;
+    bonus?: number;
+    reduction?: number;
+    type?: number;
+    level?: number;
   }>;
 
   equipments: Array<{
@@ -180,12 +195,6 @@ interface ApiCharacterCreateRequest {
 
 interface ApiAddSkillRequest {
   skillId: number;
-  level?: number | null;
-}
-
-interface ApiAddCombatSkillRequest {
-  combatSkillId: number;
-  group?: number | null;
   level?: number | null;
 }
 
@@ -264,10 +273,6 @@ export class CharacterApiService {
     await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/skills`, payload));
   }
 
-  async addCombatSkill(characterId: number, payload: ApiAddCombatSkillRequest): Promise<void> {
-    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/combat`, payload));
-  }
-
   async getSkillSpecializations(characterId: number, skillId: number): Promise<ApiCharacterSkillSpecialization[]> {
     return await firstValueFrom(
       this.http.get<ApiCharacterSkillSpecialization[]>(
@@ -319,7 +324,6 @@ export class CharacterApiService {
   getEspecializationSpells(especializationId: number) {
     return this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/views/${especializationId}/spell_especialization`);
   }
-
 
   // Adiciona uma magia ao personagem
   addCharacterSpell(characterId: number, spellId: number, spellGroupId: number, level: number, type: number) {
@@ -445,11 +449,24 @@ export class CharacterApiService {
     });
 
     const mapCombat = (e: typeof rawCombat[0]) => ({
-      id: e.combatSkillId,
-      nome: e.name,
-      grupo: e.group ?? 0,
+      id: e.combatId,
+      nome: e.combatName,
       atributo: e.attributeCode ?? '',
-      nivel: e.level ?? 0,
+      efeito: e.effect ?? '',
+      observacoes: e.notes ?? '',
+      requisições: e.requisite ?? '',
+      quadroRolagem: e.rollTable,
+      aprimoramento: e.improvement ?? '',
+      profEspId: e.profEspId ?? 0,
+      grupoCombateId: e.combatGroupId ?? 0,
+      nomeGrupo: e.groupName ?? 0,
+      categoriaId: e.categoryId ?? 0,
+      categoria: e.categoryName ?? '',
+      custo: e.cost,
+      bonus: e.bonus,
+      reducao: e.reduction,
+      tipo: e.type,
+      nivel: e.level ?? 0
     });
 
     const emptyEq = {
@@ -471,9 +488,9 @@ export class CharacterApiService {
     const armas = rawEquips.filter(e => e.isWeapon === 1).map(mapEq);
     const pertences = rawEquips.filter(e => !e.isArmor && !e.isShield && !e.isHelmet && !e.isWeapon).map(mapEq)
 
-    const tecnicasBasicas = rawCombat.filter(c => c.group === 0);
-    const tecnicasEspecializacao = rawCombat.filter(c => c.group === 1);
-    const tecnicasProfissao = rawCombat.filter(c => c.group === 2);
+    const tecnicasBasicas = rawCombat.filter(c => c.type === 1);
+    const tecnicasProfissao = rawCombat.filter(c => c.type === 2);
+    const tecnicasEspecializacao = rawCombat.filter(c => c.type === 3);
 
     const magiasProfissao = rawSpells.filter(c => c.type === 1);
     const magiasEspecializacao = rawSpells.filter(c => c.type === 2);
@@ -496,10 +513,11 @@ export class CharacterApiService {
       estagio: sheet.level ?? 0,
       especializacao: {
         id: sheet.specialization?.id ?? 0,
+        nome: sheet.specialization?.name ?? '',
+        descricao: sheet.specialization?.description ?? '',
         profissaoId: sheet.specialization?.professionId ?? 0,
         magiaGrupoId: sheet.specialization?.spellGroupId ?? 0,
         combateGrupoId: sheet.specialization?.combatGroupId ?? 0,
-        nome: sheet.specialization?.name ?? '',
       },
       atributos: {
         pointsTotal: sheet.points.pointsSkill ?? 0,

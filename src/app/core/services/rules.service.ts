@@ -88,11 +88,6 @@ export class RulesService {
     const childrenLists = await Promise.all(
       groups.map(g => firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups`)))
     );
-
-    // const flatGroups = childrenLists.flatMap((children, idx) =>
-    //   children.length ? children : [groups[idx]]
-    // );
-
     const flatGroups = this.mergeGroupsPreferParents(groups, childrenLists);
 
     const itemsLists = await Promise.all(
@@ -156,6 +151,5 @@ export class RulesService {
       this.http.get<SkillSpecializationSuggestion[]>(`${API_BASE_URL}/skills/${skillId}/specializations`)
     );
   }
-
 
 }

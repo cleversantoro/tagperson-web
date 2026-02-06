@@ -1,7 +1,8 @@
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { CharacterSheet } from '../../../../../core/models/character.models';
+import { CharacterSheet, CombatRow } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
+import { CombatService } from '../../../../../core/services/combat.service';
 import { CombatFromGroup } from '../../../../../core/models/combat.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 
@@ -12,8 +13,21 @@ import { CharacterStore } from '../../../../../core/services/character-store.ser
   templateUrl: './tab-combat.component.html',
   styleUrls: ['./tab-combat.component.scss']
 })
+
 export class TabCombatComponent {
   private readonly sheetSignal = signal<CharacterSheet | null>(null);
+  private rules = inject(RulesService);
+  private combatApi = inject(CombatService);
+  private store = inject(CharacterStore);
+
+  addCombatOpen = signal(false);
+  addCombatType = signal<'basic' | 'profession' | 'specialization'>('basic');
+  newCombatLevel = signal(0);
+  selectedCombatId = signal<number | null>(null);
+  availableTechniques = signal<CombatFromGroup[]>([]);
+
+  groups = this.rules.combatGroups;
+
   @Input({ required: true }) set sheet(value: CharacterSheet) {
     this.sheetSignal.set(value);
   }
@@ -22,23 +36,10 @@ export class TabCombatComponent {
     return this.sheetSignal()!;
   }
 
-  private rules = inject(RulesService);
-  private store = inject(CharacterStore);
-  groups = this.rules.combatGroups;
-
-  private techMap = computed(() => {
-    const map = new Map<number, number>();
-    for (const t of this.sheetSignal()?.combate.tecnicasBasicas ?? []) {
-      map.set(t.id, t.nivel ?? 0);
-    }
-    return map;
-  });
-
-  private ownedTechIds = computed(() => new Set((this.sheetSignal()?.combate.tecnicasBasicas ?? []).map(t => t.id)));
-
   private professionMainGroup = computed(() => {
     const prof = this.normalizeName(this.sheetSignal()?.profissao ?? '');
     if (!prof) return null;
+
     const groups = this.groups() ?? [];
     return groups.find(g => {
       const gName = this.normalizeName(g.group.name);
@@ -46,76 +47,60 @@ export class TabCombatComponent {
     });
   });
 
-  basicas = computed(() => this.filterOwned(this.byParentId(1)));
+  basicas = computed(() => {
+    const basic = this.sheetSignal()?.combate.tecnicasBasicas ?? [];
+    const basics = basic;
+    const rt = basics.flatMap(g => g).filter(s => s.tipo === 1);
+    return rt;
+  });
+
   especializacao = computed(() => {
-    const parentId = this.professionMainGroup()?.group.parentId;
-    if (!parentId) return [];
-    return this.filterOwned(this.byGroupName(parentId, this.sheetSignal()?.especializacao?.nome ?? ''));
+    const prof = this.sheetSignal()?.combate.tecnicasEspecializacao ?? [];
+    const basics = prof;
+    const rt = basics.flatMap(g => g).filter(s => s.tipo === 3);
+    return rt;
   });
+
   profissao = computed(() => {
-    const group = this.professionMainGroup();
-    return group ? this.filterOwned(group.items) : [];
+    const esp = this.sheetSignal()?.combate.tecnicasProfissao ?? [];
+    const basics = esp;
+    const rt = basics.flatMap(g => g).filter(s => s.tipo === 2);
+    return rt;
   });
 
-  addCombatOpen = signal(false);
-  addCombatType = signal<'basic' | 'profession' | 'specialization'>('basic');
-  selectedCombatId = signal<number | null>(null);
-  newCombatLevel = signal(0);
-
-  private basicTechniquesSource = computed(() => {
-    const basics = this.byParentId(1);
-    const owned = this.ownedTechIds();
-    return basics
-      .filter(t => !owned.has(t.id))
-      .sort((a, b) => a.name.localeCompare(b.name));
-  });
-
-  private professionTechniquesSource = computed(() => {
-    const group = this.professionMainGroup();
-    if (!group) return [];
-    const items = group.items;
-    const owned = this.ownedTechIds();
-    return items.filter(t => !owned.has(t.id)).sort((a, b) => a.name.localeCompare(b.name));
-  });
-
-  private specializationTechniquesSource = computed(() => {
-    const parentId = this.professionMainGroup()?.group.parentId;
-    if (!parentId) return [];
-    const specName = this.sheetSignal()?.especializacao?.nome;
-    if (!specName) return [];
-    const items = this.byGroupName(parentId, specName);
-    const owned = this.ownedTechIds();
-    return items.filter(t => !owned.has(t.id)).sort((a, b) => a.name.localeCompare(b.name));
-  });
-
-  availableBasicTechniques = computed(() => {
-    const type = this.addCombatType();
-    if (type === 'profession') return this.professionTechniquesSource();
-    if (type === 'specialization') return this.specializationTechniquesSource();
-    return this.basicTechniquesSource();
-  });
-
-  levelOf(id: number) {
-    return this.techMap().get(id) ?? 0;
-  }
-
-  totalOf(item: CombatFromGroup) {
-    const level = this.levelOf(item.id);
+  totalOf(item: CombatRow) {
+    const level = item.nivel ?? 0;
     const bonus = item.bonus ?? 0;
     return level + bonus;
   }
 
-  categoryName(categoryId?: number | null) {
-    const cat = this.rules.categories().find(c => c.id === categoryId);
-    return cat?.name ?? '-';
-  }
-
-  openAddCombat(type: 'basic' | 'profession' | 'specialization' = 'basic') {
-    this.addCombatType.set(type);
-    const list = this.availableBasicTechniques(); // Agora retorna a lista baseada no tipo
-    this.selectedCombatId.set(list[0]?.id ?? null);
+  openAddCombat(type: string) {
+    const list = this.availableTechniques();
+    this.selectedCombatId.set(list[0]?.combatId ?? null);
     this.newCombatLevel.set(0);
     this.addCombatOpen.set(true);
+    this.addCombatType.set(type as any);
+
+
+    switch (type) {
+      case 'basic':
+        this.combatApi.getBasicCombat().subscribe((data) => {
+          this.availableTechniques.set(data);
+        });
+        break;
+
+      case 'profession':
+        this.combatApi.getProfessionCombat(this.sheetSignal()?.profissaoId ?? 0).subscribe((data) => {
+          this.availableTechniques.set(data);
+        });
+        break;
+
+      case 'specialization':
+        this.combatApi.getEspecializationCombat(this.sheetSignal()?.especializacao?.id ?? 0).subscribe((data) => {
+          this.availableTechniques.set(data);
+        });
+        break;
+    }
   }
 
   closeAddCombat() {
@@ -129,35 +114,23 @@ export class TabCombatComponent {
     const type = this.addCombatType();
     const group = type === 'basic' ? 1 : type === 'profession' ? 2 : 3;
 
-    await this.store.addCombatSkill(this.sheet.id, combatSkillId, this.newCombatLevel(), group);
-    this.addCombatOpen.set(false);
-  }
 
-  private filterOwned(items: CombatFromGroup[]) {
-    const owned = this.ownedTechIds();
-    return items.filter(i => owned.has(i.id));
-  }
+    await this.combatApi.addCombatSkill(
+      this.sheet.id,
+      combatSkillId,
 
-  private byGroupId(groupId: number) {
-    const group = (this.groups() ?? []).find(g => g.group.id === groupId);
-    return group?.items ?? [];
-  }
+      type === 'basic'
+        ? 1
+        : type === 'profession'
+          ? this.sheet.profissaoId ?? 0
+          : this.sheet.especializacao?.combateGrupoId ?? 0,
 
-  private byParentId(parentId: number) {
-    const groups = this.groups() ?? [];
-    return groups
-      .filter(g => g.group.parentId === parentId)
-      .flatMap(g => g.items);
-  }
-
-  private byGroupName(parentId: number, name: string) {
-    const groups = this.groups() ?? [];
-    const target = this.normalizeName(name);
-    if (!target) return [];
-    const match = groups.find(g =>
-      g.group.parentId === parentId && this.normalizeName(g.group.name).includes(target)
+      this.newCombatLevel(),
+      group
     );
-    return match?.items ?? [];
+
+    this.addCombatOpen.set(false);
+    this.store.select(this.sheet.id);
   }
 
   private normalizeName(value: string) {
