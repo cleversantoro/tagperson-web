@@ -3,10 +3,11 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from './api-config';
 import { AuthService } from './auth.service';
-import { SkillFromGroup, SkillGroup, SkillGroupWithSkills, SkillSpecializationSuggestion, EquipmentLookup, CategoryLookup, EquipmentBelongings } from '../models/rules.models';
+import { CategoryLookup } from '../models/rules.models';
 import { CombatGroup, CombatGroupWithItems, CombatFromGroup } from '../models/combat.models';
 import { SpellGroup, SpellGroupWithSpells, SpellFromGroup } from '../models/spells.models';
-import { EquipmentGroup, EquipmentGroupWithItems, EquipmentFromGroup } from '../models/equipment.models';
+import { EquipmentGroup, EquipmentGroupWithItems, EquipmentFromGroup, EquipmentLookup } from '../models/equipment.models';
+import { SkillFromGroup, SkillGroup, SkillGroupWithSkills, SkillSpecializationSuggestion } from '../models/skills.models';
 
 interface LookupItem {
   id: number;

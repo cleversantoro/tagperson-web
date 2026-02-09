@@ -6,9 +6,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
-import { CharacterSheet, Traits, EquipmentRow } from '../../../../../core/models/character.models';
+import { CharacterSheet, Traits } from '../../../../../core/models/character.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 import { RulesService } from '../../../../../core/services/rules.service';
+import { EquipmentRow } from '../../../../../core/models/equipment.models';
 
 @Component({
   standalone: true,

@@ -142,6 +142,17 @@ interface ApiCharacterSheet {
   characterizations: Array<{
     characterizationId: number;
     name: string;
+    characterizationTypeId: number;
+    nameType: string;
+    characterizationGroupId: number;
+    nameGroup: string;
+    description: string;
+    notes: string;
+    placeId: number;
+    cost: number;
+    isInitial: number;
+    isRare: number;
+    isAllowGame: number;
     level?: number | null;
   }>;
 
@@ -270,7 +281,7 @@ export class CharacterApiService {
   }
 
   async addSkill(characterId: number, payload: ApiAddSkillRequest): Promise<void> {
-    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/skills`, payload));
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters_skill/${characterId}/skills`, payload));
   }
 
   async getSkillSpecializations(characterId: number, skillId: number): Promise<ApiCharacterSkillSpecialization[]> {
@@ -296,20 +307,20 @@ export class CharacterApiService {
   }
 
   async addEquipment(characterId: number, equipmentId: number, qty?: number): Promise<void> {
-    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/equipments`, {
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters_equipment/${characterId}/equipments`, {
       equipmentId,
       qty
     }));
   }
 
   async addSpell(characterId: number, spellId: number): Promise<void> {
-    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/spells`, {
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters_spell/${characterId}/spells`, {
       spellId
     }));
   }
 
   async addCharacterization(characterId: number, characterizationId: number, level?: number): Promise<void> {
-    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/characterizations`, {
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters_characterization/${characterId}/characterizations`, {
       characterizationId,
       level
     }));
@@ -583,6 +594,17 @@ export class CharacterApiService {
       caracterizacoes: sheet.characterizations?.map(c => ({
         id: c.characterizationId,
         nome: c.name,
+        caracterizacaoTipoId: c.characterizationTypeId ?? '',
+        nomeTipo: c.nameType ?? '',
+        caracterizacaoGrupoId: c.characterizationGroupId ?? '',
+        nomeGrupo: c.nameGroup ?? '',
+        descricao: c.description ?? '',
+        obs: c.notes ?? '',
+        localidade: c.placeId ?? 0,
+        custo: c.cost ?? 0,
+        inicio: c.isInitial ?? 0,
+        raro: c.isRare ?? 0,
+        permiteJogo: c.isAllowGame ?? 0,
         nivel: c.level ?? null
       })) ?? [],
       equipamentosIniciais: sheet.startingEquipments?.map(c => ({

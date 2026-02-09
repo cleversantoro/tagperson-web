@@ -9,7 +9,7 @@ export class CombatService {
   constructor(private http: HttpClient) { }
 
   async addCombat(characterId: number, payload: ApiAddCombatSkillRequest): Promise<void> {
-    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/combat`, payload));
+    await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters_combat/${characterId}/combat`, payload));
   }
 
   async addCombatSkill(characterId: number, combatSkillId: number, combatGroupId: number, level?: number, type?: number) {

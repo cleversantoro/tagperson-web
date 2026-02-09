@@ -7,9 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { CharacterSheet, SpellRow } from '../../../../../core/models/character.models';
+import { CharacterSheet  } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
-import { SpellFromGroup, SpellTechniquesDto } from '../../../../../core/models/spells.models';
+import { SpellFromGroup, SpellRow } from '../../../../../core/models/spells.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 import { SpellSelectionDialogComponent } from './spell-selection-dialog.component';
 

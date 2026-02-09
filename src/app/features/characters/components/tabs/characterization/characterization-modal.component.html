@@ -1,0 +1,62 @@
+<h2 mat-dialog-title>Nova Caracterização</h2>
+<mat-dialog-content>
+  <div class="modal-form">
+
+    <!-- Tipo Caracterização -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tipo de Caracterização</mat-label>
+      <mat-select (selectionChange)="selectCharacterizationType($event.value)">
+
+        <mat-option [value]="null">Selecione...</mat-option>
+
+        @for (type of characterizationTypes(); track type.id) {
+        <mat-option [value]="type.id">{{type.name}}</mat-option>
+        }
+
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Grupo de Caracterização-->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Grupo</mat-label>
+      <mat-select (selectionChange)="selectCharacterizationGroup($event.value)"
+        [disabled]="characterizationGroups().length === 0">
+
+        <mat-option [value]="null">Selecione...</mat-option>
+
+        @for (group of characterizationGroups(); track group.id) {
+        <mat-option [value]="group.id">{{group.name}}</mat-option>
+        }
+
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Caracterização -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Caracterização</mat-label>
+      <mat-select (selectionChange)="selectCharacterizationItem($event.value)"
+        [disabled]="characterizationItems().length === 0">
+        <mat-option [value]="null">Selecione...</mat-option>
+        @for (item of characterizationItems(); track item.id) {
+        <mat-option [value]="item.id">{{item.name}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Nível -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Nível</mat-label>
+      <input matInput type="number" [(ngModel)]="characterizationLevel"/>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancelar</button>
+
+  <button mat-raised-button color="primary" (click)="saveCharacterization()"
+    [disabled]="isSavingCharacterization() || isLoadingCharacterizations()">
+    Salvar
+  </button>
+</mat-dialog-actions>

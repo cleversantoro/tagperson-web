@@ -4,59 +4,13 @@
       <mat-card-title>Caracterização</mat-card-title>
       <mat-card-content>
         <div class="selectors">
-          <mat-form-field appearance="outline">
-            <mat-label>Tipo de Caracterização</mat-label>
-            <mat-select (selectionChange)="selectCharacterizationType($event.value)">
-              <mat-option [value]="null">Selecione...</mat-option>
-              @for (type of characterizationTypes(); track type.id) {
-                <mat-option [value]="type.id">{{type.name}}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Grupo</mat-label>
-            <mat-select
-              (selectionChange)="selectCharacterizationGroup($event.value)"
-              [disabled]="characterizationGroups().length === 0"
-            >
-              <mat-option [value]="null">Selecione...</mat-option>
-              @for (group of characterizationGroups(); track group.id) {
-                <mat-option [value]="group.id">{{group.name}}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Caracterização</mat-label>
-            <mat-select
-              (selectionChange)="selectCharacterizationItem($event.value)"
-              [disabled]="characterizationItems().length === 0"
-            >
-              <mat-option [value]="null">Selecione...</mat-option>
-              @for (item of characterizationItems(); track item.id) {
-                <mat-option [value]="item.id">{{item.name}}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Nível</mat-label>
-            <input matInput type="number" [(ngModel)]="characterizationLevel" />
-          </mat-form-field>
-
           <button
-            mat-icon-button
+            mat-raised-button
+            color="primary"
             type="button"
-            class="add-btn"
-            (click)="saveCharacterization()"
-            [disabled]="isSavingCharacterization() || isLoadingCharacterizations()"
-          >
-            @if (isSavingCharacterization()) {
-              <mat-spinner diameter="20"></mat-spinner>
-            } @else {
-              <mat-icon>add</mat-icon>
-            }
+            (click)="openCharacterizationModal()"
+            [disabled]="isSavingCharacterization() || isLoadingCharacterizations()">
+            Nova Caracterização
           </button>
         </div>
 
@@ -83,6 +37,21 @@
                   <td mat-cell *matCellDef="let element">{{ element.nivel ?? '-' }}</td>
                 </ng-container>
 
+                <!-- Info Column -->
+                <ng-container matColumnDef="info">
+                  <th mat-header-cell *matHeaderCellDef>Info</th>
+                  <td mat-cell *matCellDef="let element">
+                    <button
+                      mat-icon-button
+                      type="button"
+                      (click)="openDetailsModal(element)"
+                      matTooltip="Ver detalhes"
+                    >
+                      <mat-icon>help_outline</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
@@ -100,6 +69,5 @@
         </mat-card>
       </mat-card-content>
     </mat-card>
-
-
+  </div>
 </div>

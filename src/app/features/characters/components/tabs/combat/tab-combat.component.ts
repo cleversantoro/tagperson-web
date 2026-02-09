@@ -1,9 +1,9 @@
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { CharacterSheet, CombatRow } from '../../../../../core/models/character.models';
+import { CharacterSheet } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
 import { CombatService } from '../../../../../core/services/combat.service';
-import { CombatFromGroup } from '../../../../../core/models/combat.models';
+import { CombatFromGroup, CombatRow } from '../../../../../core/models/combat.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 
 @Component({

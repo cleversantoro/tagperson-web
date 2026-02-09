@@ -1,14 +1,22 @@
+import { CharacterizationRow } from "./characterization.models";
+import { CombatState } from "./combat.models";
+import { EquipmentState } from "./equipment.models";
+import { SkillRow } from "./skills.models";
+import { SpellState } from "./spells.models";
+
 export type Race = 'Humano' | 'Pequenino' | 'Anão' | 'Elfo Florestal' | 'Elfo Dourado' | 'Meio Elfo' | string;
 export type Profession = 'Guerreiro' | 'Ladino' | 'Sacerdote' | 'Mago' | 'Rastreador' | 'Bardo' | string;
 export type AttributeKey = 'AGILIDADE' | 'PERCEPCAO' | 'INTELECTO' | 'AURA' | 'CARISMA' | 'FORCA' | 'FISICO';
 export type SocialClass = 'Alta nobreza' | 'Artífice' | 'Baixa nobreza' | 'Ex-escravo' | 'Ex-servo' | 'Grande comerciante' | 'Livre' | 'Pequeno comerciante' | string;
 
+/*****Atributos*****/
 export interface Attributes {
   values: Record<AttributeKey, number>; // -4..+6 (igual a tela)
   pointsTotal: number;
   pointsUsed: number;
 }
 
+/*****Especialização*****/
 export interface Specialization {
   id: number;
   nome: string;
@@ -18,6 +26,7 @@ export interface Specialization {
   combateGrupoId: number;
 }
 
+/*****Pontos*****/
 export interface CharacterPoints {
   habilidade: number;
   arma: number;
@@ -25,6 +34,7 @@ export interface CharacterPoints {
   magia: number;
 }
 
+/*****Derivados*****/
 export interface DerivedStats {
   resistenciaFisica: number;
   resistenciaMagia: number;
@@ -37,108 +47,20 @@ export interface DerivedStats {
   energiaHeroica: number;
 }
 
+/*****Dinheiro*****/
 export interface Money {
   cobre: number;
   prata: number;
   ouro: number;
 }
 
-/*****Habilidade*****/
-export interface SkillRow {
-  id: number;
-  nome: string;
-  restrito?: boolean;
-  nivel: number;
-  ajuste: string; // ex: "INT", "AGI"...
-  hasSpecialization?: boolean;
-}
-
-export interface SkillSpecializationRow {
-  id: number;
-  skillId: number;
-  specializationId?: number | null;
-  specialization?: string | null;
-  nivel?: number | null;
-}
-
-/*****Equipamento*****/
-export interface EquipmentRow {
-  id: number;
-  grupoId: number;
-  nome: string;
-  descricao: string;
-  valor: number;
-}
-
-export interface EquipmentState {
-  armadura: EquipmentRow;
-  escudo: EquipmentRow;
-  capacete: EquipmentRow;
-  armas?: EquipmentRow[]
-  pertences?: EquipmentRow[]
-}
-
-/*****Magia*****/
-export interface SpellRow {
-  id: number;
-  nome: string;
-  descricao?: string;
-  evocacao?: string;
-  alcance?: string;
-  duracao?: string;
-  efeitos?: string;
-  custo: number;
-  nivel: number;
-  tipo?: number | null
-  //total: number
-}
-
-export interface SpellState {
-  magiasProfissao?: SpellRow[];
-  magiasEspecializacao?: SpellRow[];
-}
-
-/*****Combate*****/
-export interface CombatRow {
-  id: number;
-  nome: string;
-  atributo?: string;
-  efeito?: string;
-  observacoes?: string;
-  requisicoes?: string;
-  quadroRolagem: string;
-  aprimoramento?: string;
-  ProfEspId?: number;
-  GrupoCombateId?: number;
-  nomeGrupo?: number;
-  categoriaId?: number;
-  categoria?: string;
-  custo: number;
-  bonus?: number;
-  reducao?: number;
-  tipo?: number;
-  nivel?: number;
-  //ajuste: string;
-  //total: number;
-}
-
-export interface CombatState {
-  tecnicasBasicas?: CombatRow[];
-  tecnicasEspecializacao?: CombatRow[];
-  tecnicasProfissao?: CombatRow[];
-}
-
-export interface CharacterizationRow {
-  id: number;
-  nome: string;
-  nivel?: number | null;
-}
-
+/*****Equipamentos iniciais*****/
 export interface StartingEquipments {
   id: number;
   nome: string;
 }
 
+/*****Características*****/
 export interface Traits {
   olhos?: string;
   cabelo?: string;
@@ -150,6 +72,7 @@ export interface Traits {
   historia?: string;
 }
 
+/*******Ficha Personagem*******/
 export interface CharacterSheet {
   id: number;
   nome: string;

@@ -2,24 +2,9 @@ export interface CombatGroup {
   id: number;
   name: string;
   parentId?: number | null;
-  //tecnica?: string | null;
 }
 
 export interface CombatFromGroup {
-  // id: number;
-  // name: string;
-  // cost?: number | null;
-  // bonus?: number | null;
-  // hasSpecialization?: number | null;
-  // attributeCode?: string | null;
-  // categoryId?: number | null;
-  // effect?: string | null;
-  // improvement?: string | null;
-  // notes?: string | null;
-  // reduction?: number | null;
-  // requisite?: string | null;
-  // rollTable?: number | null;
-
   combatId?:  number ;
   combatName?: string;
   attributeCode?: string;
@@ -51,4 +36,33 @@ export interface ApiAddCombatSkillRequest {
   combatGroupId?: number | null;
   level?: number | null;
   type?: number | null;
+}
+
+export interface CombatRow {
+  id: number;
+  nome: string;
+  atributo?: string;
+  efeito?: string;
+  observacoes?: string;
+  requisicoes?: string;
+  quadroRolagem: string;
+  aprimoramento?: string;
+  ProfEspId?: number;
+  GrupoCombateId?: number;
+  nomeGrupo?: number;
+  categoriaId?: number;
+  categoria?: string;
+  custo: number;
+  bonus?: number;
+  reducao?: number;
+  tipo?: number;
+  nivel?: number;
+  //ajuste: string;
+  //total: number;
+}
+
+export interface CombatState {
+  tecnicasBasicas?: CombatRow[];
+  tecnicasEspecializacao?: CombatRow[];
+  tecnicasProfissao?: CombatRow[];
 }

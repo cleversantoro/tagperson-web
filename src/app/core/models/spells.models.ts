@@ -35,3 +35,22 @@ export interface SpellGroupWithSpells {
   group: SpellGroup;
   spells: SpellFromGroup[];
 }
+
+export interface SpellRow {
+  id: number;
+  nome: string;
+  descricao?: string;
+  evocacao?: string;
+  alcance?: string;
+  duracao?: string;
+  efeitos?: string;
+  custo: number;
+  nivel: number;
+  tipo?: number | null
+  //total: number
+}
+
+export interface SpellState {
+  magiasProfissao?: SpellRow[];
+  magiasEspecializacao?: SpellRow[];
+}

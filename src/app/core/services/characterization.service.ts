@@ -2,34 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { API_BASE_URL } from './api-config';
+import { CharacterizationGroup, CharacterizationItem, CharacterizationType } from '../models/characterization.models';
 
-export interface CharacterizationType {
-  id: number;
-  name: string;
-  description?: string;
-  displayOrder?: number;
-}
 
-export interface CharacterizationGroup {
-  id: number;
-  name: string;
-  characterizationTypeId: number;
-  displayOrder?: number;
-}
-
-export interface CharacterizationItem {
-  id: number;
-  characterizationTypeId?: number;
-  characterizationGroupId?: number;
-  placeId?: number;
-  name: string;
-  description?: string;
-  notes?: string;
-  cost?: number;
-  isInitial?: number;
-  isRare?: number;
-  isAllowGame?: number;
-}
 
 @Injectable({ providedIn: 'root' })
 export class CharacterizationService {

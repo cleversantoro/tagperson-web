@@ -1,10 +1,11 @@
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { CharacterSheet, SkillSpecializationRow } from '../../../../../core/models/character.models';
+import { CharacterSheet } from '../../../../../core/models/character.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 import { RulesService } from '../../../../../core/services/rules.service';
-import { SkillFromGroup, SkillSpecializationSuggestion } from '../../../../../core/models/rules.models';
+import { SkillFromGroup, SkillSpecializationSuggestion } from '../../../../../core/models/skills.models';
 import { CharacterApiService } from '../../../../../core/services/character-api.service';
+import { SkillSpecializationRow } from '../../../../../core/models/skills.models';
 
 @Component({
   standalone: true,
