@@ -45,7 +45,8 @@ mat-card-header {  display: flex;  align-items: center;  margin-bottom: 16px;
 }
 .modal-actions {display: flex;  justify-content: flex-end;  gap: 8px;  margin-top: 16px;}
 
-.wrap { display: grid; grid-template-columns: 1fr 1.3fr; gap: 12px; }
+.wrap { display: grid; grid-template-columns: 0.40fr 0.50fr; gap: 12px; }
+.wrap { display: grid; gap: 12px; }
 .left, .center, .right { display: -ms-grid; gap: 12px; }
 @media (max-width: 1200px){ .wrap { grid-template-columns: 1fr; } }
 .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }

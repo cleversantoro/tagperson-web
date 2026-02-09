@@ -78,6 +78,11 @@ export class CharacterStore {
     await this.select(characterId);
   }
 
+  async deleteEquipment(characterId: number, equipmentId: number) {
+    await this.api.deleteEquipment(characterId, equipmentId);
+    await this.select(characterId);
+  }
+
   async addCharacterization(characterId: number, characterizationId: number, level?: number) {
     await this.api.addCharacterization(characterId, characterizationId, level);
     await this.select(characterId);
@@ -103,7 +108,6 @@ export class CharacterStore {
         ...sheet.caracteristicas,
         ...updates
       },
-      updatedAt: new Date().toISOString()
     };
 
     this.upsert(updated);
@@ -119,7 +123,6 @@ export class CharacterStore {
         ...sheet.caracteristicas,
         dinheiro: money
       },
-      updatedAt: new Date().toISOString()
     };
 
     this.upsert(updated);
@@ -144,7 +147,6 @@ export class CharacterStore {
         ...sheet.combate,
         ...gear
       },
-      updatedAt: new Date().toISOString()
     };
 
     this.upsert(updated);

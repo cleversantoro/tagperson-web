@@ -40,7 +40,6 @@ export class TabAttributesComponent {
         values: nextValues,
         pointsUsed: this.computeUsed(nextValues),
       },
-      updatedAt: new Date().toISOString()
     });
   }
 

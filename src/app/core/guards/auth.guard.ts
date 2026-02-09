@@ -4,6 +4,13 @@ import { AuthService } from '../services/auth.service';
 
 export const authGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
-  if (auth.token) return true;
-  return inject(Router).parseUrl('/login');
+  const router = inject(Router);
+
+  if (auth.isTokenValid()) {
+    return true;
+  }
+
+  // Token inválido ou expirado - fazer logout e redirecionar
+  auth.logout();
+  return router.parseUrl('/login');
 };

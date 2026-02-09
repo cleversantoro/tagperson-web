@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, groupBy } from 'rxjs';
 import { API_BASE_URL } from './api-config';
 import { CharacterSheet, AttributeKey } from '../models/character.models';
 import { SpellFromGroup } from '../models/spells.models';
@@ -84,12 +84,21 @@ interface ApiCharacterSheet {
   };
 
   skills: Array<{
-    skillId: number;
+    id: number;
     name: string;
-    level: number | null;
+    skillGroupId: number;
+    groupName: string;
+    description: string;
     attributeCode?: string | null;
+    levelTest?: number | null;
     restricted?: number | null;
+    penalties?: string | null;
+    improvedTasks?: string | null;
+    levelsjson?: string | null;
+    bonus?: number | null;
     hasSpecialization?: number | null;
+    cost?: number | null;
+    level: number | null;
   }>;
 
   spells: Array<{
@@ -98,10 +107,11 @@ interface ApiCharacterSheet {
     description: string;
     effects: string;
     duration?: string | null;
+    levelsJson?: string | null;
     evocation?: string | null;
-    level: number | null;
     range?: string | null;
     cost: number;
+    level: number | null;
     type: number;
   }>;
 
@@ -127,9 +137,11 @@ interface ApiCharacterSheet {
   }>;
 
   equipments: Array<{
-    equipmentId: number;
-    groupid: number;
+    id: number;
     name: string;
+    imageFile?: string | null;
+    groupId: number;
+    groupName: string;
     description: string;
     price: number;
     isWeapon: number;
@@ -137,10 +149,11 @@ interface ApiCharacterSheet {
     isArmor: number;
     isShield: number;
     isHelmet: number;
+    qty?: number;
   }>;
 
   characterizations: Array<{
-    characterizationId: number;
+    id: number;
     name: string;
     characterizationTypeId: number;
     nameType: string;
@@ -287,7 +300,7 @@ export class CharacterApiService {
   async getSkillSpecializations(characterId: number, skillId: number): Promise<ApiCharacterSkillSpecialization[]> {
     return await firstValueFrom(
       this.http.get<ApiCharacterSkillSpecialization[]>(
-        `${API_BASE_URL}/characters/${characterId}/skills/${skillId}/specializations`
+        `${API_BASE_URL}/characters_especialization/${characterId}/skills/${skillId}/specializations`
       )
     );
   }
@@ -298,7 +311,7 @@ export class CharacterApiService {
     payload: ApiCharacterSkillSpecializationRequest
   ): Promise<void> {
     await firstValueFrom(
-      this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/skills/${skillId}/specializations`, payload)
+      this.http.post<void>(`${API_BASE_URL}/characters_especialization/${characterId}/skills/${skillId}/specializations`, payload)
     );
   }
 
@@ -311,6 +324,10 @@ export class CharacterApiService {
       equipmentId,
       qty
     }));
+  }
+
+  async deleteEquipment(characterId: number, equipmentId: number): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${API_BASE_URL}/characters_equipment/${characterId}/equipments?equipmentId=${equipmentId}`));
   }
 
   async addSpell(characterId: number, spellId: number): Promise<void> {
@@ -412,7 +429,6 @@ export class CharacterApiService {
       },
       caracterizacoes: [],
       equipamentosIniciais: [],
-      updatedAt: new Date().toISOString()
     };
   }
 
@@ -434,16 +450,19 @@ export class CharacterApiService {
     const rawCombat = sheet.combat ?? [];
 
     const mapEq = (e: typeof rawEquips[0]) => ({
-      id: e.equipmentId,
-      grupoId: e.groupid,
+      id: e.id,
       nome: e.name,
+      imagem: e.imageFile ?? '',
+      grupoId: e.groupId,
+      nomeGrupo: e.groupName,
       descricao: e.description,
       valor: e.price,
-      isWeapon: e.isWeapon,
-      isDefense: e.isDefense,
-      isArmor: e.isArmor,
-      isShield: e.isShield,
-      isHelmet: e.isHelmet
+      arma: e.isWeapon,
+      defesa: e.isDefense,
+      armadura: e.isArmor,
+      escudo: e.isShield,
+      elmo: e.isHelmet,
+      quantidade: e.qty ?? 0
     });
 
     const mapSpell = (e: typeof rawSpells[0]) => ({
@@ -453,9 +472,10 @@ export class CharacterApiService {
       efeitos: e.effects,
       evocacao: e.evocation ?? '',
       duracao: e.duration ?? '',
-      nivel: e.level ?? 0,
+      levelsJson: e.levelsJson ?? '',
       alcance: e.range ?? '',
       custo: e.cost,
+      nivel: e.level ?? 0,
       tipo: e.type
     });
 
@@ -522,6 +542,7 @@ export class CharacterApiService {
       divindade: sheet.deity?.name ?? '',
       experiencia: sheet.experience ?? 0,
       estagio: sheet.level ?? 0,
+
       especializacao: {
         id: sheet.specialization?.id ?? 0,
         nome: sheet.specialization?.name ?? '',
@@ -530,17 +551,20 @@ export class CharacterApiService {
         magiaGrupoId: sheet.specialization?.spellGroupId ?? 0,
         combateGrupoId: sheet.specialization?.combatGroupId ?? 0,
       },
+
       atributos: {
         pointsTotal: sheet.points.pointsSkill ?? 0,
         pointsUsed: 0,
         values
       },
+
       pontos: {
         habilidade: sheet.points.pointsSkill ?? 0,
         arma: sheet.points.pointsWeapon ?? 0,
         combate: sheet.points.pointsCombat ?? 0,
         magia: sheet.points.pointsMagic ?? 0
       },
+
       derivados: {
         resistenciaFisica: sheet.derived.resistenciaFisica ?? 0,
         resistenciaMagia: sheet.derived.resistenciaMagica ?? 0,
@@ -552,23 +576,36 @@ export class CharacterApiService {
         energiaFisicaMax: maxEf,
         energiaHeroica: 0
       },
+
       habilidades: sheet.skills?.map(s => ({
-        id: s.skillId,
+        id: s.id,
         nome: s.name,
-        nivel: s.level ?? 0,
+        groupId: s.skillGroupId,
+        groupName: s.groupName,
+        descricao: s.description,
+        atributo: s.attributeCode ?? '',
+        nivelTest: s.levelTest ?? 0,
         restrito: (s.restricted ?? 0) === 1,
-        ajuste: s.attributeCode ?? '',
-        hasSpecialization: (s.hasSpecialization ?? 0) === 1
+        penalidades: s.penalties ?? '',
+        tarefasAprimoradas: s.improvedTasks ?? '',
+        levelsJson: s.levelsjson ?? '',
+        bonus: s.bonus ?? 0,
+        hasSpecialization: (s.hasSpecialization ?? 0) === 1,
+        custo: s.cost ?? 0,
+        nivel: s.level ?? 0
       })) ?? [],
+
       magias: {
         magiasProfissao: magiasProfissao.map(mapSpell),
         magiasEspecializacao: magiasEspecializacao.map(mapSpell)
       },
+
       combate: {
         tecnicasBasicas: tecnicasBasicas.map(mapCombat),
         tecnicasEspecializacao: tecnicasEspecializacao.map(mapCombat),
         tecnicasProfissao: tecnicasProfissao.map(mapCombat)
       },
+
       equipamentos: {
         armadura: armaduraItem ? mapEq(armaduraItem) : emptyEq,
         escudo: escudoItem ? mapEq(escudoItem) : emptyEq,
@@ -576,6 +613,7 @@ export class CharacterApiService {
         armas: armas,
         pertences: pertences,
       },
+
       caracteristicas: {
         olhos: sheet.features.eyes ?? '',
         cabelo: sheet.features.hair ?? '',
@@ -586,13 +624,15 @@ export class CharacterApiService {
         aparencia: sheet.features.appearance ?? '',
         historia: sheet.features.history ?? '',
       },
+
       dinheiro: {
         cobre: sheet.coins.copper ?? 0,
         prata: sheet.coins.silver ?? 0,
         ouro: sheet.coins.gold ?? 0
       },
+
       caracterizacoes: sheet.characterizations?.map(c => ({
-        id: c.characterizationId,
+        id: c.id,
         nome: c.name,
         caracterizacaoTipoId: c.characterizationTypeId ?? '',
         nomeTipo: c.nameType ?? '',
@@ -607,11 +647,11 @@ export class CharacterApiService {
         permiteJogo: c.isAllowGame ?? 0,
         nivel: c.level ?? null
       })) ?? [],
+
       equipamentosIniciais: sheet.startingEquipments?.map(c => ({
         id: c.equipmentId,
         nome: c.name,
       })) ?? [],
-      updatedAt: new Date().toISOString()
     };
   }
 

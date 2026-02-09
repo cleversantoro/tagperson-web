@@ -115,6 +115,4 @@ export interface CharacterSheet {
   caracteristicas: Traits;
   caracterizacoes: CharacterizationRow[];
   equipamentosIniciais: StartingEquipments[];
-
-  updatedAt: string;
 }

@@ -67,7 +67,6 @@ export class CharacterHeaderComponent {
         : this.sheet.especializacao,
       raca: racaName,
       profissao: profName,
-      updatedAt: new Date().toISOString()
     });
   }
 }

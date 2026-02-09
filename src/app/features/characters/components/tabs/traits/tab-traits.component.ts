@@ -244,7 +244,6 @@ export class TabTraitsComponent implements OnInit {
     this.store.upsert({
       ...this.sheet,
       caracteristicas: { ...this.sheet.caracteristicas, ...update },
-      updatedAt: new Date().toISOString()
     });
   }
 }

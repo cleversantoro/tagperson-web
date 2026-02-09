@@ -10,10 +10,19 @@ export interface SkillSpecializationRow {
 export interface SkillRow {
   id: number;
   nome: string;
+  groupId?: number | null;
+  groupName?: string | null;
+  descricao?: string | null;
+  atributo?: string | null;
+  nivelTest?: number | null;
   restrito?: boolean;
-  nivel: number;
-  ajuste: string; // ex: "INT", "AGI"...
+  penalidades?: string | null;
+  tarefasAprimoradas?: string | null;
+  levelsJson?: string | null;
+  bonus?: number | null;
   hasSpecialization?: boolean;
+  custo?: number | null;
+  nivel: number;
 }
 
 export interface SkillGroup {
