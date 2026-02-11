@@ -6,9 +6,7 @@
 
       <mat-card-header>
         <mat-card-title>Magias da Profissão</mat-card-title>
-        <button mat-raised-button color="primary" (click)="addBasicSpell()" class="add-button">
-          <mat-icon>add</mat-icon> Adicionar Magia
-        </button>
+        <button type="button" (click)="addBasicSpell()" class="add-btn">Adicionar Magia</button>
       </mat-card-header>
 
       <mat-card-content>
@@ -21,6 +19,7 @@
                 <th>Custo</th>
                 <th>Total</th>
                 <th class="icon-col"></th>
+                <!-- <th class="icon-col"></th> -->
               </tr>
             </thead>
             <tbody>
@@ -31,10 +30,17 @@
                   <td>{{s.custo}}</td>
                   <td>{{totalOf(s)}}</td>
                   <td class="icon-col">
+                    <div class="actions-cell">
                     <button mat-icon-button (click)="selectSpell(s)">
                       <mat-icon>help_outline</mat-icon>
                     </button>
+                    <button mat-icon-button (click)="deleteSpell(s.id, getSpellGroupId(s))" title="Deletar magia">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
                   </td>
+                  <!-- <td class="icon-col">
+                  </td> -->
                 </tr>
               }
             </tbody>
@@ -55,9 +61,7 @@
       <mat-card-header>
         <mat-card-title>Magias da Especializacao</mat-card-title>
         @if (canLearnSpecializationSpells()) {
-          <button mat-raised-button color="primary" (click)="addSpecializationSpell()" class="add-button">
-            <mat-icon>add</mat-icon> Adicionar Magia
-          </button>
+          <button type="button" (click)="addSpecializationSpell()" class="add-btn">Adicionar Magia</button>
         } @else {
           <span class="warning-message">
             @if (sheet.nivel < 5) {
@@ -79,6 +83,7 @@
                 <th>Custo</th>
                 <th>Total</th>
                 <th class="icon-col"></th>
+                <!-- <th class="icon-col"></th> -->
               </tr>
             </thead>
             <tbody>
@@ -92,7 +97,12 @@
                     <button mat-icon-button (click)="selectSpell(s)">
                       <mat-icon>help_outline</mat-icon>
                     </button>
+                    <button mat-icon-button (click)="deleteSpell(s.id, getSpellGroupId(s))" title="Deletar magia">
+                      <mat-icon>delete</mat-icon>
+                    </button>
                   </td>
+                  <!-- <td class="icon-col">
+                  </td> -->
                 </tr>
               }
             </tbody>
@@ -111,7 +121,9 @@
   <div class="right">
     <mat-card>
       <mat-card-title>Detalhes</mat-card-title>
+
       <mat-card-content class="details">
+
         <mat-form-field appearance="outline">
           <mat-label>Nome</mat-label>
           <input matInput [value]="selected()?.nome ?? ''" readonly />
@@ -141,6 +153,7 @@
           <mat-label>Descricao</mat-label>
           <textarea matInput rows="8" [value]="selected()?.descricao ?? ''" readonly></textarea>
         </mat-form-field>
+
       </mat-card-content>
     </mat-card>
   </div>

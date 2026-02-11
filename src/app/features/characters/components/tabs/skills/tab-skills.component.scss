@@ -18,3 +18,8 @@
 .spec-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
 .spec-list li { display: flex; justify-content: space-between; gap: 8px; }
 .spec-level { color: #6b7280; font-size: 12px; }
+.icon-btn { border: none; background: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; color: #ef4444; transition: color 0.2s ease; }
+.icon-btn:hover { color: #dc2626; }
+.actions-cell { display: flex; gap: 8px; align-items: center; justify-content: center; }
+.details-grid { display: grid; gap: 12px; }
+.field textarea, .field input { min-height: 60px; resize: vertical; padding: 8px; border: 1px solid rgba(0,0,0,.2); border-radius: 4px; font-family: inherit; }

@@ -343,6 +343,11 @@ export class CharacterApiService {
     }));
   }
 
+  // Deleta uma caracterização do personagem
+  async deleteCharacterization(characterId: number, characterizationId: number): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${API_BASE_URL}/characters_characterization/${characterId}/characterizations?characterizationId=${characterizationId}`));
+  }
+
   // Busca as magias disponíveis para uma profissão específica
   getProfessionSpells(professionId: number) {
     return this.http.get<SpellFromGroup[]>(`${API_BASE_URL}/spells/views/${professionId}/spell_profession`);
@@ -356,7 +361,17 @@ export class CharacterApiService {
   // Adiciona uma magia ao personagem
   addCharacterSpell(characterId: number, spellId: number, spellGroupId: number, level: number, type: number) {
     // Assumindo que o payload espera o ID da magia. Ajuste conforme seu backend se necessário.
-    return this.http.post<void>(`${API_BASE_URL}/characters/${characterId}/spells`, { spellId, spellGroupId, level, type });
+    return this.http.post<void>(`${API_BASE_URL}/characters_spell/${characterId}/spells`, { spellId, spellGroupId, level, type });
+  }
+
+  // Deleta uma magia do personagem
+  async deleteSpell(characterId: number, spellId: number, spellGroupId: number): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${API_BASE_URL}/characters_spell/${characterId}/spells?spellId=${spellId}&spellGroupId=${spellGroupId}`));
+  }
+
+  // Deleta uma habilidade do personagem
+  async deleteSkill(characterId: number, skillId: number): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${API_BASE_URL}/characters_skill/${characterId}/skills?skillId=${skillId}`));
   }
 
   mapListItem(item: ApiCharacterListItem): CharacterSheet {

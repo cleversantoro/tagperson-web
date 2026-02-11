@@ -9,6 +9,7 @@
 
 .details { display: grid; gap: 10px; }
 .row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
 @media (max-width: 900px){ .row { grid-template-columns: 1fr; } }
 // Estilos para mat-card-header
 ::ng-deep .mat-mdc-card-header {
@@ -23,25 +24,9 @@
   }
 }
 
-.add-button {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+.add-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.add-button {  margin-left: auto;  display: flex;  align-items: center;  gap: 6px;}
+.warning-message {  color: #ff9800;  font-size: 0.9em;  padding: 8px;  background: rgba(255, 152, 0, 0.1);  border-radius: 4px;  display: block;}
+.empty-message {  text-align: center;  color: #999;  padding: 24px;  font-style: italic;}
+.actions-cell { display: flex; gap: 8px; align-items: center; justify-content: center; }
 
-.warning-message {
-  color: #ff9800;
-  font-size: 0.9em;
-  padding: 8px;
-  background: rgba(255, 152, 0, 0.1);
-  border-radius: 4px;
-  display: block;
-}
-
-.empty-message {
-  text-align: center;
-  color: #999;
-  padding: 24px;
-  font-style: italic;
-}

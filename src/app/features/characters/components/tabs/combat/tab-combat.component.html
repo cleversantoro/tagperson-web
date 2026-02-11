@@ -2,7 +2,6 @@
 
   <!-- Tecnias Basicas -->
   <div class="left">
-
     <div class="actions">
       <button
           type="button"
@@ -10,7 +9,6 @@
           (click)="openAddCombat('basic')">+ Nova tecnica básica
       </button>
     </div>
-
     <mat-card>
       <mat-card-title>Técnicas Básicas</mat-card-title>
       <mat-card-content>
@@ -23,6 +21,7 @@
               <th>Ajuste</th>
               <th>Total</th>
               <th>Categoria</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -34,13 +33,22 @@
                 <td>{{(i.atributo ?? '').toUpperCase()}}</td>
                 <td>{{totalOf(i)}}</td>
                 <td>{{i.categoria}}</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="icon-btn" (click)="openCombatDetails(i)" title="Ver detalhes">
+                      <mat-icon>help</mat-icon>
+                    </button>
+                    <button type="button" class="icon-btn" (click)="deleteCombat(i)" title="Deletar técnica">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
               </tr>
             }
           </tbody>
         </table>
       </mat-card-content>
     </mat-card>
-
   </div>
 
   <!-- Tecnias da Profissao -->
@@ -50,7 +58,10 @@
       <button
         type="button"
         class="add-btn"
-        (click)="openAddCombat('profession')">+ Nova tecnica profissão
+        [disabled]="!canAddProfessionTechnique()"
+        (click)="openAddCombat('profession')"
+        [title]="canAddProfessionTechnique() ? '' : 'Nível mínimo 5 para adicionar técnicas de profissão'">
+        + Nova tecnica profissão
       </button>
     </div>
 
@@ -66,6 +77,7 @@
               <th>Ajuste</th>
               <th>Total</th>
               <th>Categoria</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -77,6 +89,16 @@
                 <td>{{(i.atributo ?? '').toUpperCase()}}</td>
                 <td>{{totalOf(i)}}</td>
                 <td>{{i.categoria}}</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="icon-btn" (click)="openCombatDetails(i)" title="Ver detalhes">
+                      <mat-icon>help</mat-icon>
+                    </button>
+                    <button type="button" class="icon-btn" (click)="deleteCombat(i)" title="Deletar técnica">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
               </tr>
             }
           </tbody>
@@ -91,7 +113,10 @@
       <button
         type="button"
         class="add-btn"
-        (click)="openAddCombat('specialization')">+ Nova tecnica especializacao
+        [disabled]="!canAddSpecializationTechnique()"
+        (click)="openAddCombat('specialization')"
+        [title]="canAddSpecializationTechnique() ? '' : 'Nível mínimo 5 para adicionar técnicas de especialização'">
+        + Nova tecnica especializacao
       </button>
     </div>
 
@@ -107,6 +132,7 @@
               <th>Ajuste</th>
               <th>Total</th>
               <th>Categoria</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -118,6 +144,16 @@
                 <td>{{(i.atributo ?? '').toUpperCase()}}</td>
                 <td>{{totalOf(i)}}</td>
                 <td>{{i.categoria}}</td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" class="icon-btn" (click)="openCombatDetails(i)" title="Ver detalhes">
+                      <mat-icon>help</mat-icon>
+                    </button>
+                    <button type="button" class="icon-btn" (click)="deleteCombat(i)" title="Deletar técnica">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
               </tr>
             }
           </tbody>
@@ -155,6 +191,51 @@
         <div class="modal-actions">
           <button type="button" class="ghost-btn" (click)="closeAddCombat()">Cancelar</button>
           <button type="button" class="primary-btn" (click)="saveCombat()" [disabled]="!selectedCombatId()">Salvar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (detailsOpen()) {
+    <div class="modal-backdrop" (click)="closeCombatDetails()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Detalhes - {{selectedCombatDetails()?.nome}}</h3>
+        <div class="details-grid">
+          <label class="field">
+            <span>Descrição</span>
+            <textarea readonly>{{combatDetailsData()?.descricao ?? combatDetailsData()?.efeito ?? ''}}</textarea>
+          </label>
+          <!-- <label class="field">
+            <span>Categoria</span>
+            <input type="text" readonly [value]="combatDetailsData()?.categoria ?? ''" />
+          </label>
+          <label class="field">
+            <span>Alcance</span>
+            <input type="text" readonly [value]="combatDetailsData()?.alcance ?? ''" />
+          </label>
+          <label class="field">
+            <span>Duracao</span>
+            <input type="text" readonly [value]="combatDetailsData()?.duracao ?? ''" />
+          </label>
+          <label class="field">
+            <span>Efeitos</span>
+            <textarea readonly>{{combatDetailsData()?.efeitos ?? ''}}</textarea>
+          </label> -->
+          <label class="field">
+            <span>Penalidades</span>
+            <textarea readonly>{{combatDetailsData()?.penalidades ?? combatDetailsData()?.observacoes ?? ''}}</textarea>
+          </label>
+          <label class="field">
+            <span>Tarefas Aprimoradas</span>
+            <textarea readonly>{{combatDetailsData()?.tarefasAprimoradas ?? combatDetailsData()?.aprimoramento ?? ''}}</textarea>
+          </label>
+          <!-- <label class="field">
+            <span>Levels JSON</span>
+            <textarea readonly>{{combatDetailsData()?.levelsJson ?? ''}}</textarea>
+          </label> -->
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="primary-btn" (click)="closeCombatDetails()">Fechar</button>
         </div>
       </div>
     </div>

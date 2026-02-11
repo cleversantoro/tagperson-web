@@ -18,37 +18,45 @@
       <mat-card-content>
         @if (!getEditingArmor()) {
         <div class="view-mode">
+
           <div class="item-row">
-            <span class="label">Armadura:</span>
             <span class="value">{{ sheet.equipamentos.armadura.nome }}</span>
             @if (sheet.equipamentos.armadura.nome) {
-            <button mat-icon-button [matTooltip]="'Remover armadura'" (click)="deleteArmor()"
-              style="margin-left: auto;">
+            <button mat-icon-button [matTooltip]="'Remover armadura'" (click)="deleteArmor()" style="margin-left: auto;">
               <mat-icon color="warn">delete</mat-icon>
             </button>
             }
+            @else{
+            <span class="label">Sem Armadura</span>
+            }
           </div>
+
           <div class="item-row">
-            <span class="label">Elmo:</span>
             <span class="value">{{ sheet.equipamentos.capacete.nome }}</span>
             @if (sheet.equipamentos.capacete.nome) {
             <button mat-icon-button [matTooltip]="'Remover elmo'" (click)="deleteHelmet()" style="margin-left: auto;">
               <mat-icon color="warn">delete</mat-icon>
             </button>
+            }@else {
+            <span class="label">Sem Elmo</span>
             }
           </div>
+
           <div class="item-row">
-            <span class="label">Escudo:</span>
             <span class="value">{{ sheet.equipamentos.escudo.nome }}</span>
             @if (sheet.equipamentos.escudo.nome) {
             <button mat-icon-button [matTooltip]="'Remover escudo'" (click)="deleteShield()" style="margin-left: auto;">
               <mat-icon color="warn">delete</mat-icon>
             </button>
+            } @else {
+            <span class="label">Sem Escudo</span>
             }
           </div>
+
         </div>
         } @else {
         <div class="edit-mode">
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Armadura</mat-label>
             <mat-select [value]="getArmorData().armadura"
@@ -81,9 +89,10 @@
           </mat-form-field>
 
           <div class="actions">
-            <!-- <button mat-button (click)="cancelEditArmor()">Cancelar</button> -->
+            <button mat-button (click)="cancelEditArmor()">Cancelar</button>
             <button mat-raised-button color="primary" (click)="saveArmor()">Salvar</button>
           </div>
+
         </div>
         }
       </mat-card-content>
@@ -95,10 +104,12 @@
     <div class="actions">
       <button type="button" (click)="openAddWeapon()" class="add-btn">Selecionar Arma</button>
     </div>
-
+    <br>
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Armas</mat-card-title>
+        <mat-card-title>
+          <mat-icon>swords</mat-icon> Armas
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <table class="tbl">
@@ -137,6 +148,7 @@
         <div class="modal-overlay">
           <div class="modal-content">
             <h3>Selecionar Arma</h3>
+
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Arma</mat-label>
               <mat-select [value]="selectedWeapon()" (selectionChange)="selectedWeapon.set($event.value)">
@@ -151,52 +163,13 @@
               <button mat-button (click)="closeAddWeapon()">Cancelar</button>
               <button mat-raised-button color="primary" (click)="saveWeapon()">Salvar</button>
             </div>
+
           </div>
         </div>
         }
       </mat-card-content>
     </mat-card>
 
-    <!-- Accessories Card -->
-    <!--<mat-card>
-      <mat-card-header>
-        <mat-card-title>Pertences</mat-card-title>
-      </mat-card-header>
-
-       <mat-card-content>
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>Nome</th>
-              <th>Descricao</th>
-              <th>Valor</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            @if(getArmorData().pertences && getArmorData().pertences.length > 0) {
-            @for (p of getArmorData().pertences; track p.id) {
-            <tr>
-              <td>{{ p.nome }}</td>
-              <td>{{ p.descricao }}</td>
-              <td>{{ p.valor }}</td>
-              <td style="text-align: center;">
-                <button mat-icon-button [matTooltip]="'Deletar pertence'" (click)="deleteAccessory(p.id)"
-                  style="color: #ff6b6b;">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </tr>
-            }
-            } @else {
-            <tr>
-              <td colspan="4" class="muted">Sem dados.</td>
-            </tr>
-            }
-          </tbody>
-        </table>
-      </mat-card-content>
-    </mat-card> -->
   </div>
 
 </div>

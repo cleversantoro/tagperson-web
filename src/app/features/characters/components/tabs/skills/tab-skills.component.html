@@ -23,6 +23,7 @@
                 <th>Custo</th>
                 <th>Ajuste</th>
                 <th>Total</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
@@ -39,6 +40,16 @@
                   <td>{{s.cost ?? 0}}</td>
                   <td>{{(s.attributeCode ?? '').toUpperCase()}}</td>
                   <td>{{totalOf(s)}}</td>
+                  <td>
+                    <div class="actions-cell">
+                      <button type="button" class="icon-btn" (click)="openSkillDetails(s)" title="Ver detalhes">
+                        <mat-icon>help</mat-icon>
+                      </button>
+                      <button type="button" class="icon-btn" (click)="deleteSkill(s.id, s.name)" title="Deletar habilidade">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               }
             </tbody>
@@ -131,6 +142,51 @@
         <div class="modal-actions">
           <button type="button" class="ghost-btn" (click)="closeAddSpecialization()">Cancelar</button>
           <button type="button" class="primary-btn" (click)="saveSpecialization()" [disabled]="!selectedSpecializationId() || !selectedSpecializationText().trim()">Salvar</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (detailsOpen()) {
+    <div class="modal-backdrop" (click)="closeSkillDetails()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <h3>Detalhes - {{selectedSkillDetails()?.name}}</h3>
+        <div class="details-grid">
+          <label class="field">
+            <span>Descrição</span>
+            <textarea readonly>{{skillDetailsData()?.description ?? skillDetailsData()?.descricao ?? ''}}</textarea>
+          </label>
+          <!-- <label class="field">
+            <span>Evocacao</span>
+            <input type="text" readonly [value]="skillDetailsData()?.evocation ?? skillDetailsData()?.evocacao ?? ''" />
+          </label>
+          <label class="field">
+            <span>Alcance</span>
+            <input type="text" readonly [value]="skillDetailsData()?.range ?? skillDetailsData()?.alcance ?? ''" />
+          </label>
+          <label class="field">
+            <span>Duracao</span>
+            <input type="text" readonly [value]="skillDetailsData()?.duration ?? skillDetailsData()?.duracao ?? ''" />
+          </label>
+          <label class="field">
+            <span>Efeitos</span>
+            <textarea readonly>{{skillDetailsData()?.effects ?? skillDetailsData()?.efeitos ?? ''}}</textarea>
+          </label>
+          <label class="field">
+            <span>Penalidades</span>
+            <textarea readonly>{{skillDetailsData()?.penalties ?? skillDetailsData()?.penalidades ?? ''}}</textarea>
+          </label> -->
+          <label class="field">
+            <span>Tarefas Aprimoradas</span>
+            <textarea readonly>{{skillDetailsData()?.improvedTasks ?? skillDetailsData()?.tarefasAprimoradas ?? ''}}</textarea>
+          </label>
+          <label class="field">
+            <span>Niveis</span>
+            <textarea readonly>{{skillDetailsData()?.levelsJson ?? ''}}</textarea>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="primary-btn" (click)="closeSkillDetails()">Fechar</button>
         </div>
       </div>
     </div>

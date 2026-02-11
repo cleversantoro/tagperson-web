@@ -47,8 +47,8 @@ export interface CombatRow {
   requisicoes?: string;
   quadroRolagem: string;
   aprimoramento?: string;
-  ProfEspId?: number;
-  GrupoCombateId?: number;
+  profEspId?: number;
+  grupoCombateId?: number;
   nomeGrupo?: number;
   categoriaId?: number;
   categoria?: string;

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 
@@ -7,6 +7,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 
 
@@ -35,6 +36,7 @@ interface DialogData {
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     FormsModule
   ],
   templateUrl: './spell-selection-dialog.component.html',
@@ -42,6 +44,9 @@ interface DialogData {
 })
 export class SpellSelectionDialogComponent {
   spells$: Observable<SpellFromGroup[]>;
+  availableSpells = signal<SpellTechniquesDto[]>([]);
+  selectedSpellId = signal<number | null>(null);
+  spellLevel = signal(0);
 
   searchText = '';
   selectedSpell: SpellFromGroup | null = null;
@@ -63,13 +68,22 @@ export class SpellSelectionDialogComponent {
     this.spells$ = this.data.type === 1
       ? this.api.getProfessionSpells(this.data.professionId ?? 0)
       : this.api.getEspecializationSpells(this.data.especializationId ?? 0);
+
+    // Load spells into availableSpells signal
+    this.spells$.subscribe((spells) => {
+      const flatSpells = spells.flatMap(g => g ?? []);
+      this.availableSpells.set(flatSpells);
+      if (flatSpells.length > 0) {
+        this.selectedSpellId.set(flatSpells[0].id);
+      }
+    });
   }
 
   select(spell: SpellTechniquesDto) {
     this.api.addCharacterSpell(
       this.data.characterId ?? 0,
       spell.id,
-      spell.spellGroupId ?? 0,//type === 1 ? this.data.professionId ?? 0 : this.data.especializationId ?? 0,
+      spell.spellGroupId ?? 0,
       0,
       this.data.type ?? 0
     )
@@ -81,8 +95,18 @@ export class SpellSelectionDialogComponent {
   }
 
   confirm() {
-    if (this.selectedSpell) {
-      this.dialogRef.close(this.selectedSpell);
+    if (this.selectedSpellId()) {
+      const selectedSpell = this.availableSpells().find(s => s.id === this.selectedSpellId());
+      if (selectedSpell) {
+        this.api.addCharacterSpell(
+          this.data.characterId ?? 0,
+          selectedSpell.id,
+          selectedSpell.spellGroupId ?? 0,
+          this.spellLevel(),
+          this.data.type ?? 0
+        )
+          .subscribe(() => { this.dialogRef.close(true); });
+      }
     }
   }
 

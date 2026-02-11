@@ -1,5 +1,6 @@
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { CharacterSheet } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
 import { CombatService } from '../../../../../core/services/combat.service';
@@ -9,7 +10,7 @@ import { CharacterStore } from '../../../../../core/services/character-store.ser
 @Component({
   standalone: true,
   selector: 'app-tab-combat',
-  imports: [MatCardModule],
+  imports: [MatCardModule, MatIconModule],
   templateUrl: './tab-combat.component.html',
   styleUrls: ['./tab-combat.component.scss']
 })
@@ -133,6 +134,17 @@ export class TabCombatComponent {
     this.store.select(this.sheet.id);
   }
 
+  async deleteCombat(combat: CombatRow) {
+    if (confirm(`Tem certeza que deseja deletar "${combat.nome}"?`)) {
+      await this.combatApi.deleteCombat(
+        this.sheet.id,
+        combat.id,
+        combat.grupoCombateId ?? 0
+      );
+      this.store.select(this.sheet.id);
+    }
+  }
+
   private normalizeName(value: string) {
     return value
       .toLowerCase()
@@ -144,4 +156,29 @@ export class TabCombatComponent {
   get canAddProfession() {
     return !!this.professionMainGroup();
   }
-}
+
+  canAddProfessionTechnique = computed(() => {
+    const level = this.sheetSignal()?.nivel ?? 0;
+    return level >= 5;
+  });
+
+  canAddSpecializationTechnique = computed(() => {
+    const level = this.sheetSignal()?.nivel ?? 0;
+    return level >= 5;
+  });
+
+  detailsOpen = signal(false);
+  selectedCombatDetails = signal<CombatRow | null>(null);
+  combatDetailsData = signal<any>(null);
+
+  openCombatDetails(combat: CombatRow) {
+    this.selectedCombatDetails.set(combat);
+    this.detailsOpen.set(true);
+    this.combatDetailsData.set(combat);
+  }
+
+  closeCombatDetails() {
+    this.detailsOpen.set(false);
+    this.selectedCombatDetails.set(null);
+    this.combatDetailsData.set(null);
+  }}

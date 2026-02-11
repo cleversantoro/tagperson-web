@@ -46,7 +46,8 @@ export interface SpellRow {
   efeitos?: string;
   custo: number;
   nivel: number;
-  tipo?: number | null
+  tipo?: number | null;
+  spellGroupId?: number;
   //total: number
 }
 

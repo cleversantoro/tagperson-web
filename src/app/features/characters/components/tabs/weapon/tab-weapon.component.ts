@@ -227,6 +227,11 @@ export class TabWeaponComponent implements OnInit {
     }
   }
 
+  cancelEditArmor() {
+    this.initializeArmorData();
+    this.editingArmor.set(false);
+  }
+
   closeAddWeapon() {
     this.addWeaponOpen.set(false);
   }

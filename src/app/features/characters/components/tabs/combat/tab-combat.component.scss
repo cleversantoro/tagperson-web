@@ -6,10 +6,16 @@
 .tbl th { background: #f2f2f2; text-align: left; }
 .actions { display: flex; justify-content: flex-start; }
 .add-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.add-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .modal-backdrop { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; }
 .modal { background: #fff; border-radius: 10px; padding: 16px; width: min(520px, 92vw); box-shadow: 0 20px 60px rgba(0,0,0,.2); display: grid; gap: 12px; }
 .field { display: grid; gap: 6px; font-size: 13px; }
-.field select, .field input { padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,.2); }
+.field select, .field input, .field textarea { padding: 6px 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,.2); }
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .primary-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
 .ghost-btn { border: 1px solid rgba(0,0,0,.2); background: #fff; color: #111827; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.icon-btn { border: none; background: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; color: #ef4444; transition: color 0.2s ease; }
+.icon-btn:hover { color: #dc2626; }
+.actions-cell { display: flex; gap: 8px; align-items: center; justify-content: center; }
+.details-grid { display: grid; gap: 12px; }
+.field textarea { min-height: 60px; resize: vertical; }

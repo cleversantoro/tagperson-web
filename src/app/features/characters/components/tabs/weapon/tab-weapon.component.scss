@@ -61,3 +61,11 @@ mat-card-header {  display: flex;  align-items: center;  margin-bottom: 16px;
 .modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
 .primary-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
 .ghost-btn { border: 1px solid rgba(0,0,0,.2); background: #fff; color: #111827; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}

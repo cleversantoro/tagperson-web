@@ -1,5 +1,6 @@
 import { Component, Input, computed, inject, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { CharacterSheet } from '../../../../../core/models/character.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
 import { RulesService } from '../../../../../core/services/rules.service';
@@ -10,7 +11,7 @@ import { SkillSpecializationRow } from '../../../../../core/models/skills.models
 @Component({
   standalone: true,
   selector: 'app-tab-skills',
-  imports: [MatCardModule],
+  imports: [MatCardModule, MatIconModule],
   templateUrl: './tab-skills.component.html',
   styleUrls: ['./tab-skills.component.scss']
 })
@@ -89,6 +90,10 @@ export class TabSkillsComponent {
   selectedSpecializationText = signal('');
   newSpecializationLevel = signal(0);
 
+  detailsOpen = signal(false);
+  selectedSkillDetails = signal<SkillFromGroup | null>(null);
+  skillDetailsData = signal<any>(null);
+
   levelOf(id: number) {
     return this.skillMap().get(id) ?? 0;
   }
@@ -126,6 +131,13 @@ export class TabSkillsComponent {
     if (!skillId) return;
     await this.store.addSkill(this.sheet.id, skillId, this.newSkillLevel());
     this.addSkillOpen.set(false);
+  }
+
+  async deleteSkill(skillId: number, skillName: string) {
+    if (confirm(`Tem certeza que deseja deletar "${skillName}"?`)) {
+      await this.api.deleteSkill(this.sheet.id, skillId);
+      this.store.select(this.sheet.id);
+    }
   }
 
   async openSpecializations(skill: SkillFromGroup) {
@@ -210,5 +222,20 @@ export class TabSkillsComponent {
   skillsToBuy() {
     return this.sheetSignal()?.habilidades?.length ?? 0;
   }
-}
 
+  openSkillDetails(skill: SkillFromGroup) {
+    this.selectedSkillDetails.set(skill);
+    this.detailsOpen.set(true);
+
+    // Buscar os dados completos da habilidade
+    const allSkills = (this.rules.skillGroups() ?? []).flatMap(g => g.skills);
+    const skillData = (this.rules.skillGroups() ?? []).flatMap(g => g.skills).find(s => s.id === skill.id);
+    this.skillDetailsData.set(skillData ?? {});
+  }
+
+  closeSkillDetails() {
+    this.detailsOpen.set(false);
+    this.selectedSkillDetails.set(null);
+    this.skillDetailsData.set(null);
+  }
+}

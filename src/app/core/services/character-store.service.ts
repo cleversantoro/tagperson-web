@@ -88,6 +88,11 @@ export class CharacterStore {
     await this.select(characterId);
   }
 
+  async deleteCharacterization(characterId: number, characterizationId: number) {
+    await this.api.deleteCharacterization(characterId, characterizationId);
+    await this.select(characterId);
+  }
+
   async addSkill(characterId: number, skillId: number, level?: number) {
     await this.api.addSkill(characterId, { skillId, level: level ?? null });
     await this.select(characterId);
@@ -95,6 +100,11 @@ export class CharacterStore {
 
   async addSpell(characterId: number, spellId: number) {
     await this.api.addSpell(characterId, spellId);
+    await this.select(characterId);
+  }
+
+  async deleteSpell(characterId: number, spellId: number, spellGroupId: number) {
+    await this.api.deleteSpell(characterId, spellId, spellGroupId);
     await this.select(characterId);
   }
 

@@ -36,4 +36,8 @@ export class CombatService {
     return this.http.get<CombatFromGroup[]>(`${API_BASE_URL}/combat/views/${especialiationId}/combat_especialization`);
   }
 
+  async deleteCombat(characterId: number, combatId: number, combatGroupId: number): Promise<void> {
+    await firstValueFrom(this.http.delete<void>(`${API_BASE_URL}/characters_combat/${characterId}/combat?combatId=${combatId}&combatGroupId=${combatGroupId}`));
+  }
+
 }

@@ -121,7 +121,7 @@ export class TabSpellsComponent {
         title: 'Adicionar Magia da Profissão',
         type: 1
       },
-      width: '600px'
+      width: '1000px'
     });
 
     // Se salvou com sucesso (retornou true), recarrega o personagem
@@ -148,7 +148,7 @@ export class TabSpellsComponent {
         characterId: this.sheet.id,
         title: 'Adicionar Magia de Especialização'
       },
-      width: '600px'
+      width: '1000px'
     }).afterClosed().subscribe(async (spell: SpellFromGroup | undefined) => {
       if (spell) {
         await this.addSpell(spell.id);
@@ -166,5 +166,29 @@ export class TabSpellsComponent {
     } catch (error) {
       console.error('Erro ao adicionar magia:', error);
     }
+  }
+
+  /**
+   * Deleta uma magia do personagem
+   */
+  async deleteSpell(spellId: number, spellGroupId: number) {
+    try {
+      await this.store.deleteSpell(this.sheet.id, spellId, spellGroupId);
+    } catch (error) {
+      console.error('Erro ao deletar magia:', error);
+    }
+  }
+
+  /**
+   * Retorna o spellGroupId baseado no tipo de magia
+   * Tipo 1 = Profissão (usa profissaoId)
+   * Tipo 2 = Especialização (usa magiaGrupoId da especialização)
+   */
+  getSpellGroupId(spell: SpellRow): number {
+    if (spell.tipo === 2) {
+      return this.sheet.especializacao?.magiaGrupoId ?? 0;
+    }
+    // Para tipo 1 (profissão) ou outro, usa a profissão ID como grupo
+    return this.sheet.profissaoId ?? 0;
   }
 }

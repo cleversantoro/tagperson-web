@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { FormsModule } from '@angular/forms';
 import { CharacterSheet  } from '../../../../../core/models/character.models';
@@ -14,8 +15,8 @@ import { RulesService } from '../../../../../core/services/rules.service';
 
 import { MatDialog } from '@angular/material/dialog';
 import { CharacterizationModalComponent } from './characterization-modal.component';
-import { CharacterizationDetailsModalComponent } from './characterization-details-modal.component';
 import { CharacterizationGroup, CharacterizationItem, CharacterizationType } from '../../../../../core/models/characterization.models';
+import { CharacterStore } from '../../../../../core/services/character-store.service';
 
 
 @Component({
@@ -30,6 +31,7 @@ import { CharacterizationGroup, CharacterizationItem, CharacterizationType } fro
     MatSelectModule,
     MatProgressSpinnerModule,
     MatTableModule,
+    MatTooltipModule,
     FormsModule
   ],
   templateUrl: './tab-characterization.component.html',
@@ -40,6 +42,8 @@ export class TabCharacterizationComponent {
 
   private selectedGroupId = signal<number | null>(null);
   private rules = inject(RulesService);
+  private store = inject(CharacterStore);
+  private selectedCharacterization = signal<any | null>(null);
 
   groups = this.rules.equipmentGroups;
 
@@ -49,7 +53,7 @@ export class TabCharacterizationComponent {
   isLoadingCharacterizations = signal(false);
   isSavingCharacterization = signal(false);
 
-  displayedColumns: string[] = ['nome', 'nivel', 'info'];
+  displayedColumns: string[] = ['nome', 'nivel', 'acoes'];
 
   items = computed(() => {
     const groupId = this.selectedGroupId();
@@ -62,7 +66,7 @@ export class TabCharacterizationComponent {
 
   openCharacterizationModal(): void {
     const dialogRef = this.dialog.open(CharacterizationModalComponent, {
-      width: '800px',
+      width: '1000px',
       data: {
         types: this.characterizationTypes(),
         groups: this.characterizationGroups(),
@@ -72,14 +76,24 @@ export class TabCharacterizationComponent {
     });
   }
 
-  openDetailsModal(element: any): void {
-    this.dialog.open(CharacterizationDetailsModalComponent, {
-      width: '800px',
-      data: {
-        description: element.descricao,
-        notes: element.obs,
-      },
-    });
+  selectCharacterization(element: any): void {
+    this.selectedCharacterization.set(element);
+  }
+
+  selected() {
+    return this.selectedCharacterization();
+  }
+
+  /**
+   * Deleta uma caracterização do personagem
+   */
+  async deleteCharacterization(characterizationId: number) {
+    try {
+      await this.store.deleteCharacterization(this.sheet.id, characterizationId);
+      this.selectedCharacterization.set(null);
+    } catch (error) {
+      console.error('Erro ao deletar caracterização:', error);
+    }
   }
 
 }
