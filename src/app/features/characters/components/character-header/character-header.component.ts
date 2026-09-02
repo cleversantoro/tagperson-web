@@ -23,14 +23,18 @@ export class CharacterHeaderComponent {
 
   racas = this.rules.races;
   profs = this.rules.professions;
+  divindades = this.rules.deities;
+  classesSociais = this.rules.socialClasses;
+  localidades = this.rules.places;
+  especializacoes = this.rules.specializations;
 
   form = this.fb.nonNullable.group({
     nome: '',
     jogador: '',
-    divindade: '',
-    especializacao: '',
-    classeSocial: '',
-    localidade: '',
+    divindadeId: 0,
+    especializacaoId: 0,
+    classeSocialId: 0,
+    localidadeId: 0,
     racaId: 0,
     profissaoId: 0,
     experiencia: 0,
@@ -42,12 +46,10 @@ export class CharacterHeaderComponent {
     this.form.patchValue({
       nome: this.sheet.nome ?? '',
       jogador: this.sheet.jogador ?? '',
-      divindade: this.sheet.divindade ?? '',
-      especializacao: typeof this.sheet.especializacao === 'string'
-        ? this.sheet.especializacao
-        : (this.sheet.especializacao?.nome ?? ''),
-      classeSocial: this.sheet.classeSocial ?? '',
-      localidade: this.sheet.localidade ?? '',
+      divindadeId: this.sheet.divindadeId ?? 0,
+      especializacaoId: this.sheet.especializacao?.id ?? 0,
+      classeSocialId: this.sheet.classeSocialId ?? 0,
+      localidadeId: this.sheet.localidadeId ?? 0,
       racaId: this.sheet.racaId ?? 0,
       profissaoId: this.sheet.profissaoId ?? 0,
       experiencia: this.sheet.experiencia,
@@ -62,11 +64,14 @@ export class CharacterHeaderComponent {
     this.store.upsert({
       ...this.sheet,
       ...v,
-      especializacao: typeof this.sheet.especializacao === 'string'
-        ? this.sheet.especializacao
+      especializacao: this.especializacoes().find(x => x.id === v.especializacaoId)
+        ? { ...this.sheet.especializacao!, id: v.especializacaoId, nome: this.especializacoes().find(x => x.id === v.especializacaoId)!.name }
         : this.sheet.especializacao,
       raca: racaName,
       profissao: profName,
+      divindade: this.divindades().find(x => x.id === v.divindadeId)?.name ?? '',
+      classeSocial: this.classesSociais().find(x => x.id === v.classeSocialId)?.name ?? '',
+      localidade: this.localidades().find(x => x.id === v.localidadeId)?.name ?? '',
     });
   }
 }

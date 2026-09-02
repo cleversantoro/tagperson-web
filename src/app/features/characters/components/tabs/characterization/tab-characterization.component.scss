@@ -40,18 +40,14 @@
   margin-top: 8px;
 }
 .add-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.icon-btn { border: none; background: none; cursor: pointer; padding: 4px; align-items: center; justify-content: center; color: #ef4444; transition: color 0.2s ease; }
+.icon-btn:hover { color: #dc2626; }
 
 .caracterizacoes-table {
   width: 100%;
   font-size: 13px;
 
-  th {
-    background-color: #f5f5f5;
-    font-weight: 600;
-    text-align: left;
-    padding: 8px;
-    border-bottom: 2px solid #ddd;
-  }
+  th {    background-color: #f5f5f5;    font-weight: 600;    text-align: left;    padding: 8px;    border-bottom: 2px solid #ddd;  }
 
   td {
     padding: 8px;

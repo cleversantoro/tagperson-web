@@ -162,15 +162,15 @@ export class TabWeaponComponent implements OnInit {
 
     // Se adicionou (newId existe e não tinha nada)
     if (newId && !currentId) {
-      await this.store.addEquipment(this.sheet.id, newId);
+      await this.store.addEquipment(this.sheet.id, newId, 1, true, this.slotFor(type));
       this.updateCurrentId(type, newId);
       return;
     }
 
     // Se mudou (newId diferente de currentId)
     if (newId && currentId && newId !== currentId) {
-      await this.store.deleteEquipment(this.sheet.id, currentId);
-      await this.store.addEquipment(this.sheet.id, newId);
+      if (!confirm('Substituir o equipamento atualmente usado neste slot?')) return;
+      await this.store.addEquipment(this.sheet.id, newId, 1, true, this.slotFor(type));
       this.updateCurrentId(type, newId);
       return;
     }
@@ -180,6 +180,10 @@ export class TabWeaponComponent implements OnInit {
     if (type === 'armor') this.currentArmorId.set(id);
     if (type === 'helmet') this.currentHelmetId.set(id);
     if (type === 'shield') this.currentShieldId.set(id);
+  }
+
+  private slotFor(type: 'armor' | 'helmet' | 'shield') {
+    return type === 'armor' ? 'armadura' : type === 'helmet' ? 'elmo' : 'escudo';
   }
 
   async saveWeapon() {

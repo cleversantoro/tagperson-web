@@ -34,6 +34,20 @@ export interface CharacterPoints {
   magia: number;
 }
 
+export interface PointAllocation {
+  granted: number;
+  used: number;
+  remaining: number;
+}
+
+export interface CharacterPointBudget {
+  attributes: PointAllocation;
+  skills: PointAllocation;
+  weapons: PointAllocation;
+  combat: PointAllocation;
+  magic: PointAllocation;
+}
+
 /*****Derivados*****/
 export interface DerivedStats {
   resistenciaFisica: number;
@@ -81,7 +95,9 @@ export interface CharacterSheet {
 
   jogador?: string;
   divindade?: string;
+  divindadeId?: number | null;
   localidade?: string;
+  localidadeId?: number | null;
 
   olhos?: string;
   cabelo?: string;
@@ -106,6 +122,7 @@ export interface CharacterSheet {
   especializacao?: Specialization;
   atributos: Attributes;
   pontos?: CharacterPoints;
+  orcamento?: CharacterPointBudget;
   derivados: DerivedStats;
 
   habilidades: SkillRow[];

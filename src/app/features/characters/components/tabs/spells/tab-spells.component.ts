@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { CharacterSheet  } from '../../../../../core/models/character.models';
+import { CharacterSheet } from '../../../../../core/models/character.models';
 import { RulesService } from '../../../../../core/services/rules.service';
 import { SpellFromGroup, SpellRow } from '../../../../../core/models/spells.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
@@ -172,10 +172,12 @@ export class TabSpellsComponent {
    * Deleta uma magia do personagem
    */
   async deleteSpell(spellId: number, spellGroupId: number) {
-    try {
-      await this.store.deleteSpell(this.sheet.id, spellId, spellGroupId);
-    } catch (error) {
-      console.error('Erro ao deletar magia:', error);
+    if (confirm(`Tem certeza que deseja deletar?`)) {
+      try {
+        await this.store.deleteSpell(this.sheet.id, spellId, spellGroupId);
+      } catch (error) {
+        console.error('Erro ao deletar magia:', error);
+      }
     }
   }
 

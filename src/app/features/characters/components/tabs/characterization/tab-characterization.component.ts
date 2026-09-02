@@ -88,11 +88,20 @@ export class TabCharacterizationComponent {
    * Deleta uma caracterização do personagem
    */
   async deleteCharacterization(characterizationId: number) {
-    try {
-      await this.store.deleteCharacterization(this.sheet.id, characterizationId);
-      this.selectedCharacterization.set(null);
-    } catch (error) {
-      console.error('Erro ao deletar caracterização:', error);
+    if (confirm(`Tem certeza que deseja deletar?`)) {
+      // await this.combatApi.deleteCombat(
+      //   this.sheet.id,
+      //   combat.id,
+      //   combat.grupoCombateId ?? 0
+      // );
+      try {
+        await this.store.deleteCharacterization(this.sheet.id, characterizationId);
+        this.selectedCharacterization.set(null);
+      } catch (error) {
+        console.error('Erro ao deletar caracterização:', error);
+      }
+
+      //this.store.select(this.sheet.id);
     }
   }
 

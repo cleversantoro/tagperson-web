@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCardModule } from '@angular/material/card';
 import { CharacterSheet, AttributeKey } from '../../../../../core/models/character.models';
 import { CharacterStore } from '../../../../../core/services/character-store.service';
+import { CharacterApiService } from '../../../../../core/services/character-api.service';
 import { AttributesCardComponent } from "./attributes-card.component";
 
 @Component({
@@ -26,26 +27,29 @@ export class TabAttributesComponent {
     FISICO: 'FÍSICO',
   };
 
-  constructor(private store: CharacterStore) {}
+  constructor(private store: CharacterStore, private api: CharacterApiService) {}
+
+  error = signal('');
 
   value(k: AttributeKey) { return this.sheet.atributos.values[k] ?? 0; }
 
-  set(k: AttributeKey, v: number) {
+  async set(k: AttributeKey, v: number) {
     const nextValues = { ...this.sheet.atributos.values, [k]: v };
-    // aqui você coloca a regra real de pontos do Tagmar depois (custo/limites)
-    this.store.upsert({
-      ...this.sheet,
-      atributos: {
-        ...this.sheet.atributos,
-        values: nextValues,
-        pointsUsed: this.computeUsed(nextValues),
-      },
-    });
-  }
-
-  private computeUsed(values: Record<AttributeKey, number>) {
-    // placeholder: soma dos positivos como “gasto”
-    return Object.values(values).reduce((acc, n) => acc + Math.max(0, n), 0);
+    try {
+      await this.api.applyAttributes(this.sheet.id, {
+        attAgi: nextValues.AGILIDADE,
+        attPer: nextValues.PERCEPCAO,
+        attInt: nextValues.INTELECTO,
+        attAur: nextValues.AURA,
+        attCar: nextValues.CARISMA,
+        attFor: nextValues.FORCA,
+        attFis: nextValues.FISICO
+      });
+      this.error.set('');
+      await this.store.select(this.sheet.id);
+    } catch {
+      this.error.set('A distribuição de atributos excede os limites permitidos.');
+    }
   }
 }
 

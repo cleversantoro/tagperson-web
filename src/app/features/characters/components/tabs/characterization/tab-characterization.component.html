@@ -16,45 +16,48 @@
       </mat-card-header>
 
       <mat-card-content>
-        <div class="table-container">
-          <table mat-table [dataSource]="sheet.caracterizacoes" class="caracterizacoes-table">
-            <!-- Nome Column -->
-            <ng-container matColumnDef="nome">
-              <th mat-header-cell *matHeaderCellDef>Nome</th>
-              <td mat-cell *matCellDef="let element">{{ element.nome }}</td>
-            </ng-container>
-
-            <!-- Nivel Column -->
-            <ng-container matColumnDef="nivel">
-              <th mat-header-cell *matHeaderCellDef>Nível</th>
-              <td mat-cell *matCellDef="let element">{{ element.nivel ?? '-' }}</td>
-            </ng-container>
-
-            <!-- Ações Column -->
-            <ng-container matColumnDef="acoes">
-              <th mat-header-cell *matHeaderCellDef>Ações</th>
-              <td mat-cell *matCellDef="let element">
-                <button mat-icon-button type="button" (click)="deleteCharacterization(element.id)" matTooltip="Deletar caracterização">
+        @if (sheet.caracterizacoes.length > 0) {
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Caracterização</th>
+              <th>Custo</th>
+              <th>Nivel</th>
+              <th>Raro</th>
+              <th>Inicio</th>
+              <th>Permite Jogo</th>
+              <th class="icon-col"></th>
+              <th class="icon-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of sheet.caracterizacoes; track s.id) {
+            <tr>
+              <td>{{s.nome}}</td>
+              <td>{{s.custo}}</td>
+              <td>{{s.nivel}}</td>
+              <td>{{s.raro}}</td>
+              <td>{{s.inicio}}</td>
+              <td>{{s.permiteJogo}}</td>
+              <td class="icon-col">
+                <div class="actions-cell">
+                  <button mat-icon-button  class="icon-btn" (click)="selectCharacterization(s)" [class.selected]="selected()?.id === s.id" title="Detalhe magia">
+                    <mat-icon>help</mat-icon>
+                  </button>
+                </div>
+              </td>
+              <td class="icon-col">
+                <button mat-icon-button (click)="deleteCharacterization(s.id)" class="icon-btn" title="Deletar magia">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-              (click)="selectCharacterization(row)"
-              [class.selected]="selected()?.id === row.id"></tr>
-
-            <!-- No data row -->
-            @if (sheet.caracterizacoes.length === 0) {
-            <tr class="mat-row">
-              <td class="mat-cell muted" [attr.colspan]="displayedColumns.length">
-                Nenhuma caracterização cadastrada.
-              </td>
             </tr>
             }
-          </table>
-        </div>
+          </tbody>
+        </table>
+        } @else {
+        <p class="empty-message">Nenhuma caracterização cadastrada</p>
+        }
       </mat-card-content>
 
     </mat-card>

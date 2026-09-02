@@ -1,7 +1,14 @@
 <div class="wrap">
   <mat-card class="points">
-    <mat-card-title>PONTOS: {{sheet.atributos.pointsUsed}} | {{sheet.atributos.pointsTotal}}</mat-card-title>
+    <mat-card-title>
+      PONTOS: {{ sheet.orcamento?.attributes?.used ?? sheet.atributos.pointsUsed }} /
+      {{ sheet.orcamento?.attributes?.granted ?? sheet.atributos.pointsTotal }}
+    </mat-card-title>
   </mat-card>
+
+  @if (error()) {
+    <p role="alert">{{ error() }}</p>
+  }
 
   <div class="content">
     <div class="attrs">

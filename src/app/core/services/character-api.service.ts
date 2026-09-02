@@ -54,6 +54,14 @@ interface ApiCharacterSheet {
     pointsMagic: number | null;
   };
 
+  budget?: {
+    attributes: { granted: number; used: number; remaining: number };
+    skills: { granted: number; used: number; remaining: number };
+    weapons: { granted: number; used: number; remaining: number };
+    combat: { granted: number; used: number; remaining: number };
+    magic: { granted: number; used: number; remaining: number };
+  };
+
   features: {
     age?: number | null;
     height?: number | null;
@@ -207,6 +215,12 @@ interface ApiCharacterUpdateRequest {
   pointsWeapon?: number | null;
   pointsCombat?: number | null;
   pointsMagic?: number | null;
+
+  experience?: number | null;
+  specializationId?: number | null;
+  deityId?: number | null;
+  classSocialId?: number | null;
+  birthPlaceId?: number | null;
 }
 
 interface ApiCharacterCreateRequest {
@@ -220,6 +234,16 @@ interface ApiCharacterCreateRequest {
 interface ApiAddSkillRequest {
   skillId: number;
   level?: number | null;
+}
+
+interface ApiAttributeDistributionRequest {
+  attAgi?: number;
+  attPer?: number;
+  attInt?: number;
+  attAur?: number;
+  attCar?: number;
+  attFor?: number;
+  attFis?: number;
 }
 
 interface ApiCharacterSkillSpecialization {
@@ -247,6 +271,18 @@ export class CharacterApiService {
 
   async getSheet(id: number): Promise<ApiCharacterSheet> {
     return await firstValueFrom(this.http.get<ApiCharacterSheet>(`${API_BASE_URL}/characters/${id}/sheet`));
+  }
+
+  async downloadSheetPdf(id: number): Promise<Blob> {
+    return await firstValueFrom(
+      this.http.get(`${API_BASE_URL}/characters/${id}/sheet/pdf`, { responseType: 'blob' })
+    );
+  }
+
+  async applyAttributes(id: number, payload: ApiAttributeDistributionRequest): Promise<void> {
+    await firstValueFrom(
+      this.http.post<void>(`${API_BASE_URL}/characters_atributes/${id}/apply-attributes`, payload)
+    );
   }
 
   async create(payload: ApiCharacterCreateRequest): Promise<ApiCharacterSheet> {
@@ -289,7 +325,13 @@ export class CharacterApiService {
       pointsSkill: sheet.pontos?.habilidade ?? 0,
       pointsWeapon: sheet.pontos?.arma ?? 0,
       pointsCombat: sheet.pontos?.combate ?? 0,
-      pointsMagic: sheet.pontos?.magia ?? 0
+      pointsMagic: sheet.pontos?.magia ?? 0,
+
+      experience: sheet.experiencia ?? 0,
+      specializationId: sheet.especializacao?.id ?? null,
+      deityId: sheet.divindadeId ?? null,
+      classSocialId: sheet.classeSocialId ?? null,
+      birthPlaceId: sheet.localidadeId ?? null
     };
   }
 
@@ -319,10 +361,12 @@ export class CharacterApiService {
     await firstValueFrom(this.http.delete<void>(`${API_BASE_URL}/characters/${id}`));
   }
 
-  async addEquipment(characterId: number, equipmentId: number, qty?: number): Promise<void> {
+  async addEquipment(characterId: number, equipmentId: number, qty?: number, equipped = false, slot = 'nenhum'): Promise<void> {
     await firstValueFrom(this.http.post<void>(`${API_BASE_URL}/characters_equipment/${characterId}/equipments`, {
       equipmentId,
-      qty
+      qty,
+      equipped,
+      slot
     }));
   }
 
@@ -554,7 +598,9 @@ export class CharacterApiService {
       classeSocial: sheet.classSocial?.name ?? '',
       classeSocialId: sheet.classSocial?.id ?? null,
       localidade: sheet.birthPlace?.name ?? '',
+      localidadeId: sheet.birthPlace?.id ?? null,
       divindade: sheet.deity?.name ?? '',
+      divindadeId: sheet.deity?.id ?? null,
       experiencia: sheet.experience ?? 0,
       estagio: sheet.level ?? 0,
 
@@ -579,6 +625,7 @@ export class CharacterApiService {
         combate: sheet.points.pointsCombat ?? 0,
         magia: sheet.points.pointsMagic ?? 0
       },
+      orcamento: sheet.budget,
 
       derivados: {
         resistenciaFisica: sheet.derived.resistenciaFisica ?? 0,

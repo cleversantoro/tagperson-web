@@ -18,6 +18,10 @@ interface LookupItem {
 export class RulesService {
   readonly races = signal<LookupItem[]>([]);
   readonly professions = signal<LookupItem[]>([]);
+  readonly deities = signal<LookupItem[]>([]);
+  readonly socialClasses = signal<LookupItem[]>([]);
+  readonly places = signal<LookupItem[]>([]);
+  readonly specializations = signal<LookupItem[]>([]);
   readonly skillGroups = signal<SkillGroupWithSkills[]>([]);
   readonly combatGroups = signal<CombatGroupWithItems[]>([]);
   readonly spellGroups = signal<SpellGroupWithSpells[]>([]);
@@ -36,6 +40,10 @@ export class RulesService {
     const [
       races,
       profs,
+      deities,
+      socialClasses,
+      places,
+      specializations,
       groups,
       combatGroups,
       spellGroups,
@@ -47,6 +55,10 @@ export class RulesService {
         [
           firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/races`)),
           firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/professions`)),
+          firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/deity`)),
+          firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/socialclass`)),
+          firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/place`)),
+          firstValueFrom(this.http.get<LookupItem[]>(`${API_BASE_URL}/lookups/specialization`)),
           firstValueFrom(this.http.get<SkillGroup[]>(`${API_BASE_URL}/skills/groups`)),
           firstValueFrom(this.http.get<CombatGroup[]>(`${API_BASE_URL}/combat/groups`)),
           firstValueFrom(this.http.get<SpellGroup[]>(`${API_BASE_URL}/spells/groups`)),
@@ -58,6 +70,10 @@ export class RulesService {
 
     this.races.set(races);
     this.professions.set(profs);
+    this.deities.set(deities);
+    this.socialClasses.set(socialClasses);
+    this.places.set(places);
+    this.specializations.set(specializations);
     this.equipments.set(equipments);
     this.categories.set(categories);
     await this.loadSkills(groups);

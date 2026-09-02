@@ -11,42 +11,43 @@
 
       <mat-card-content>
         @if (basicas().length > 0) {
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Magia</th>
-                <th>Nivel</th>
-                <th>Custo</th>
-                <th>Total</th>
-                <th class="icon-col"></th>
-                <!-- <th class="icon-col"></th> -->
-              </tr>
-            </thead>
-            <tbody>
-              @for (s of basicas(); track s.id) {
-                <tr>
-                  <td>{{s.nome}}</td>
-                  <td>{{levelOf(s.id)}}</td>
-                  <td>{{s.custo}}</td>
-                  <td>{{totalOf(s)}}</td>
-                  <td class="icon-col">
-                    <div class="actions-cell">
-                    <button mat-icon-button (click)="selectSpell(s)">
-                      <mat-icon>help_outline</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="deleteSpell(s.id, getSpellGroupId(s))" title="Deletar magia">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </div>
-                  </td>
-                  <!-- <td class="icon-col">
-                  </td> -->
-                </tr>
-              }
-            </tbody>
-          </table>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Magia</th>
+              <th>Nivel</th>
+              <th>Custo</th>
+              <th>Total</th>
+              <th class="icon-col"></th>
+              <th class="icon-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of basicas(); track s.id) {
+            <tr>
+              <td>{{s.nome}}</td>
+              <td>{{levelOf(s.id)}}</td>
+              <td>{{s.custo}}</td>
+              <td>{{totalOf(s)}}</td>
+              <td class="icon-col">
+                <div class="actions-cell">
+                  <button mat-icon-button (click)="selectSpell(s)" class="icon-btn" title="Detalhe magia">
+                    <mat-icon>help</mat-icon>
+                  </button>
+                </div>
+              </td>
+              <td class="icon-col">
+                <button mat-icon-button (click)="deleteSpell(s.id, getSpellGroupId(s))" class="icon-btn"
+                  title="Deletar magia">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
         } @else {
-          <p class="empty-message">Nenhuma magia básica cadastrada</p>
+        <p class="empty-message">Nenhuma magia básica cadastrada</p>
         }
       </mat-card-content>
 
@@ -61,56 +62,53 @@
       <mat-card-header>
         <mat-card-title>Magias da Especializacao</mat-card-title>
         @if (canLearnSpecializationSpells()) {
-          <button type="button" (click)="addSpecializationSpell()" class="add-btn">Adicionar Magia</button>
+        <button type="button" (click)="addSpecializationSpell()" class="add-btn">Adicionar Magia</button>
         } @else {
-          <span class="warning-message">
-            @if (sheet.nivel < 5) {
-              Necessário nível 5 para aprender magias de especialização
-            } @else {
-              Necessário cadastrar especialização
+        <span class="warning-message">
+          @if (sheet.nivel < 5) { Necessário nível 5 para aprender magias de especialização } @else { Necessário
+            cadastrar especialização } </span>
             }
-          </span>
-        }
       </mat-card-header>
 
       <mat-card-content>
         @if (especializacao().length > 0) {
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Magia</th>
-                <th>Nivel</th>
-                <th>Custo</th>
-                <th>Total</th>
-                <th class="icon-col"></th>
-                <!-- <th class="icon-col"></th> -->
-              </tr>
-            </thead>
-            <tbody>
-              @for (s of especializacao(); track s.id) {
-                <tr>
-                  <td>{{s.nome}}</td>
-                  <td>{{levelOf(s.id)}}</td>
-                  <td>{{s.custo}}</td>
-                  <td>{{totalOf(s)}}</td>
-                  <td class="icon-col">
-                    <button mat-icon-button (click)="selectSpell(s)">
-                      <mat-icon>help_outline</mat-icon>
-                    </button>
-                    <button mat-icon-button (click)="deleteSpell(s.id, getSpellGroupId(s))" title="Deletar magia">
-                      <mat-icon>delete</mat-icon>
-                    </button>
-                  </td>
-                  <!-- <td class="icon-col">
-                  </td> -->
-                </tr>
-              }
-            </tbody>
-          </table>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Magia</th>
+              <th>Nivel</th>
+              <th>Custo</th>
+              <th>Total</th>
+              <th class="icon-col"></th>
+              <th class="icon-col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (s of especializacao(); track s.id) {
+            <tr>
+              <td>{{s.nome}}</td>
+              <td>{{levelOf(s.id)}}</td>
+              <td>{{s.custo}}</td>
+              <td>{{totalOf(s)}}</td>
+              <td class="icon-col">
+                <button mat-icon-button (click)="selectSpell(s)" class="icon-btn" title="Detalhe magia">
+                  <mat-icon>help</mat-icon>
+                </button>
+              </td>
+              <td class="icon-col">
+                <button mat-icon-button (click)="deleteSpell(s.id, getSpellGroupId(s))" class="icon-btn"
+                  title="Deletar magia">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
         } @else {
-          @if (canLearnSpecializationSpells()) {
-            <p class="empty-message">Nenhuma magia de especialização cadastrada</p>
-          }
+        @if (canLearnSpecializationSpells()) {
+        <p class="empty-message">Nenhuma magia de especialização cadastrada</p>
+        }
         }
       </mat-card-content>
 

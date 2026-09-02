@@ -1,5 +1,20 @@
 @if (store.selected(); as sheet) {
-  <app-character-header [sheet]="sheet" />
+  <div class="page-header">
+    <app-character-header [sheet]="sheet" />
+    <button
+      mat-flat-button
+      type="button"
+      [disabled]="exporting()"
+      (click)="exportPdf(sheet.id)"
+    >
+      <mat-icon>picture_as_pdf</mat-icon>
+      {{ exporting() ? 'Gerando PDF...' : 'Exportar PDF' }}
+    </button>
+  </div>
+
+  @if (exportError()) {
+    <p class="export-error" role="alert">{{ exportError() }}</p>
+  }
 
   <div class="grid">
     <section class="main">

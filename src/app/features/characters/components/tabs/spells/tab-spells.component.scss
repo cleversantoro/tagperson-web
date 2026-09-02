@@ -24,6 +24,9 @@
   }
 }
 
+.icon-btn { border: none; background: none; cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; color: #ef4444; transition: color 0.2s ease; }
+.icon-btn:hover { color: #dc2626; }
+
 .add-btn { border: 1px solid #1f2937; background: #1f2937; color: #fff; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
 .add-button {  margin-left: auto;  display: flex;  align-items: center;  gap: 6px;}
 .warning-message {  color: #ff9800;  font-size: 0.9em;  padding: 8px;  background: rgba(255, 152, 0, 0.1);  border-radius: 4px;  display: block;}

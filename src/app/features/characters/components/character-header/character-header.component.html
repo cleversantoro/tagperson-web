@@ -12,12 +12,16 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Divindade</mat-label>
-    <input matInput formControlName="divindade" (blur)="commit()" />
+    <mat-select formControlName="divindadeId" (selectionChange)="commit()">
+      @for (item of divindades(); track item.id) { <mat-option [value]="item.id">{{ item.name }}</mat-option> }
+    </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Especialização</mat-label>
-    <input matInput formControlName="especializacao" (blur)="commit()" />
+    <mat-select formControlName="especializacaoId" (selectionChange)="commit()">
+      @for (item of especializacoes(); track item.id) { <mat-option [value]="item.id">{{ item.name }}</mat-option> }
+    </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
@@ -36,12 +40,16 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Classe Social</mat-label>
-    <input matInput formControlName="classeSocial" (blur)="commit()" />
+    <mat-select formControlName="classeSocialId" (selectionChange)="commit()">
+      @for (item of classesSociais(); track item.id) { <mat-option [value]="item.id">{{ item.name }}</mat-option> }
+    </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Local Nascimento</mat-label>
-    <input matInput formControlName="localidade" (blur)="commit()" />
+    <mat-select formControlName="localidadeId" (selectionChange)="commit()">
+      @for (item of localidades(); track item.id) { <mat-option [value]="item.id">{{ item.name }}</mat-option> }
+    </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">

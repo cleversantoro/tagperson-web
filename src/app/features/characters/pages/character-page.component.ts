@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { CharacterHeaderComponent } from '../components/character-header/character-header.component';
 import { TabAttributesComponent } from '../components/tabs/attributes/tab-attributes.component';
 import { TabSkillsComponent } from '../components/tabs/skills/tab-skills.component';
@@ -16,6 +18,7 @@ import { CharacterStore } from '../../../core/services/character-store.service';
   selector: 'app-character-page',
   imports: [
     MatTabsModule, MatCardModule,
+    MatButtonModule, MatIconModule,
     CharacterHeaderComponent,
     TabAttributesComponent,
     TabSkillsComponent,
@@ -30,6 +33,21 @@ import { CharacterStore } from '../../../core/services/character-store.service';
 })
 export class CharacterPageComponent {
   constructor(public store: CharacterStore) {}
+
+  exporting = signal(false);
+  exportError = signal('');
+
+  async exportPdf(characterId: number) {
+    this.exporting.set(true);
+    this.exportError.set('');
+    try {
+      await this.store.exportPdf(characterId);
+    } catch {
+      this.exportError.set('Não foi possível exportar a ficha em PDF.');
+    } finally {
+      this.exporting.set(false);
+    }
+  }
 
   canAccessSpellsTab(profession: string | undefined): boolean {
     if (!profession) return true;

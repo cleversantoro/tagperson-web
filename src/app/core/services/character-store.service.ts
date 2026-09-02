@@ -73,8 +73,18 @@ export class CharacterStore {
     if (this._selectedId() === id) this._selectedId.set(next[0]?.id ?? null);
   }
 
-  async addEquipment(characterId: number, equipmentId: number, qty?: number) {
-    await this.api.addEquipment(characterId, equipmentId, qty);
+  async exportPdf(characterId: number) {
+    const pdf = await this.api.downloadSheetPdf(characterId);
+    const url = URL.createObjectURL(pdf);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `ficha-${characterId}.pdf`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async addEquipment(characterId: number, equipmentId: number, qty?: number, equipped = false, slot = 'nenhum') {
+    await this.api.addEquipment(characterId, equipmentId, qty, equipped, slot);
     await this.select(characterId);
   }
 

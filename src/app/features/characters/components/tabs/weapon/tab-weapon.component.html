@@ -22,7 +22,7 @@
           <div class="item-row">
             <span class="value">{{ sheet.equipamentos.armadura.nome }}</span>
             @if (sheet.equipamentos.armadura.nome) {
-            <button mat-icon-button [matTooltip]="'Remover armadura'" (click)="deleteArmor()" style="margin-left: auto;">
+            <button mat-icon-button [matTooltip]="'Remover armadura'" (click)="deleteArmor()" style="margin-left: auto;color: #ff6b6b;">
               <mat-icon color="warn">delete</mat-icon>
             </button>
             }
@@ -34,7 +34,7 @@
           <div class="item-row">
             <span class="value">{{ sheet.equipamentos.capacete.nome }}</span>
             @if (sheet.equipamentos.capacete.nome) {
-            <button mat-icon-button [matTooltip]="'Remover elmo'" (click)="deleteHelmet()" style="margin-left: auto;">
+            <button mat-icon-button [matTooltip]="'Remover elmo'" (click)="deleteHelmet()" style="margin-left: auto;color: #ff6b6b;">
               <mat-icon color="warn">delete</mat-icon>
             </button>
             }@else {
@@ -45,7 +45,7 @@
           <div class="item-row">
             <span class="value">{{ sheet.equipamentos.escudo.nome }}</span>
             @if (sheet.equipamentos.escudo.nome) {
-            <button mat-icon-button [matTooltip]="'Remover escudo'" (click)="deleteShield()" style="margin-left: auto;">
+            <button mat-icon-button [matTooltip]="'Remover escudo'" (click)="deleteShield()" style="margin-left: auto;color: #ff6b6b;">
               <mat-icon color="warn">delete</mat-icon>
             </button>
             } @else {
@@ -129,8 +129,7 @@
               <td>{{ c.descricao }}</td>
               <td>{{ c.valor }}</td>
               <td style="text-align: center;">
-                <button mat-icon-button [matTooltip]="'Deletar arma'" (click)="deleteWeapon(c.id)"
-                  style="color: #ff6b6b;">
+                <button mat-icon-button [matTooltip]="'Deletar arma'" (click)="deleteWeapon(c.id)" style="color: #ff6b6b;">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
